@@ -5,6 +5,7 @@ import { netmap } from './netmap.js';
 import { assetDrawer } from './pages-ops.js';
 
 const sgn = v => v > 0 ? `−${v}%` : v < 0 ? `+${-v}%` : 'no change in';
+const pctd = v => v > 0 ? `−${v}%` : v < 0 ? `+${-v}%` : '0%';
 const card = (id, title, sub, span = '') => `<div class="chart-card" ${span}><h3>${title}</h3><p class="sub">${sub}</p><div id="${id}"><div class="loading"><span class="spin"></span>Loading</div></div></div>`;
 
 // ======================================= GRAPHS =======================================
@@ -197,7 +198,9 @@ export async function optimizer(root) {
   const run = async () => {
     const out = $('#oOut');
     const body = { max_fixes: +$('#oN').value, windows: +$('#oW').value, staff_budget: $('#oS').value ? +$('#oS').value : null, simultaneous: +$('#oK').value, speed: +$('#oV').value };
-    out.innerHTML = `<div class="loading"><span class="spin"></span>Searching bundles${body.max_fixes > 3 || body.simultaneous > 1 ? ' (larger budgets take up to a minute)' : ''}</div>`;
+    out.innerHTML = `<div class="loading" role="status"><span class="spin"></span>Searching bundles${body.max_fixes > 3 || body.simultaneous > 1 ? ' (larger budgets take up to a minute)' : ''}</div>`;
+    const btn = $('#oRun');
+    btn.disabled = true; btn.setAttribute('aria-busy', 'true'); btn.innerHTML = '<span class="spin"></span>Searching';
     try {
       const o = await api('/api/optimize', body);
       const b = o.before, a = o.best;
@@ -211,8 +214,15 @@ export async function optimizer(root) {
         </div>
         <div class="grid g2" style="margin-top:16px">
           <div class="sheet"><h3>Recommended bundle</h3><p class="sub">Why each one: its effect when tested alone. Together they can do more, because closing one way in matters only once the others are closed too.</p>
-            ${a.fixes.length ? a.fixes.map((id, i) => { const w = why(id); return `<div style="padding:10px 0;border-bottom:1px solid var(--line)"><b style="font-weight:600">${i + 1}. ${h(a.labels[i])}</b>
-              <p class="mute" style="font-size:13px">${w ? `Alone: ${sgn(w.risk_reduction_pct)} likely harm, ${sgn(w.worst_case_reduction_pct)} worst case, ${w.staff_hours} staff h${w.needs_window ? ', needs a maintenance window' : ''}.` : ''}</p></div>`; }).join('') : '<p class="mute">Doing nothing is already the best option within this budget.</p>'}
+            ${a.fixes.length ? `<ol class="fixlist">${a.fixes.map((id, i) => { const w = why(id); return `<li>
+              <span class="rank">${i + 1}</span>
+              <div class="fx"><b>${h(a.labels[i])}</b>
+                ${w ? `<div class="fxbars" aria-label="Effect when tested alone">
+                  <span>Likely harm</span><i class="fxbar"><s style="width:${Math.max(0, Math.min(100, w.risk_reduction_pct))}%"></s></i><em>${pctd(w.risk_reduction_pct)}</em>
+                  <span>Worst case</span><i class="fxbar worst"><s style="width:${Math.max(0, Math.min(100, w.worst_case_reduction_pct))}%"></s></i><em>${pctd(w.worst_case_reduction_pct)}</em>
+                </div>
+                <p class="fxmeta"><span class="tag">${h(w.type.replace('_', ' '))}</span><span class="tag">${w.staff_hours} staff h</span>${w.needs_window ? '<span class="tag warn">needs a maintenance window</span>' : ''}</p>` : ''}
+              </div></li>`; }).join('')}</ol>` : '<p class="mute">Doing nothing is already the best option within this budget.</p>'}
             <p class="note" style="margin-top:12px">Attacker's best way in: before, ${b.attacker_entry.map(e => h(names[e])).join(' + ') || 'none'}; after, <b>${a.attacker_entry.map(e => h(names[e])).join(' + ') || 'none'}</b>.</p>
             <div class="row" style="margin-top:12px"><button class="btn small primary" id="oSim">Test against an adaptive attacker</button><button class="btn small" id="oTwin">Apply in the 3D twin</button></div></div>
           <div class="chart-card"><h3>Before and after</h3><p class="sub">Same unit, people × minutes over 6 hours.</p><div id="oChart"></div></div>
@@ -225,7 +235,8 @@ export async function optimizer(root) {
         { key: 'earliest_failure_min', label: 'First loss', num: true, render: r => tmin(r.earliest_failure_min) }, { key: 'staff_hours', label: 'Staff h', num: true }], { sortKey: null });
       out.querySelector('#oSim').onclick = () => { location.hash = `#/simulate?entry=${b.attacker_entry[0]}&fixes=${a.fixes.join(',')}&adaptive=1`; };
       out.querySelector('#oTwin').onclick = () => withTwin(c => { a.fixes.forEach(f => { if (!c.S.applied.has(f)) c.toggleFix(f); }); });
-    } catch (e) { out.innerHTML = `<div class="err">${h(e.message)}</div>`; }
+    } catch (e) { out.innerHTML = `<div class="err errbox" role="alert"><b>The optimiser could not finish</b><p>${h(e.message)}</p><p class="mute">Try a smaller budget, or check that the server is still running.</p></div>`; }
+    finally { btn.disabled = false; btn.removeAttribute('aria-busy'); btn.textContent = 'Find the best bundle'; }
   };
   $('#oRun').onclick = run; run();
 }

@@ -42,7 +42,12 @@ export const pm = v => `${fmt(v)} people-min`;
 export const pct = (a, b) => a ? Math.round(100 * (a - b) / a) : 0;
 export function toast(text) { const t = document.getElementById('toast'); t.textContent = text; t.style.display = 'block'; clearTimeout(toast.h); toast.h = setTimeout(() => t.style.display = 'none', 3800); }
 export const loading = (root, text = 'Loading') => root.innerHTML = `<div class="skel" aria-busy="true" aria-label="${h(text)}"><i style="height:64px;width:min(560px,80%)"></i><div class="r"><i style="height:110px"></i><i style="height:110px"></i><i style="height:110px"></i><i style="height:110px"></i></div><div class="r" style="grid-template-columns:2fr 1fr"><i style="height:300px"></i><i style="height:300px"></i></div><span class="sr-only" style="position:absolute;left:-9999px">${h(text)}</span></div>`;
-export const errorBox = (root, e) => root.innerHTML = `<div class="err">Could not load this: ${h(e.message || e)}. Is the backend running?</div>`;
+export const errorBox = (root, e) => {
+  root.innerHTML = `<div class="err errbox" role="alert"><b>This page could not load its data</b>
+    <p>${h(e.message || e)}</p><p class="mute">Check that the Cascade server is still running, then try again.</p>
+    <button class="btn small" type="button">Try again</button></div>`;
+  root.querySelector('.errbox button').onclick = () => route();
+};
 export const ATK = ['A', 'B', 'C', 'D'];
 export const atkColor = id => ({ A: '#E5559F', B: '#2A8FD6', C: '#9A74F0', D: '#2BA58A' }[id] || '#8E9DE0');
 export const atkBadge = id => `<span class="atk ${h(id)}" aria-label="Attacker ${h(id)}">${h(id)}</span>`;
@@ -138,6 +143,28 @@ export const ROUTES = [
 ];
 const LABEL = Object.fromEntries(ROUTES.flatMap(([, items]) => items.map(([k, l]) => [k, l])));
 const MODULE = Object.fromEntries(ROUTES.flatMap(([, items]) => items.map(([k, , m]) => [k, m])));
+const GROUP = Object.fromEntries(ROUTES.flatMap(([g, items]) => items.map(([k]) => [k, g])));
+
+// The attack-to-mitigation journey, shown as a step strip on the four pages that make it up.
+const FLOW = [
+  ['simulate', 'Choose an attack', 'Run a ready-made or custom attack'],
+  ['timeline', 'Watch it spread', 'What falls, and when services are lost'],
+  ['response', 'Plan the response', 'Deadlines before and after the alarm'],
+  ['optimizer', 'Choose fixes', 'Best fix bundle for your budget'],
+];
+function renderFlow(k) {
+  const nav = document.getElementById('flow');
+  const at = FLOW.findIndex(([key]) => key === k);
+  nav.hidden = at < 0;
+  if (at < 0) { nav.innerHTML = ''; return; }
+  const ran = !!store.scenario;
+  // nothing has run yet: from the timeline the useful next step is back to step 1
+  const next = !ran && k === 'timeline' ? ['simulate', 'Run an attack first'] : FLOW[at + 1];
+  nav.innerHTML = `<ol>${FLOW.map(([key, label, sub], i) => `<li class="${i === at ? 'now' : ''} ${i === 0 && ran ? 'done' : ''}">
+      <a href="#/${key}" ${i === at ? 'aria-current="step"' : ''}><span class="n">${i + 1}</span><span class="tx"><b>${label}</b><small>${sub}</small></span></a></li>`).join('')}</ol>
+    ${next ? `<a class="btn small primary nextstep" href="#/${next[0]}">${next[0] === 'simulate' ? next[1] : `Next: ${next[1].toLowerCase()}`}</a>` : ''}`;
+}
+store.on(() => { const k = (location.hash.replace(/^#\/?/, '').split('?')[0]) || 'overview'; if (FLOW.some(([key]) => key === k)) renderFlow(k); });
 
 function renderNav() {
   let closed = {}; try { closed = JSON.parse(localStorage.getItem('cascade.nav') || '{}'); } catch { /* ignore */ }
@@ -155,8 +182,9 @@ async function route() {
   const key = (location.hash.replace(/^#\/?/, '').split('?')[0]) || 'overview';
   const k = LABEL[key] ? key : 'overview';
   document.querySelectorAll('#nav a').forEach(a => { const on = a.dataset.r === k; a.classList.toggle('on', on); on ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'); const g = a.closest('.grp'); if (on && g.classList.contains('closed')) g.classList.remove('closed'); });
-  document.getElementById('title').textContent = LABEL[k];
+  document.getElementById('title').innerHTML = `<span class="crumb">${h(GROUP[k])}</span><span class="cur">${h(LABEL[k])}</span>`;
   document.title = `${LABEL[k]}: Cascade`;
+  renderFlow(k);
   closeDrawer();
   document.getElementById('side').classList.remove('open');
   const page = document.getElementById('page'), th = document.getElementById('twinhost');
