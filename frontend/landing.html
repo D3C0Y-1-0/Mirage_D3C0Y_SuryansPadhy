@@ -1,0 +1,1307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cascade: see the cyberattack before the city feels it</title>
+<meta name="description" content="A time-aware cyber digital twin for critical infrastructure: simulate how an attack spreads, predict which services fail and when, and rank the fixes that buy the most time.">
+<link rel="stylesheet" href="/vendor/lenis/lenis.css">
+<script src="/static/site-config.js"></script>
+<script src="/vendor/lenis/lenis.min.js"></script>
+<style>
+@font-face { font-family: "Outfit"; font-weight: 300; font-display: swap; src: url(/vendor/fonts/outfit-latin-300-normal.woff2) format("woff2"); }
+@font-face { font-family: "Outfit"; font-weight: 400; font-display: swap; src: url(/vendor/fonts/outfit-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Outfit"; font-weight: 500; font-display: swap; src: url(/vendor/fonts/outfit-latin-500-normal.woff2) format("woff2"); }
+@font-face { font-family: "Outfit"; font-weight: 600; font-display: swap; src: url(/vendor/fonts/outfit-latin-600-normal.woff2) format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 400; font-display: swap; src: url(/vendor/fonts/plus-jakarta-sans-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 500; font-display: swap; src: url(/vendor/fonts/plus-jakarta-sans-latin-500-normal.woff2) format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 600; font-display: swap; src: url(/vendor/fonts/plus-jakarta-sans-latin-600-normal.woff2) format("woff2"); }
+@font-face { font-family: "Big Shoulders Display"; font-weight: 800; font-display: swap; src: url(/vendor/fonts/big-shoulders-display-latin-800-normal.woff2) format("woff2"); }
+
+/* ---------- landing theme (light). See DESIGN.md section 11 ---------- */
+:root {
+  --royal: #1E3BFF; --royal-2: #2F5BFF; --azure: #4F8BFF; --sky: #A9CBFF; --mist: #EAF2FF; --paper: #F5F8FF; --white: #FFFFFF;
+  --ink: #0B1640; --ink-2: #3B4A78; --ink-3: #6A78A6; --line: rgba(11,22,64,.10); --line-2: rgba(11,22,64,.16);
+  --pink: #FF4FA3; --pink-2: #FF6FB5; --pink-soft: #FFE3F1;
+  --night: #050B24; --night-2: #0A1640; --night-line: #2B3D86; --warn: #F2B84B;
+  --glass: rgba(255,255,255,.14); --glass-line: rgba(255,255,255,.34);
+  --h: "Outfit", system-ui, sans-serif; --b: "Plus Jakarta Sans", system-ui, sans-serif; --d: "Big Shoulders Display", "Arial Narrow", sans-serif;
+  --r: 22px; --shadow: 0 30px 60px -20px rgba(16,34,120,.35), 0 8px 20px -10px rgba(16,34,120,.2);
+}
+* { box-sizing: border-box; }
+html { background: var(--paper); }
+body { margin: 0; color: var(--ink); font: 400 16px/1.6 var(--b); background: var(--paper); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+h1, h2, h3, h4 { font-family: var(--h); font-weight: 500; letter-spacing: -.02em; margin: 0; line-height: 1.05; text-wrap: balance; }
+p { margin: 0; }
+:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 6px; }
+.wrap { width: min(1200px, calc(100% - 32px)); margin: 0 auto; }
+.num { font-variant-numeric: tabular-nums; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* progress + side dots */
+.progress { position: fixed; left: 0; top: 0; height: 3px; width: 100%; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, var(--royal), var(--pink)); z-index: 60; }
+.dots { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 50; display: flex; flex-direction: column; gap: 10px; }
+.dots a { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--ink-3); display: block; position: relative; transition: transform .2s, background .2s, border-color .2s; }
+.dots a.on { background: var(--pink); border-color: var(--pink); transform: scale(1.3); }
+.dots a span { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); white-space: nowrap; font-size: 12px; background: var(--ink); color: #fff; padding: 3px 8px; border-radius: 6px; opacity: 0; pointer-events: none; transition: opacity .15s; }
+.dots a:hover span, .dots a:focus-visible span { opacity: 1; }
+.dots.dark a { border-color: rgba(255,255,255,.6); }
+
+/* nav */
+.nav { position: fixed; top: 16px; left: 0; right: 0; z-index: 55; pointer-events: none; transition: top .25s; }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.nav .brand, .nav .pills, .nav .cta { pointer-events: auto; }
+.brand { display: flex; align-items: center; gap: 10px; font: 600 21px var(--h); color: #fff; text-decoration: none; letter-spacing: -.01em; transition: color .25s; }
+.brand svg { width: 28px; height: 28px; }
+.pills { display: flex; gap: 2px; padding: 5px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-line); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); transition: background .25s, border-color .25s; }
+.pills a { padding: 8px 16px; border-radius: 999px; text-decoration: none; color: rgba(255,255,255,.88); font-size: 14px; font-weight: 500; transition: background .2s, color .2s; white-space: nowrap; }
+.pills a:hover, .pills a.on { background: rgba(255,255,255,.18); color: #fff; }
+.nav.solid { top: 10px; }
+.nav.light .pills { background: rgba(255,255,255,.78); border-color: var(--line-2); box-shadow: 0 10px 30px -15px rgba(16,34,120,.35); }
+.nav.light .pills a { color: var(--ink-2); }
+.nav.light .pills a:hover, .nav.light .pills a.on { background: var(--mist); color: var(--ink); }
+.nav.light .brand { color: var(--ink); }
+.nav.light .btn.glass { color: var(--ink); background: rgba(255,255,255,.78); border-color: var(--line-2); }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 24px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; cursor: pointer; border: 1px solid transparent; white-space: nowrap; transition: transform .2s, box-shadow .2s, background .2s; will-change: transform; }
+.btn.pink { color: #fff; background: linear-gradient(180deg, var(--pink-2), var(--pink)); box-shadow: 0 12px 30px -10px rgba(255,79,163,.7), inset 0 1px 0 rgba(255,255,255,.4); }
+.btn.pink:hover { box-shadow: 0 16px 40px -10px rgba(255,79,163,.85), inset 0 1px 0 rgba(255,255,255,.4); }
+.btn.glass { color: #fff; background: var(--glass); border-color: var(--glass-line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.btn.glass:hover { background: rgba(255,255,255,.24); }
+.btn.ink { color: #fff; background: var(--ink); }
+.btn.line { color: var(--ink); border-color: var(--line-2); background: #fff; }
+.btn.line:hover { border-color: var(--ink-3); }
+.btn.small { min-height: 38px; padding: 0 16px; font-size: 14px; }
+
+/* ---------- hero ---------- */
+.hero { position: relative; min-height: 100vh; min-height: 100svh; padding: 130px 0 0; color: #fff; overflow: hidden;
+  background: linear-gradient(180deg, #1630E8 0%, var(--royal) 12%, var(--royal-2) 34%, var(--azure) 58%, var(--sky) 78%, var(--mist) 92%, var(--paper) 100%); }
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero .inner { position: relative; text-align: center; z-index: 2; }
+.tags { display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; font-size: 14px; color: rgba(255,255,255,.88); }
+.tags span::before { content: "→ "; opacity: .8; }
+.hero h1 { font-weight: 300; font-size: clamp(42px, 7.2vw, 96px); letter-spacing: -.035em; line-height: 1.0; margin: 26px auto 0; max-width: 15ch; position: relative; }
+.hero h1 .w { display: inline-block; opacity: 0; transform: translateY(26px); filter: blur(6px); transition: opacity .7s, transform .7s cubic-bezier(.2,.8,.2,1), filter .7s; }
+.hero h1.in .w { opacity: 1; transform: none; filter: none; }
+.hero h1 em { font-style: normal; background: linear-gradient(180deg, #fff 30%, #D7E5FF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.badge { position: absolute; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; box-shadow: 0 14px 30px -10px rgba(0,0,0,.35); animation: bob 5s ease-in-out infinite; }
+.badge svg { width: 26px; height: 26px; }
+.badge.lock { right: -18px; top: -10px; background: linear-gradient(180deg, var(--pink-2), var(--pink)); }
+.badge.star { left: -30px; bottom: -6px; background: var(--glass); border: 1px solid var(--glass-line); backdrop-filter: blur(10px); animation-delay: -2.5s; }
+@keyframes bob { 50% { transform: translateY(-10px); } }
+.hero .lead { margin: 26px auto 0; max-width: 56ch; font-size: 18px; color: rgba(255,255,255,.92); }
+.hero .ctas { display: flex; gap: 14px; justify-content: center; margin-top: 34px; flex-wrap: wrap; }
+.cards { position: relative; z-index: 3; height: 380px; margin-top: 56px; perspective: 1400px; }
+.fcard { position: absolute; left: 50%; top: 0; background: #fff; color: var(--ink); border-radius: var(--r); box-shadow: var(--shadow); padding: 20px 22px; text-align: left; transform-style: preserve-3d; will-change: transform; transition: box-shadow .3s; }
+.fcard h4 { font: 600 16px var(--h); display: flex; align-items: center; gap: 8px; }
+.fcard h4 i { width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; background: var(--mist); color: var(--royal); font-style: normal; font-size: 12px; }
+.fcard .sub { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.fcard.a { width: 330px; margin-left: -520px; top: 34px; }
+.fcard.c { width: 330px; margin-left: 190px; top: 34px; }
+.fcard.b { width: 360px; margin-left: -180px; top: 0; z-index: 2; color: #fff; background: linear-gradient(180deg, #FF77BF 0%, var(--pink) 60%, #F23A93 100%); box-shadow: 0 40px 70px -24px rgba(255,79,163,.75); }
+.fcard.b .sub { color: rgba(255,255,255,.85); }
+.fcard.b h4 i { background: rgba(255,255,255,.25); color: #fff; }
+.srow { display: grid; grid-template-columns: 96px 1fr auto; gap: 10px; align-items: center; font-size: 12px; margin-top: 10px; color: var(--ink-2); }
+.srow .bars { height: 10px; border-radius: 6px; background: var(--mist); overflow: hidden; position: relative; }
+.srow .bars span { position: absolute; inset: 0 auto 0 0; border-radius: 6px; background: linear-gradient(90deg, var(--royal-2), var(--azure)); transition: width 1.2s cubic-bezier(.2,.8,.2,1); width: 0; }
+.srow .bars span.lost { background: linear-gradient(90deg, var(--pink-2), var(--pink)); }
+.srow b { font-weight: 600; color: var(--ink); }
+.gauge { position: relative; width: 100%; margin-top: 10px; }
+.gauge svg { width: 100%; height: 150px; overflow: visible; display: block; }
+.gauge .val { text-align: center; font: 800 52px/1 var(--d); letter-spacing: .01em; margin-top: 6px; }
+.gauge .cap { text-align: center; font-size: 12px; color: rgba(255,255,255,.9); margin-top: 4px; }
+.spark { width: 100%; height: 120px; margin-top: 10px; }
+.legend-s { display: flex; gap: 12px; font-size: 11px; color: var(--ink-3); margin-top: 4px; }
+.legend-s i { display: inline-block; width: 10px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 5px; }
+
+/* ticker */
+.ticker { position: relative; z-index: 4; background: var(--ink); color: #fff; overflow: hidden; border-top: 1px solid rgba(255,255,255,.1); }
+.ticker .lab { position: absolute; left: 0; top: 0; bottom: 0; z-index: 2; display: flex; align-items: center; gap: 8px; padding: 0 18px; background: var(--ink); font-size: 12px; font-weight: 600; color: var(--pink-2); box-shadow: 14px 0 20px var(--ink); }
+.ticker .lab::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--pink); }
+.ticker .track { display: flex; gap: 46px; white-space: nowrap; padding: 13px 0; width: max-content; animation: marquee 70s linear infinite; font-size: 13px; color: rgba(255,255,255,.8); }
+.ticker .track b { color: #fff; font-weight: 600; margin-right: 6px; font-variant-numeric: tabular-nums; }
+.ticker .track .lost { color: var(--pink-2); }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* sections */
+.sec { padding: 130px 0; position: relative; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--royal); background: var(--mist); padding: 6px 12px; border-radius: 999px; }
+.eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.sec h2 { font-size: clamp(36px, 5vw, 64px); font-weight: 400; margin-top: 18px; max-width: 18ch; letter-spacing: -.03em; }
+.sec h2 em { font-style: normal; color: var(--royal); }
+.sec .intro { margin-top: 18px; font-size: 18px; color: var(--ink-2); max-width: 60ch; }
+.rv { opacity: 0; transform: translateY(24px); transition: opacity .8s, transform .8s cubic-bezier(.2,.8,.2,1); }
+.rv.in { opacity: 1; transform: none; }
+
+/* zoom section */
+.zoom { height: 460vh; background: var(--night); color: #fff; position: relative; }
+.zoom .stick { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; place-items: center; }
+.zoom .bgglow { position: absolute; inset: -20%; background: radial-gradient(50% 40% at 50% 60%, rgba(47,91,255,.45), transparent 70%); pointer-events: none; }
+.zoom .head { position: absolute; top: 12vh; left: 0; right: 0; text-align: center; transition: opacity .3s; z-index: 3; }
+.zoom .head h2 { font-size: clamp(32px, 4.6vw, 58px); font-weight: 300; margin: 14px auto 0; max-width: 20ch; }
+.zoom .head .eyebrow { background: rgba(255,255,255,.1); color: #fff; }
+.screen { position: relative; width: min(1200px, 92vw); aspect-ratio: 16 / 9; border-radius: 26px; overflow: hidden; transform-origin: 50% 50%; will-change: transform;
+  box-shadow: 0 60px 120px -40px rgba(47,91,255,.6), 0 0 0 1px rgba(255,255,255,.12); }
+.screen .pan { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+.screen img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.screen .frame { position: absolute; inset: 0; opacity: 0; }
+.screen .frame.on { opacity: 1; }
+.zlines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: visible; }
+.zlines line { stroke: #fff; stroke-width: 1.5; stroke-dasharray: 4 4; opacity: 0; transition: opacity .25s; }
+.zlines line.on { opacity: .9; }
+#zHot { z-index: 5; }
+.zstack { display: grid; gap: 28px; width: min(1100px, 92vw); margin: 0 auto; padding: 0 0 80px; }
+.zstack figure { margin: 0; }
+.zstack img { width: 100%; height: auto; border-radius: 14px; display: block; }
+.zstack figcaption { margin-top: 12px; color: rgba(255,255,255,.86); font-size: 15px; }
+.zstack figcaption b { display: block; color: #fff; font: 600 20px var(--h); }
+.screen .veil { position: absolute; inset: 0; background: rgba(5,11,36,.0); transition: background .3s; }
+.hot { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; opacity: 0; transform: scale(.4); transition: opacity .35s, transform .35s; }
+.hot::before, .hot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--pink-2); }
+.hot::after { animation: ping 1.6s ease-out infinite; }
+.hot.on { opacity: 1; transform: none; }
+.hot.blue::before, .hot.blue::after { border-color: #fff; }
+@keyframes ping { to { transform: scale(2.6); opacity: 0; } }
+.callout { position: absolute; z-index: 4; max-width: 330px; padding: 16px 18px; border-radius: 16px; background: rgba(255,255,255,.96); color: var(--ink); box-shadow: var(--shadow); opacity: 0; transform: translateY(14px); transition: opacity .4s, transform .4s; pointer-events: none; }
+.callout.on { opacity: 1; transform: none; }
+.callout b { display: block; font: 600 20px var(--h); letter-spacing: -.01em; }
+.callout span { display: block; font-size: 14px; color: var(--ink-2); margin-top: 4px; }
+.callout .k { font: 800 34px/1 var(--d); color: var(--pink); }
+.steps-dots { position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 5; }
+.steps-dots i { width: 28px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.22); overflow: hidden; position: relative; }
+.steps-dots i span { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; transform: scaleX(0); }
+.xray { position: absolute; z-index: 6; right: 4vw; top: 50%; width: min(420px, 90vw); transform: translate(30px, -50%); opacity: 0; transition: opacity .4s, transform .4s; pointer-events: none;
+  background: rgba(10,22,64,.88); border: 1px solid rgba(255,255,255,.16); border-radius: 22px; padding: 22px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.xray.on { opacity: 1; transform: translate(0, -50%); pointer-events: auto; }
+.xray .tagx { font-size: 12px; color: var(--pink-2); font-weight: 600; }
+.xray h3 { font-size: 28px; font-weight: 500; margin-top: 6px; }
+.xray .sw { color: rgba(255,255,255,.7); font-size: 14px; margin-top: 4px; }
+.xray table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 13px; }
+.xray th, .xray td { text-align: left; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.12); }
+.xray th { color: rgba(255,255,255,.6); font-weight: 500; }
+.xray td.n, .xray th.n { text-align: right; font-variant-numeric: tabular-nums; }
+.kevtag { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: rgba(242,184,75,.18); color: var(--warn); }
+.xray .meta { margin-top: 14px; font-size: 13px; color: rgba(255,255,255,.75); }
+.xray .meta b { color: #fff; font-weight: 600; }
+
+/* counters + compare */
+.counters { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin-top: 56px; }
+.counter { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 20px; }
+.counter b { display: block; font: 800 46px/1 var(--d); color: var(--ink); }
+.counter span { display: block; font-size: 13px; color: var(--ink-3); margin-top: 8px; }
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 28px; }
+.cmp { border-radius: var(--r); padding: 28px; background: #fff; border: 1px solid var(--line); position: relative; overflow: hidden; }
+.cmp.us { background: linear-gradient(160deg, var(--royal) 0%, var(--royal-2) 50%, var(--azure) 100%); color: #fff; border: 0; box-shadow: var(--shadow); }
+.cmp h3 { font-size: 24px; }
+.cmp p { margin-top: 10px; color: var(--ink-2); }
+.cmp.us p { color: rgba(255,255,255,.9); }
+.cmp .big { font: 800 64px/1 var(--d); margin-top: 18px; }
+.cmp .big small { font: 500 15px var(--b); margin-left: 8px; opacity: .8; }
+.meter { height: 10px; border-radius: 6px; background: var(--mist); margin-top: 12px; overflow: hidden; }
+.cmp.us .meter { background: rgba(255,255,255,.22); }
+.meter span { display: block; height: 100%; width: 0; border-radius: 6px; background: var(--ink-3); transition: width 1.4s cubic-bezier(.2,.8,.2,1); }
+.cmp.us .meter span { background: #fff; }
+.footnote { margin-top: 12px; font-size: 12px; color: var(--ink-3); }
+
+/* pipeline */
+.pipe { position: relative; margin-top: 70px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; }
+.pipe .beam { position: absolute; left: 6%; right: 6%; top: 34px; height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.pipe .beam span { position: absolute; inset: 0; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, var(--royal), var(--pink)); }
+.stage { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 22px 20px; transition: transform .4s, box-shadow .4s, border-color .4s; }
+.stage .n { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font: 600 16px var(--h); background: var(--mist); color: var(--royal); margin-bottom: 16px; transition: background .4s, color .4s; }
+.stage h3 { font-size: 24px; }
+.stage p { margin-top: 8px; font-size: 14px; color: var(--ink-2); }
+.stage code { display: block; margin-top: 12px; font: 12px ui-monospace, Consolas, monospace; color: var(--ink-3); }
+.stage.on { transform: translateY(-8px); box-shadow: var(--shadow); border-color: transparent; }
+.stage.on .n { background: linear-gradient(180deg, var(--pink-2), var(--pink)); color: #fff; }
+
+/* bento */
+.bento { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 230px; gap: 16px; margin-top: 56px; }
+.tile { position: relative; overflow: hidden; border-radius: var(--r); background: #fff; border: 1px solid var(--line); padding: 22px; text-decoration: none; display: flex; flex-direction: column; transition: transform .3s, box-shadow .3s; isolation: isolate; }
+.tile::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(79,139,255,.16), transparent 60%); }
+.tile:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.tile:hover::before { opacity: 1; }
+.tile h3 { font-size: 21px; font-weight: 500; }
+.tile p { font-size: 13.5px; color: var(--ink-2); margin-top: 6px; max-width: 38ch; }
+.tile .go { margin-top: auto; font-size: 13px; font-weight: 600; color: var(--royal); }
+.tile .viz { flex: 1; position: relative; min-height: 74px; margin: 10px 0; overflow: hidden; }
+.tile .viz svg.mini { width: 100%; height: 100%; min-height: 74px; display: block; overflow: visible; }
+.barnote { margin: 8px 0 0; font-size: 11px; color: var(--ink-3, #6A78A6); }
+.tile.w2 { grid-column: span 2; }
+.tile.h2 { grid-row: span 2; }
+.tile.dark { background: var(--ink); color: #fff; border-color: transparent; }
+.tile.dark p { color: rgba(255,255,255,.75); }
+.tile.dark .go { color: var(--pink-2); }
+.tile.dark::before { background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(255,79,163,.22), transparent 60%); }
+.tile.blue { background: linear-gradient(160deg, var(--royal), var(--azure)); color: #fff; border-color: transparent; }
+.tile.blue p { color: rgba(255,255,255,.88); }
+.tile.blue .go { color: #fff; }
+.mini { width: 100%; height: 100%; }
+.codebox { display: flex; gap: 6px; margin-top: 10px; }
+.codebox span { width: 34px; height: 44px; border-radius: 10px; border: 1px solid var(--line-2); display: grid; place-items: center; font: 600 22px var(--h); background: var(--paper); }
+.ring { width: 100%; height: 100%; max-width: 92px; max-height: 92px; }
+
+/* demo */
+.demo { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 20px; margin-top: 50px; }
+.mapcard { position: relative; background: #fff; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; min-height: 520px; box-shadow: 0 30px 60px -40px rgba(16,34,120,.35); }
+.mapcard svg { display: block; width: 100%; height: 100%; position: absolute; inset: 0; }
+.mapcard .after { clip-path: inset(0 0 0 var(--cut, 100%)); }
+.divider { position: absolute; top: 0; bottom: 0; width: 0; left: var(--cutpx, 100%); z-index: 5; display: none; }
+.divider::before { content: ""; position: absolute; top: 0; bottom: 0; left: -1px; width: 2px; background: var(--ink); }
+.divider button { position: absolute; top: 50%; left: 0; transform: translate(-50%, -50%); width: 46px; height: 46px; border-radius: 50%; border: 0; background: var(--ink); color: #fff; cursor: ew-resize; box-shadow: var(--shadow); font-size: 16px; }
+.mapcard.split .divider { display: block; }
+.maplab { position: absolute; top: 14px; z-index: 4; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,.9); border: 1px solid var(--line); display: none; }
+.mapcard.split .maplab { display: block; }
+.maplab.l { left: 14px; } .maplab.r { right: 14px; }
+.maphint { position: absolute; left: 16px; bottom: 14px; z-index: 4; font-size: 12px; color: var(--ink-3); background: rgba(255,255,255,.9); padding: 5px 10px; border-radius: 999px; }
+.panel { background: #fff; border: 1px solid var(--line); border-radius: var(--r); padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.panel .clock { font: 800 64px/1 var(--d); color: var(--ink); }
+.panel .clock.lost { color: var(--pink); }
+.svcs { display: grid; gap: 8px; }
+.svc { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; padding: 9px 12px; border-radius: 12px; background: var(--paper); }
+.svc.lost { background: var(--pink-soft); color: #B0125F; }
+.harms { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.harms div { border-radius: 14px; padding: 12px 14px; background: var(--paper); }
+.harms b { display: block; font: 800 34px/1 var(--d); }
+.harms span { font-size: 12px; color: var(--ink-3); }
+.harms .after b { color: var(--royal); }
+.dplayer { display: flex; align-items: center; gap: 12px; }
+.dplayer input { flex: 1; accent-color: var(--pink); }
+.pbtn { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--ink); color: #fff; display: grid; place-items: center; cursor: pointer; flex: none; }
+.pbtn svg { width: 14px; height: 14px; fill: currentColor; }
+.pbtn:disabled { opacity: .35; cursor: default; }
+.dstatus { margin: 0; font-size: 13px; color: var(--ink-3); min-height: 18px; }
+.dstatus.err { color: #B0125F; }
+.svc.backup { background: #FFF4DE; color: #8A5A00; }
+.svc .st { font-weight: 600; white-space: nowrap; }
+.svc .st small { font-weight: 400; color: var(--ink-3); margin-left: 6px; }
+.devents { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 12.5px; color: var(--ink-2); max-height: 112px; overflow: hidden; }
+.devents li { display: grid; grid-template-columns: 62px 1fr; gap: 8px; }
+.devents li b { font-variant-numeric: tabular-nums; color: var(--ink-3); font-weight: 500; }
+.devents li.service_down { color: #B0125F; }
+.mbusy { position: absolute; inset: 0; z-index: 6; display: grid; place-content: center; justify-items: center; gap: 10px; background: rgba(255,255,255,.72); font-size: 14px; color: var(--ink-2); text-align: center; padding: 20px; }
+.mbusy[hidden] { display: none; }
+.mbusy .spin { width: 28px; height: 28px; border-radius: 50%; border: 3px solid rgba(11,22,64,.12); border-top-color: var(--pink); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.mapcard .node:focus-visible { outline: none; }
+.mapcard .node:focus-visible .ring { stroke: #0B1640; stroke-width: 2.5; }
+
+/* water */
+.water { background: linear-gradient(180deg, var(--paper) 0%, #DCE9FF 30%, var(--royal-2) 100%); }
+.wgrid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 20px; margin-top: 50px; }
+.wchart { background: #fff; border-radius: var(--r); padding: 22px; box-shadow: var(--shadow); }
+.wchart .hb { display: inline-flex; gap: 6px; align-items: center; font-size: 12px; font-weight: 600; color: #8A5A00; background: #FFF4DC; border-radius: 999px; padding: 4px 10px; }
+.wchart svg { width: 100%; height: 280px; display: block; margin-top: 12px; }
+.wstats { display: grid; gap: 14px; }
+.wstat { background: rgba(255,255,255,.92); border-radius: 18px; padding: 18px 20px; }
+.wstat b { font: 800 44px/1 var(--d); }
+.wstat span { display: block; font-size: 13px; color: var(--ink-2); margin-top: 6px; }
+.layers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+.layer { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.3); color: #fff; border-radius: 18px; padding: 18px; }
+.layer b { font: 600 18px var(--h); }
+.layer p { font-size: 13.5px; color: rgba(255,255,255,.88); margin-top: 6px; }
+
+/* why */
+.toggle { display: inline-flex; padding: 5px; border-radius: 999px; background: #fff; border: 1px solid var(--line-2); margin-top: 30px; }
+.toggle button { border: 0; background: none; padding: 10px 20px; border-radius: 999px; cursor: pointer; font-weight: 600; font-size: 14px; color: var(--ink-2); transition: background .2s, color .2s; }
+.toggle button.on { background: var(--ink); color: #fff; }
+.whylist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 26px; }
+.why { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px; display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: start; }
+.why .ic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--mist); color: var(--royal); font-weight: 700; transition: background .3s, color .3s; }
+.why b { font: 600 16px var(--h); display: block; }
+.why p { font-size: 14px; color: var(--ink-2); margin-top: 4px; transition: opacity .25s; }
+.why.us .ic { background: linear-gradient(180deg, var(--pink-2), var(--pink)); color: #fff; }
+
+/* sectors marquee */
+.marq { overflow: hidden; margin-top: 46px; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.marq .row { display: flex; gap: 16px; width: max-content; animation: marquee 50s linear infinite; padding: 6px 0; }
+.marq:hover .row { animation-play-state: paused; }
+.sector { width: 270px; background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 20px; flex: none; }
+.sector svg { width: 34px; height: 34px; stroke: var(--royal); fill: none; stroke-width: 1.6; }
+.sector b { display: block; font: 500 20px var(--h); margin-top: 12px; }
+.sector p { font-size: 13px; color: var(--ink-2); margin-top: 4px; }
+.sector .cnt { display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--mist); color: var(--royal); }
+.sector .cnt.no { background: var(--paper); color: var(--ink-3); }
+
+/* architecture */
+.arch { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 38px 32px; margin-top: 56px; }
+.abox { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 18px; transition: border-color .3s, box-shadow .3s, transform .3s; }
+.abox b { display: block; font: 500 18px var(--h); }
+.abox span { display: block; font-size: 13px; color: var(--ink-2); margin-top: 4px; }
+.abox code { display: block; margin-top: 10px; font: 12px ui-monospace, Consolas, monospace; color: var(--ink-3); }
+.abox:not(:nth-child(4n))::after { content: ""; position: absolute; right: -32px; top: 50%; width: 32px; height: 2px; background: var(--line-2); }
+.abox.lit { border-color: var(--royal); box-shadow: 0 16px 30px -18px rgba(30,59,255,.5); transform: translateY(-3px); }
+.abox.lit:not(:nth-child(4n))::after { background: linear-gradient(90deg, var(--royal), var(--pink)); }
+
+/* faq */
+.faq { margin-top: 40px; display: grid; gap: 10px; max-width: 860px; }
+.faq details { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 4px 20px; transition: box-shadow .2s; }
+.faq details[open] { box-shadow: 0 20px 40px -30px rgba(16,34,120,.4); }
+.faq summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 16px; align-items: center; padding: 16px 0; font: 500 18px var(--h); }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-size: 24px; color: var(--royal); transition: transform .2s; }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq details p { padding: 0 0 18px; color: var(--ink-2); max-width: 70ch; }
+
+/* team */
+.team { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 46px; }
+.person { background: #fff; border: 1px solid var(--line); border-radius: var(--r); padding: 28px; display: flex; gap: 18px; align-items: flex-start; }
+.avatar { width: 64px; height: 64px; border-radius: 20px; flex: none; display: grid; place-items: center; font: 600 22px var(--h); color: #fff; background: linear-gradient(160deg, var(--royal), var(--azure)); }
+.person:nth-child(2) .avatar { background: linear-gradient(160deg, var(--pink-2), var(--pink)); }
+.person h3 { font-size: 26px; }
+.person p { font-size: 14px; color: var(--ink-2); margin-top: 6px; }
+.facts { margin-top: 18px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.facts div { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; font-size: 14px; color: var(--ink-2); }
+.facts b { display: block; color: var(--ink); font: 500 15px var(--h); margin-bottom: 4px; }
+
+/* closing */
+.closing { margin: 0 16px 16px; border-radius: 34px; overflow: hidden; position: relative; color: #fff; text-align: center; padding: 130px 20px;
+  background: linear-gradient(180deg, var(--royal) 0%, var(--royal-2) 50%, var(--azure) 100%); }
+.closing canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .7; }
+.closing h2 { position: relative; font-size: clamp(38px, 6vw, 78px); font-weight: 300; letter-spacing: -.035em; max-width: 16ch; margin: 0 auto; }
+.closing .ctas { position: relative; display: flex; gap: 14px; justify-content: center; margin-top: 36px; flex-wrap: wrap; }
+footer { padding: 46px 0 40px; color: var(--ink-2); font-size: 14px; }
+footer .cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 28px; }
+footer h4 { font: 600 15px var(--h); color: var(--ink); margin-bottom: 10px; }
+footer ul { list-style: none; margin: 0; padding: 0; }
+footer li { margin: 7px 0; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--royal); }
+footer .brand { color: var(--ink); }
+footer .base { margin-top: 36px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--ink-3); }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: #fff; border-radius: 12px; padding: 12px 18px; z-index: 80; display: none; max-width: calc(100% - 32px); font-size: 14px; }
+
+/* responsive */
+@media (max-width: 1180px) {
+  .pills a.opt { display: none; }
+  .fcard.a { margin-left: -470px; width: 300px; } .fcard.c { margin-left: 170px; width: 300px; } .fcard.b { margin-left: -165px; width: 330px; }
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .arch { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .abox::after { display: none; }
+  .counters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 980px) {
+  .pills { display: none; }
+  .dots { display: none; }
+  .fcard.a, .fcard.c { display: none; }
+  .fcard.b { margin-left: -170px; width: 340px; }
+  .pipe { grid-template-columns: 1fr 1fr; } .pipe .beam { display: none; }
+  .demo, .wgrid { grid-template-columns: 1fr; }
+  .compare { grid-template-columns: 1fr; }
+  .whylist { grid-template-columns: 1fr; }
+  .xray { right: 50%; transform: translate(50%, 20px); top: auto; bottom: 4vh; }
+  .xray.on { transform: translate(50%, 0); }
+  footer .cols { grid-template-columns: 1fr 1fr; }
+  .callout { max-width: 260px; }
+}
+@media (max-width: 640px) {
+  .hero { padding-top: 104px; }
+  .tags { gap: 10px; font-size: 12px; }
+  .badge { display: none; }
+  .hero .lead { font-size: 16px; }
+  .cards { height: 330px; margin-top: 40px; }
+  .fcard.b { margin-left: -150px; width: 300px; }
+  .sec { padding: 90px 0; }
+  .bento { grid-template-columns: 1fr; grid-auto-rows: minmax(220px, auto); }
+  .tile.w2 { grid-column: auto; } .tile.h2 { grid-row: auto; }
+  .pipe, .layers, .team, .facts { grid-template-columns: 1fr; }
+  .counters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .counter b { font-size: 38px; }
+  .arch { grid-template-columns: 1fr; }
+  .mapcard { min-height: 380px; }
+  .zoom { height: 380vh; }
+  .callout { left: 16px !important; right: 16px !important; top: auto !important; bottom: 12vh; max-width: none; }
+  .xray { width: calc(100vw - 32px); }
+  .screen { width: 170vw; justify-self: center; }
+  .nav .cta .btn { padding: 0 14px; }
+  footer .cols { grid-template-columns: 1fr; }
+  .closing { padding: 90px 18px; border-radius: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .rv { opacity: 1; transform: none; }
+  .hero h1 .w { opacity: 1; transform: none; filter: none; }
+  .zoom { height: auto; }
+  .zoom .stick { display: none; }
+  .zoom .zstack[hidden] { display: grid; }
+  .zoom .zstack { padding-top: 110px; }
+  .zoom .head { position: relative; top: 0; margin-bottom: 30px; }
+  .screen { margin: 0 auto; }
+  .callout, .xray { position: relative; opacity: 1; transform: none; left: auto !important; top: auto !important; right: auto; margin: 16px auto 0; max-width: 720px; }
+  .hot { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Cascade home">
+      <svg viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="url(#lg)"/><path d="M7 18.5 12 13l3.5 3.5L21 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="9" r="2.2" fill="#fff"/><defs><linearGradient id="lg" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#FF6FB5"/><stop offset="1" stop-color="#FF4FA3"/></linearGradient></defs></svg>
+      Cascade
+    </a>
+    <nav class="pills" aria-label="Sections">
+      <a href="#city">Twin</a><a href="#problem">Problem</a><a href="#how" class="opt">How it works</a><a href="#capabilities">Capabilities</a><a href="#demo">Try it</a><a href="#water" class="opt">Water ML</a><a href="#faq">FAQ</a>
+    </nav>
+    <div class="cta"><a class="btn glass small mag" href="/app">Launch platform</a></div>
+  </div>
+</header>
+<nav class="dots" id="dots" aria-label="Page sections"></nav>
+
+<main>
+<!-- ======================= HERO ======================= -->
+<section class="hero" id="top" data-name="Top" data-dark>
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="wrap inner">
+    <div class="tags"><span>Attack simulation</span><span>Water anomaly ML</span><span>Budget defence</span></div>
+    <h1 id="headline"><span class="badge lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="badge star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg></span>See the cyberattack <em>before the city feels it</em></h1>
+    <p class="lead">A time-aware cyber digital twin for critical infrastructure. It simulates how an attack spreads through power, water, hospitals and traffic, predicts which services fail and when, and ranks the fixes that buy the most time.</p>
+    <div class="ctas"><a class="btn pink mag" href="/app">Launch platform</a><a class="btn glass mag" href="#city">Watch the attack</a></div>
+    <div class="cards" id="cards" aria-label="Live numbers from the simulation">
+      <div class="fcard a" data-depth="1.2">
+        <h4><i>≡</i>Services under the worst attack</h4><p class="sub" id="cA">Simulated city, worst way in</p>
+        <div id="svcBars"></div><p class="barnote">Bar length = people who depend on the service</p>
+      </div>
+      <div class="fcard b" data-depth="2">
+        <h4><i>⏱</i>Time to first service lost</h4><p class="sub" id="cB">Worst single attack</p>
+        <div class="gauge"><svg viewBox="0 0 300 170" id="gauge" aria-hidden="true"></svg><div class="val num" id="gVal">T+--:--</div><div class="cap" id="gCap"></div></div>
+      </div>
+      <div class="fcard c" data-depth="1.2">
+        <h4><i>~</i>Water anomaly score</h4><p class="sub">Historical replay, BATADAL attack 6</p>
+        <svg class="spark" id="spark" viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="legend-s"><span><i style="background:#2F5BFF"></i>ML score</span><span><i style="background:#FF4FA3"></i>Alert threshold</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-label="Replay of the simulated worst attack"><span class="lab">Replay, simulated</span><div class="track" id="track"></div></div>
+
+<!-- ======================= ZOOM INTO THE CITY ======================= -->
+<section class="zoom" id="city" data-name="The twin" data-dark>
+  <div class="stick" id="stick">
+    <div class="bgglow" aria-hidden="true"></div>
+    <div class="head" id="zHead"><span class="eyebrow">The digital twin</span><h2>Scroll into the city and watch one attack unfold</h2></div>
+    <div class="screen" id="screen">
+      <div class="pan" id="pan">
+        <!-- five real frames captured from the twin by tools/capture_twin_frames.js; crossfaded per step -->
+        <img class="frame on" data-f="0" src="/static/img/twin-step-0.jpg" width="1600" height="900" alt="The 3D twin before the attack: six sector pads, every service running">
+        <img class="frame" data-f="1" src="/static/img/twin-step-1.jpg" width="1600" height="900" alt="The attack comes in through one building: a pink beam at T+00:00" loading="lazy">
+        <img class="frame" data-f="2" src="/static/img/twin-step-2.jpg" width="1600" height="900" alt="The attack spreads link by link: compromised buildings turn pink" loading="lazy">
+        <img class="frame" data-f="3" src="/static/img/twin-step-3.jpg" width="1600" height="900" alt="The first essential service is lost: the clock turns pink" loading="lazy">
+        <img class="frame" data-f="4" src="/static/img/twin-step-4.jpg" width="1600" height="900" alt="The same moment with the recommended fixes applied: no service lost" loading="lazy">
+        <div class="veil" id="veil"></div>
+      </div>
+    </div>
+    <svg class="zlines" id="zLines" aria-hidden="true"><line id="zLine" x1="0" y1="0" x2="0" y2="0"/></svg>
+    <span class="hot" id="zHot" aria-hidden="true"></span>
+    <div class="callout" data-step="0"><span class="k num" id="zSys">33</span><b>systems, six sectors, one city</b><span>Power, water, hospitals, telecom, traffic and city services, joined by the same networks attackers use.</span></div>
+    <div class="callout" data-step="1"><b>The attack gets in through one door</b><span id="zEntry">Here, the utility's remote-access VPN: internet-facing, known-exploited CVEs, no MFA.</span></div>
+    <div class="callout" data-step="2"><b>It spreads link by link, against a clock</b><span id="zSpread">Every crossing takes minutes. The clock shows when each system falls and when anyone would notice.</span></div>
+    <div class="callout" data-step="3"><span class="k num" id="zLost">T+01:14</span><b>Essential services fail</b><span id="zLostText">Backup buffers run out; people lose power, water, traffic signals.</span></div>
+    <div class="callout" data-step="4"><b>Fix the right thing first</b><span id="zFix">Every fix is re-simulated. The optimiser picks the bundle that removes the most harm for your budget, against an attacker who changes plan.</span></div>
+    <aside class="xray" id="xray" aria-label="X-ray of the way in"></aside>
+    <div class="steps-dots" aria-hidden="true"><i><span></span></i><i><span></span></i><i><span></span></i><i><span></span></i><i><span></span></i><i><span></span></i></div>
+  </div>
+  <div class="zstack" id="zStack" hidden></div>
+</section>
+
+<!-- ======================= PROBLEM ======================= -->
+<section class="sec" id="problem" data-name="Problem">
+  <div class="wrap">
+    <div class="rv"><span class="eyebrow">The problem</span><h2>A severity score is <em>not a consequence</em></h2>
+      <p class="intro">Scanners rank bugs by CVSS. CVSS says how bad a bug is anywhere. It does not know which hospital loses power, how many people lose water, or how many minutes the defenders have.</p></div>
+    <div class="counters rv" id="counters">
+      <div class="counter"><b class="num" data-count="assets">0</b><span>systems modelled</span></div>
+      <div class="counter"><b class="num" data-count="sectors">0</b><span>sectors</span></div>
+      <div class="counter"><b class="num" data-count="links">0</b><span>connections</span></div>
+      <div class="counter"><b class="num" data-count="cves">0</b><span>real CVEs mapped</span></div>
+      <div class="counter"><b class="num" data-count="kev">0</b><span>known exploited (KEV)</span></div>
+      <div class="counter"><b class="num" data-count="people">0</b><span>people depend on its services</span></div>
+    </div>
+    <div class="compare rv" id="compare">
+      <div class="cmp"><h3>Patching by CVSS score</h3><p id="cmpA">Fix the most severe bugs first.</p>
+        <div class="big num" id="cmpAv">–<small>worst-case harm left</small></div><div class="meter"><span id="cmpAm"></span></div></div>
+      <div class="cmp us"><h3>Ranking by simulated harm</h3><p id="cmpB">Re-run the attack after every candidate fix; pick the one that removes the most lost service.</p>
+        <div class="big num" id="cmpBv">–<small>worst-case harm left</small></div><div class="meter"><span id="cmpBm"></span></div></div>
+    </div>
+    <p class="footnote rv" id="cmpNote">Computed by the backend on the loaded dataset. Harm = people × minutes of lost service in 6 hours.</p>
+  </div>
+</section>
+
+<!-- ======================= HOW IT WORKS ======================= -->
+<section class="sec" id="how" data-name="How it works" style="padding-top:40px">
+  <div class="wrap">
+    <div class="rv"><span class="eyebrow">How it works</span><h2>From a list of bugs to <em>a ranked defence plan</em></h2></div>
+    <div class="pipe" id="pipe">
+      <div class="beam"><span id="beam"></span></div>
+      <div class="stage"><div class="n">01</div><h3>Model</h3><p>Systems, network and vendor links, CVEs and the essential services that depend on them.</p><code>load_graph.py</code></div>
+      <div class="stage"><div class="n">02</div><h3>Inform</h3><p>CVSS, CISA KEV and FIRST EPSS become how fast each system can be broken into.</p><code>risk.py</code></div>
+      <div class="stage"><div class="n">03</div><h3>Simulate</h3><p>One or several attackers move link by link with a clock, until alarms isolate them.</p><code>simulate.py, multi.py</code></div>
+      <div class="stage"><div class="n">04</div><h3>Predict</h3><p>Which services fail, when, and for how many people: harm in people × minutes.</p><code>harm.py</code></div>
+      <div class="stage"><div class="n">05</div><h3>Defend</h3><p>Fixes ranked by harm removed for the staff hours and maintenance windows you have.</p><code>fixes.py, optimize.py</code></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= BENTO ======================= -->
+<section class="sec" id="capabilities" data-name="Capabilities" style="padding-top:40px">
+  <div class="wrap">
+    <div class="rv"><span class="eyebrow">Capabilities</span><h2>Everything an operator needs, <em>in one platform</em></h2></div>
+    <div class="bento rv" id="bento">
+      <a class="tile w2 dark" href="/app#/simulate"><h3>Multi-attacker simulation</h3><p>Several attackers, each with its own way in, start time and path. One can be contained while the other keeps going.</p><div class="viz"><svg class="mini" id="vMulti" aria-hidden="true"></svg></div><span class="go">Open simulation →</span></a>
+      <a class="tile blue" href="/app#/water"><h3>Water anomaly ML</h3><p>Learns normal plant behaviour; flags what is not normal, even attacks never seen before.</p><div class="viz"><svg class="mini" id="vWater" viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"></svg></div><span class="go">Open water monitoring →</span></a>
+      <a class="tile" href="/app#/novel"><h3>Unknown-attack response</h3><p>No CVE needed. Leaves normal, alarm, simulate the consequence, isolate, a human decides.</p><div class="viz"><svg class="mini" id="vNovel" aria-hidden="true"></svg></div><span class="go">Open the pipeline →</span></a>
+      <a class="tile" href="/app#/optimizer"><h3>Fix optimiser</h3><p>Best bundle for your fix count, maintenance windows and staff hours.</p><div class="viz"><svg class="mini" id="vOpt" aria-hidden="true"></svg></div><span class="go">Open optimiser →</span></a>
+      <a class="tile w2" href="/app#/risk"><h3>CVSS-only against Cascade</h3><p>Five fixes chosen five ways, re-simulated after every step. See where a severity list leaves you.</p><div class="viz"><svg class="mini" id="vBase" aria-hidden="true"></svg></div><span class="go">Open risk register →</span></a>
+      <a class="tile" href="/app#/response"><h3>Response plan</h3><p>Every action with a deadline, and which ones fall before anyone would notice.</p><div class="viz" id="vResp" style="font-size:13px"></div><span class="go">Open response →</span></a>
+      <a class="tile" href="/app#/graphs"><h3>Assumption test</h3><p>Every estimate moved 30% down and up. Does the fix order hold?</p><div class="viz" style="display:flex;align-items:center"><b style="font:800 54px/1 var(--d)" id="vSens">18/18</b></div><span class="go">Open graphs →</span></a>
+      <a class="tile" href="/app#/security"><h3>2FA sign-in</h3><p>Password plus authenticator code, recovery codes, encrypted secrets.</p><div class="viz"><div class="codebox" id="vCode"><span>4</span><span>8</span><span>2</span><span>9</span><span>1</span><span>6</span></div></div><span class="go">Open security →</span></a>
+      <a class="tile" href="/app#/inventory"><h3>Asset inventory</h3><p>Every system: software, version, CVEs, monitoring, patch window.</p><div class="viz" id="vInv" style="font-size:12px"></div><span class="go">Open inventory →</span></a>
+      <a class="tile dark" href="/app#/inventory"><h3>Blast radius</h3><p>If this one system is taken over, what falls next, and when?</p><div class="viz" style="display:grid;place-items:center"><svg class="ring" id="vBlast" viewBox="0 0 100 100" aria-hidden="true"></svg></div><span class="go">Open a system →</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= TRY IT ======================= -->
+<section class="sec" id="demo" data-name="Try it" style="padding-top:40px">
+  <div class="wrap">
+    <div class="rv"><span class="eyebrow">Try it</span><h2>Attack the city. <em>Then protect it.</em></h2>
+      <p class="intro">Click any system to start a simulated attack from there. Then press Protect: the backend tries every fix against that exact attack, keeps the best three, and replays both runs on one clock so you can drag the divider to compare. Same engine as the platform; simulated city.</p></div>
+    <div class="demo rv">
+      <div class="mapcard" id="mapcard">
+        <svg id="mapBefore" aria-label="City map. Click a system to attack from it" role="img"></svg>
+        <svg id="mapAfter" class="after" aria-hidden="true"></svg>
+        <span class="maplab l">Before fixes</span><span class="maplab r">After the recommended fixes</span>
+        <div class="divider" id="divider"><button aria-label="Drag to compare before and after" id="divBtn">⇆</button></div>
+        <span class="maphint" id="mapHint">Click a dot to attack from it (or Tab to it and press Enter). Pink rings are ways in from outside.</span>
+        <div class="mbusy" id="mBusy" hidden><span class="spin" aria-hidden="true"></span><span id="mBusyT">Simulating…</span></div>
+      </div>
+      <div class="panel">
+        <div><span class="eyebrow" id="dEntry">Pick a way in</span></div>
+        <div class="clock num" id="dClock">T+00:00</div>
+        <div class="dplayer"><button class="pbtn" id="dPlay" aria-label="Play" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z"/></svg></button>
+          <input type="range" id="dScrub" min="0" max="360" step="1" value="0" aria-label="Replay minute" disabled></div>
+        <p class="dstatus" id="dStatus" role="status" aria-live="polite"></p>
+        <div class="svcs" id="dSvcs"></div>
+        <ol class="devents" id="dEvents" aria-label="What has happened so far"></ol>
+        <div class="harms"><div><b class="num" id="hBefore">–</b><span>harm, no fixes</span></div><div class="after"><b class="num" id="hAfter">–</b><span>harm, with the fixes</span></div></div>
+        <button class="btn pink" id="protect" disabled>Protect with the recommended fixes</button>
+        <p class="footnote" id="dFix" style="margin:0"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= WATER ======================= -->
+<section class="sec water" id="water" data-name="Water ML">
+  <div class="wrap">
+    <div class="rv"><span class="eyebrow">Water anomaly ML</span><h2>An attack nobody has seen before <em>still looks abnormal</em></h2>
+      <p class="intro">Vulnerability feeds only know published weaknesses. Our water model, built by Suryans Padhy, learned how a water network normally behaves. When tanks and pressures stop matching what the pumps imply, it raises an alert.</p></div>
+    <div class="wgrid">
+      <div class="wchart rv"><span class="hb">Historical replay, BATADAL dataset04 (2016). Not live telemetry.</span>
+        <svg id="wLine" style="width:100%;height:280px;display:block" aria-label="Model C anomaly score around documented attack 6" role="img"></svg>
+        <div class="legend-s"><span><i style="background:#2F5BFF"></i>Anomaly score (0-100)</span><span><i style="background:#FF4FA3"></i>Alert threshold (50)</span><span><i style="background:rgba(255,79,163,.25)"></i>Alert hours</span></div></div>
+      <div class="wstats rv">
+        <div class="wstat"><b class="num" id="w1">4/4</b><span>held-out attacks detected (evaluated once)</span></div>
+        <div class="wstat"><b class="num" id="w2">1.37</b><span>false alarms per 7 days</span></div>
+        <div class="wstat"><b class="num" id="w3">0.95</b><span>precision on the held-out test</span></div>
+      </div>
+    </div>
+    <div class="layers rv">
+      <div class="layer"><b>Layer 1: ML (Model C)</b><p>Predicts each tank level and pressure from the last hours and the pump settings. A big miss is unusual. Fast: 0-3 hours.</p></div>
+      <div class="layer"><b>Layer 2: safety rules</b><p>Hard limits, pump-flow consistency, rate of change, frozen sensors. Slower, but raised no false alarm in the replay.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= WHY DIFFERENT ======================= -->
+<section class="sec" id="different" data-name="Why different">
+  <div class="wrap">
+    <div class="rv"><span class="eyebrow">Why it is different</span><h2>Same questions, <em>different answers</em></h2></div>
+    <div class="toggle rv" role="group" aria-label="Compare"><button data-v="them">Typical scanner</button><button data-v="us" class="on">Cascade</button></div>
+    <div class="whylist" id="whylist"></div>
+  </div>
+</section>
+
+<!-- ======================= SECTORS ======================= -->
+<section class="sec" id="sectors" data-name="Sectors" style="padding-top:20px">
+  <div class="wrap"><div class="rv"><span class="eyebrow">Sectors</span><h2>Built for what people <em>depend on</em></h2>
+    <p class="intro">A simulated prototype. The modelled city covers six sectors; the engine works on any dataset that follows the data contract.</p></div></div>
+  <div class="marq" id="marq"><div class="row" id="marqRow"></div></div>
+</section>
+
+<!-- ======================= ARCHITECTURE ======================= -->
+<section class="sec" id="architecture" data-name="Architecture" style="padding-top:40px">
+  <div class="wrap">
+    <div class="rv"><span class="eyebrow">Architecture</span><h2>Eight modules, <em>one laptop, offline</em></h2></div>
+    <div class="arch" id="arch">
+      <div class="abox"><b>Asset and vulnerability data</b><span>Four CSVs. NVD, CISA KEV, FIRST EPSS.</span><code>data_master/</code></div>
+      <div class="abox"><b>Infrastructure graph</b><span>Validated, compiled once.</span><code>load_graph.py</code></div>
+      <div class="abox"><b>Risk engine</b><span>Vulnerability score per system.</span><code>risk.py</code></div>
+      <div class="abox"><b>Attack simulation</b><span>Time-aware spread, detection, several attackers.</span><code>simulate.py, multi.py</code></div>
+      <div class="abox"><b>Service impact</b><span>Service rules, backup buffers, people × minutes.</span><code>harm.py</code></div>
+      <div class="abox"><b>Water anomaly ML</b><span>Model C replay plus a rule layer.</span><code>water.py, ml_water/</code></div>
+      <div class="abox"><b>Fix optimiser</b><span>Ranked fixes, budget bundles, sensitivity.</span><code>optimize.py</code></div>
+      <div class="abox"><b>Platform and twin</b><span>FastAPI, Three.js twin, platform pages.</span><code>api.py, frontend/</code></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FAQ ======================= -->
+<section class="sec" id="faq" data-name="FAQ" style="padding-top:40px">
+  <div class="wrap">
+    <div class="rv"><span class="eyebrow">Questions</span><h2>What judges <em>usually ask</em></h2></div>
+    <div class="faq rv">
+      <details><summary>Is the data real?</summary><p>The city is simulated: its systems, links and services were designed for this project. The vulnerabilities are real: CVEs from NVD matched to real products, with CISA's Known Exploited list and FIRST EPSS scores. The water data is the public BATADAL benchmark, replayed historically.</p></details>
+      <details><summary>Why did you not train your own CVE exploitation model?</summary><p>FIRST EPSS already predicts exploitation from far more data than we could collect. We use EPSS and KEV for that, and spent our machine learning on a question EPSS cannot answer: is the physical process behaving abnormally? Six sector models were built against gates fixed before training. Two passed and are in the platform: water anomaly detection (BATADAL) and electricity attack screening (MSU-ORNL, high precision, about 40% coverage). Healthcare, telecom and transport failed their gates; for IoT no honest test was possible (no session data), so it is shown only as a labelled demonstration benchmark. All six are in the platform's Model evaluation page with every criterion and score.</p></details>
+      <details><summary>How are attack times decided?</summary><p>Each link has a base crossing time, slowed by firewalls and segmentation and sped up by how breakable the target is. These are assumptions, listed in one file, and the platform moves every one of them 30% down and up to check that the fix order still holds.</p></details>
+      <details><summary>How does the failsafe decide?</summary><p>It does not decide alone. An alarm proposes protective actions and waits for a human. Only if nobody answers within the set time does it cut internet and vendor access. Every step, human or automatic, goes into an audit log, and only a human can undo it.</p></details>
+      <details><summary>What if the attacker never touches a monitored system?</summary><p>Then detection is slow (about four hours in the model), and the platform shows exactly that: many response deadlines fall before anyone would notice. That gap is the argument for the monitoring fixes the optimiser recommends.</p></details>
+      <details><summary>Does it scan or attack real systems?</summary><p>No. Everything is an abstract simulation of the modelled city. There is no scanner, no exploit code and no connection to real infrastructure.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= TEAM ======================= -->
+<section class="sec" id="team" data-name="Team" style="padding-top:40px">
+  <div class="wrap">
+    <div class="rv"><span class="eyebrow">Team</span><h2>Built by <em>Dhruv Salunkhe and Suryans Padhy</em></h2></div>
+    <div class="team rv" id="people"></div>
+    <div class="facts rv">
+      <div><b>Problem statement</b><span id="fPS">PS03</span></div>
+      <div><b>Stack</b>Python, FastAPI, pandas, NetworkX, scikit-learn, Three.js, plain JavaScript</div>
+      <div><b>Limits we state</b>Simulated city; assumed spread and detection times; water and electricity ML shown on historical benchmark data, never as live telemetry.</div>
+    </div>
+    <div style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap" class="rv"><a class="btn ink mag" href="#" data-gh>View on GitHub</a><a class="btn line mag" href="/app#/project">Methodology</a></div>
+  </div>
+</section>
+
+<section class="closing" id="end" data-name="Launch" data-dark>
+  <canvas id="field2" aria-hidden="true"></canvas>
+  <h2>Understand the risk before it becomes an incident.</h2>
+  <div class="ctas"><a class="btn pink mag" href="/app">Launch platform</a><a class="btn glass mag" href="#" data-gh>View on GitHub</a></div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div><a class="brand" href="#top">Cascade</a><p style="margin-top:10px;max-width:36ch">Critical infrastructure cyber-risk intelligence. A hackathon prototype for PS03.</p></div>
+      <div><h4>Site</h4><ul><li><a href="#city">The twin</a></li><li><a href="#problem">Problem</a></li><li><a href="#capabilities">Capabilities</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+      <div><h4>Platform</h4><ul><li><a href="/app#/overview">Command centre</a></li><li><a href="/app#/twin">Digital twin</a></li><li><a href="/app#/simulate">Attack simulation</a></li><li><a href="/app#/water">Water monitoring</a></li></ul></div>
+      <div><h4>Project</h4><ul><li><a href="/app#/project">Methodology</a></li><li><a href="/app#/security">Security and 2FA</a></li><li><a href="#" data-gh>GitHub</a></li></ul></div>
+    </div>
+    <div class="base"><span>Built by Dhruv Salunkhe and Suryans Padhy. All infrastructure data is simulated; CVE, KEV and EPSS data are real.</span><span>No real systems are scanned or attacked.</span></div>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+const SITE = window.CASCADE_SITE;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const tmin = m => { if (m == null || m >= 360) return 'none in 6 h'; m = Math.round(m); return `T+${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; };
+const fmt = v => v == null ? '–' : v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : v >= 1e4 ? Math.round(v / 1e3) + 'k' : v >= 1e3 ? (v / 1e3).toFixed(1) + 'k' : String(Math.round(v));
+const toast = t => { const e = $('#toast'); e.textContent = t; e.style.display = 'block'; clearTimeout(toast.h); toast.h = setTimeout(() => e.style.display = 'none', 3500); };
+const NS = 'http://www.w3.org/2000/svg';
+
+// ---------- team, GitHub ----------
+$('#people').innerHTML = SITE.team.map(p => `<div class="person"><div class="avatar">${esc(p.name.split(' ').map(x => x[0]).join(''))}</div><div><h3>${esc(p.name)}</h3><p>${esc(p.role)}</p></div></div>`).join('');
+$('#fPS').textContent = SITE.problem;
+$$('[data-gh]').forEach(a => {
+  if (window.cascadeGithubReady()) { a.href = SITE.github; a.target = '_blank'; a.rel = 'noopener'; }
+  else a.addEventListener('click', e => { e.preventDefault(); toast('GitHub link not set yet: add it in frontend/static/site-config.js'); });
+});
+
+// ---------- smooth scroll (off under reduced motion) ----------
+let lenis = null;
+if (!reduce && window.Lenis) {
+  lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+  const raf = t => { lenis.raf(t); requestAnimationFrame(raf); }; requestAnimationFrame(raf);
+}
+$$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+  const id = a.getAttribute('href'); if (id.length < 2) return; const el = document.querySelector(id); if (!el) return;
+  e.preventDefault(); lenis ? lenis.scrollTo(el, { offset: id === '#city' ? 0 : -10 }) : el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+}));
+
+// ---------- headline word reveal ----------
+const h1 = $('#headline');
+[...h1.childNodes].forEach(n => {
+  if (n.nodeType === 3 || n.tagName === 'EM') {
+    const words = n.textContent.trim().split(/\s+/), frag = document.createDocumentFragment();
+    words.forEach((w, i) => { const s = document.createElement('span'); s.className = 'w'; s.textContent = w; frag.appendChild(s); frag.appendChild(document.createTextNode(' ')); });
+    if (n.tagName === 'EM') { n.textContent = ''; n.appendChild(frag); } else n.replaceWith(frag);
+  }
+});
+$$('#headline .w').forEach((w, i) => w.style.transitionDelay = `${120 + i * 70}ms`);
+requestAnimationFrame(() => setTimeout(() => h1.classList.add('in'), 60));
+
+// ---------- magnetic buttons ----------
+if (!reduce && matchMedia('(pointer: fine)').matches) $$('.mag').forEach(b => {
+  b.addEventListener('mousemove', e => { const r = b.getBoundingClientRect(); b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .18}px, ${(e.clientY - r.top - r.height / 2) * .28}px)`; });
+  b.addEventListener('mouseleave', () => b.style.transform = '');
+});
+
+// ---------- bento spotlight ----------
+$$('.tile').forEach(t => t.addEventListener('pointermove', e => { const r = t.getBoundingClientRect(); t.style.setProperty('--mx', `${e.clientX - r.left}px`); t.style.setProperty('--my', `${e.clientY - r.top}px`); }));
+
+// ---------- reveal on scroll ----------
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); e.target.dispatchEvent(new Event('reveal')); io.unobserve(e.target); } }), { threshold: .15 });
+$$('.rv').forEach(el => io.observe(el));
+
+// ---------- section dots, nav theme, progress ----------
+const secs = $$('main > section[data-name]');
+$('#dots').innerHTML = secs.map(s => `<a href="#${s.id}" aria-label="${esc(s.dataset.name)}"><span>${esc(s.dataset.name)}</span></a>`).join('');
+$$('#dots a').forEach(a => a.addEventListener('click', e => { e.preventDefault(); const el = document.querySelector(a.getAttribute('href')); lenis ? lenis.scrollTo(el) : el.scrollIntoView(); }));
+const nav = $('#nav'), dots = $('#dots'), prog = $('#progress');
+function onScrollUI() {
+  const y = scrollY, H = document.documentElement.scrollHeight - innerHeight;
+  prog.style.transform = `scaleX(${H > 0 ? y / H : 0})`;
+  nav.classList.toggle('solid', y > 30);
+  const under = document.elementsFromPoint(innerWidth / 2, 40).find(el => el.closest('main > section, .ticker, footer'));
+  const sec = under?.closest('main > section');
+  nav.classList.toggle('light', !(sec && sec.hasAttribute('data-dark') && (sec.id !== 'top' || y < innerHeight * .55)));
+  let cur = secs[0]; for (const s of secs) if (s.getBoundingClientRect().top <= innerHeight * .4) cur = s;
+  $$('#dots a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + cur.id));
+  dots.classList.toggle('dark', cur.hasAttribute('data-dark'));
+  $$('.pills a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + cur.id));
+}
+
+// ---------- hero pixel field (mouse-reactive, shifts with scroll) ----------
+function field(canvas, opts = {}) {
+  const ctx = canvas.getContext('2d'); let W, H, dpr, cells = [], mouse = { x: -1e4, y: -1e4 }, visible = true;
+  const STEP = opts.step || 9;
+  function build() {
+    dpr = Math.min(2, devicePixelRatio || 1); W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); cells = [];
+    for (let y = 0; y < H; y += STEP) for (let x = 0; x < W; x += STEP) {
+      const edge = Math.abs(x - W / 2) / (W / 2);                       // 0 centre, 1 edges
+      const dens = opts.centre ? .35 : Math.min(.92, Math.pow(edge, 1.7) * 1.05) * (1 - y / H * .5);
+      if (Math.random() < dens) cells.push({ x, y, p: Math.random() * 6.28, s: .4 + Math.random() * .6 });
+    }
+  }
+  build(); addEventListener('resize', build);
+  canvas.parentElement.addEventListener('pointermove', e => { const r = canvas.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
+  canvas.parentElement.addEventListener('pointerleave', () => { mouse.x = mouse.y = -1e4; });
+  new IntersectionObserver(es => visible = es[0].isIntersecting).observe(canvas);
+  function draw(t) {
+    if (visible && !document.hidden) {
+      ctx.clearRect(0, 0, W, H);
+      const sp = Math.min(1, scrollY / Math.max(1, innerHeight));      // scroll shifts the field brighter and calmer
+      for (const c of cells) {
+        const tw = reduce ? .7 : .45 + .55 * Math.sin(t * .0012 * c.s + c.p);
+        const dx = c.x - mouse.x, dy = c.y - mouse.y, d = Math.hypot(dx, dy), push = d < 120 ? (1 - d / 120) * 10 : 0;
+        const x = c.x + (d ? dx / d * push : 0), y = c.y + (d ? dy / d * push : 0);
+        const a = (opts.alpha || .55) * tw * (1 - c.y / H * .65) * (1 - sp * .5) + (push ? .35 : 0);
+        ctx.fillStyle = push ? `rgba(255,111,181,${Math.min(1, a + .2)})` : `rgba(255,255,255,${a})`;
+        ctx.fillRect(x, y, 2.4, 2.4);
+      }
+    }
+    if (!reduce) requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+}
+field($('#field'));
+field($('#field2'), { centre: true, alpha: .4, step: 11 });
+
+// ---------- floating cards: mouse tilt + spread on scroll ----------
+const cards = $$('.fcard'); let mx = 0, my = 0;
+addEventListener('pointermove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; });
+function cardsFrame() {
+  const sp = Math.min(1, scrollY / (innerHeight * .9));
+  cards.forEach(c => {
+    const d = +c.dataset.depth, side = c.classList.contains('a') ? -1 : c.classList.contains('c') ? 1 : 0;
+    const tilt = reduce ? 0 : 1;
+    c.style.transform = `translate3d(${side * sp * 90 + mx * 14 * d * tilt}px, ${-sp * (side ? 40 : 80) + my * 10 * d * tilt}px, 0) rotateY(${(mx * 10 + side * 8) * tilt}deg) rotateX(${(-my * 8 + 6) * tilt}deg) rotateZ(${side * (3 + sp * 4) * tilt}deg)`;
+  });
+}
+
+// ---------- zoom into the city (pinned, scroll-driven) ----------
+// Five frames captured from the twin itself; each step crossfades to its own frame, pans and zooms to its own hotspot
+// (positions projected from the twin's 3D scene at capture time: static/img/twin-frames.json), and pins its callout there.
+const zoom = $('#city'), screen = $('#screen'), pan = $('#pan'), zHead = $('#zHead');
+const calls = $$('.callout'), bars = $$('.steps-dots i span'), xray = $('#xray'), frames = $$('#pan .frame');
+const zHot = $('#zHot'), zLine = $('#zLine');
+const STEPS = [[.18, .32], [.32, .46], [.46, .6], [.6, .73], [.73, .86]], XR = .86, FADE = .03;
+let ZF = null;                                     // frames metadata (hotspots), loaded from the capture
+const ZOOM = [1, 1.65, 1.45, 1.4, 1.5], XZOOM = 2.6;
+const smooth = (a, b, x) => { const k = Math.min(1, Math.max(0, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
+function zTarget(i) {                              // [focus x, focus y, scale] for step i (5 = X-ray)
+  if (!ZF) return [.5, .5, 1];
+  if (i >= 5) return [...ZF.xray, XZOOM];
+  return i === 0 ? [.5, .5, 1] : [...ZF.frames[i].hot, ZOOM[i]];
+}
+function zPan(fx, fy, s) {                          // translation (fraction of the screen) that puts the focus off-centre, away from the callout side
+  const cx = fx > .5 ? .6 : .4, cy = .5;
+  const tx = Math.min(0, Math.max(1 - s, cx - fx * s)), ty = Math.min(0, Math.max(1 - s, cy - fy * s));
+  return [tx, ty];
+}
+let zState = { step: -1, frame: 0 };
+function zoomFrame() {
+  if (reduce) return;
+  const r = zoom.getBoundingClientRect(), total = r.height - innerHeight;
+  const p = Math.min(1, Math.max(0, -r.top / total));
+  const zin = Math.min(1, p / .18);                                              // phase 1: card grows to the screen
+  const e = 1 - Math.pow(1 - zin, 3);
+  const small = innerWidth < 640 ? .82 : .58;
+  const sc = small + (1 - small) * e;
+  screen.style.transform = zin >= 1 ? 'none' : `perspective(1600px) translateY(${(1 - e) * 14}vh) rotateX(${(1 - e) * 22}deg) scale(${sc})`;
+  screen.style.borderRadius = `${26 * (1 - e) + 8}px`;
+  zHead.style.opacity = String(Math.max(0, 1 - zin * 1.6));
+  // which step, and how far into the crossfade to the next one (u = .5 exactly at the boundary)
+  const bounds = [STEPS[0][1], STEPS[1][1], STEPS[2][1], STEPS[3][1], XR];
+  let i = 0; while (i < 5 && p >= bounds[i]) i++;                   // i = 0..5 (5 = X-ray)
+  const prevB = i > 0 ? bounds[i - 1] : -1, nextB = i < 5 ? bounds[i] : 2;
+  let from = i, to = i, u = 0;
+  if (p > nextB - FADE) { to = i + 1; u = smooth(nextB - FADE, nextB + FADE, p); }
+  else if (p < prevB + FADE) { from = i - 1; to = i; u = smooth(prevB - FADE, prevB + FADE, p); }
+  const fa = Math.min(4, from), fb = Math.min(4, to);              // the X-ray uses the last frame
+  frames.forEach((f, k) => { const o = k === fa && k === fb ? 1 : k === fa ? 1 - u : k === fb ? u : 0; f.style.opacity = o.toFixed(3); f.classList.toggle('on', o >= .5); });
+  zState.frame = u < .5 ? fa : fb;
+  // pan and zoom: ease between the two steps' targets
+  const A = zTarget(from), B = zTarget(to), m = (k) => A[k] + (B[k] - A[k]) * u;
+  const fx = m(0), fy = m(1), s = m(2), [tx, ty] = zPan(fx, fy, s);
+  pan.style.transform = `translate(${(tx * 100).toFixed(3)}%, ${(ty * 100).toFixed(3)}%) scale(${s.toFixed(4)})`;
+  $('#veil').style.background = `rgba(5,11,36,${(i >= 5 ? .4 * smooth(XR, XR + .06, p) : 0).toFixed(3)})`;
+  // active step (exactly one callout at a time) and its pinned position
+  const active = p < STEPS[0][0] ? -1 : i;                         // -1 while the card is still growing
+  zState.step = active;
+  calls.forEach((c, k) => c.classList.toggle('on', k === active));
+  xray.classList.toggle('on', active === 5);
+  const all = [...STEPS, [XR, 1]];
+  bars.forEach((bb, k) => { const [a, z] = all[k]; bb.style.transform = `scaleX(${Math.min(1, Math.max(0, (p - a) / (z - a)))})`; });
+  placeCallout(active);
+}
+// hotspot of the active step on screen = where its point in the frame currently is, after the pan/zoom transform
+function hotOnScreen(step) {
+  if (!ZF || step < 0) return null;
+  const t = zTarget(step), sr = screen.getBoundingClientRect(), st = $('#stick').getBoundingClientRect();
+  const [, , s] = [0, 0, parseFloat((pan.style.transform.match(/scale\(([\d.]+)\)/) || [0, 1])[1])];
+  const m = pan.style.transform.match(/translate\((-?[\d.]+)%, (-?[\d.]+)%\)/) || [0, 0, 0];
+  const tx = +m[1] / 100, ty = +m[2] / 100;
+  return [sr.left - st.left + (tx + t[0] * s) * sr.width, sr.top - st.top + (ty + t[1] * s) * sr.height];
+}
+function placeCallout(step) {
+  const hp = hotOnScreen(step);
+  zHot.classList.toggle('on', !!hp);
+  if (!hp) { zLine.classList.remove('on'); return; }
+  zHot.style.left = `${hp[0]}px`; zHot.style.top = `${hp[1]}px`;
+  zHot.classList.toggle('blue', step === 0 || step === 4);
+  const box = step === 5 ? xray : calls[step];
+  if (innerWidth < 640 || step === 5 && innerWidth < 1000) { zLine.classList.remove('on'); return; }   // phones: fixed card at the bottom
+  const navB = ($('#nav')?.getBoundingClientRect().bottom || 70) + 14;
+  const w = box.offsetWidth, h = box.offsetHeight, gap = Math.min(90, innerWidth * .06);
+  let left, top;
+  if (step === 5) { const r = box.getBoundingClientRect(); left = r.left; top = r.top; }
+  else {
+    left = hp[0] > innerWidth / 2 ? hp[0] - gap - w : hp[0] + gap;
+    left = Math.min(innerWidth - w - 16, Math.max(16, left));
+    top = Math.min(innerHeight - h - 70, Math.max(navB, hp[1] - h / 2));
+    box.style.left = `${left}px`; box.style.top = `${top}px`;
+  }
+  // connector: from the closest point of the callout's edge to the hotspot
+  const px = Math.min(left + w, Math.max(left, hp[0])), py = Math.min(top + h, Math.max(top, hp[1]));
+  zLine.setAttribute('x1', px.toFixed(1)); zLine.setAttribute('y1', py.toFixed(1));
+  zLine.setAttribute('x2', hp[0].toFixed(1)); zLine.setAttribute('y2', hp[1].toFixed(1));
+  zLine.classList.toggle('on', Math.hypot(px - hp[0], py - hp[1]) > 6);
+}
+window.__zoom = { get state() { return { ...zState, hot: hotOnScreen(zState.step) }; } };
+
+// ---------- pipeline beam ----------
+const pipe = $('#pipe'), stages = $$('.stage');
+function pipeFrame() {
+  const r = pipe.getBoundingClientRect(), p = Math.min(1, Math.max(0, (innerHeight * .8 - r.top) / (innerHeight * .7)));
+  $('#beam').style.transform = `scaleX(${reduce ? 1 : p})`;
+  stages.forEach((s, i) => s.classList.toggle('on', p >= i / 5 + .02));
+}
+
+// ---------- one scroll loop ----------
+let ticking = false;
+function onScroll() { if (ticking) return; ticking = true; requestAnimationFrame(() => { ticking = false; onScrollUI(); cardsFrame(); zoomFrame(); pipeFrame(); }); }
+addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll);
+if (!reduce) addEventListener('pointermove', () => { if (scrollY < innerHeight * 1.2) requestAnimationFrame(cardsFrame); });
+onScroll();
+
+// ---------- counters ----------
+function countUp(el, to, dur = 1400) {
+  if (reduce) { el.textContent = to.toLocaleString(); return; }
+  const t0 = performance.now(); const step = t => { const k = Math.min(1, (t - t0) / dur), v = Math.round(to * (1 - Math.pow(1 - k, 3))); el.textContent = v.toLocaleString(); if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step);
+}
+
+// ---------- data ----------
+let L = null, HERO = null;
+Promise.all([fetch('/api/public/landing').then(r => r.json()), fetch('/api/public/hero').then(r => r.json())]).then(([land, hero]) => {
+  L = land; HERO = hero;
+  heroCards(); ticker(); zoomData(); counters(); waterChart(); bentoViz(); demoInit(); sectors(); headline();
+  zoomFrames();
+}).catch(() => { toast('Start the backend to load the live numbers.'); zoomFrames(); });
+
+function heroCards() {
+  const svc = [...L.services].sort((a, b) => (a.fail_at ?? 999) - (b.fail_at ?? 999)), maxP = Math.max(...svc.map(s => s.people));
+  $('#cA').textContent = `From ${L.worst_entry_name}, simulated`;
+  $('#svcBars').innerHTML = svc.map(s => `<div class="srow"><span>${esc(s.name.replace('District ', '').replace('Hospital ', 'Hosp. '))}</span><div class="bars"><span class="${s.fail_at != null && s.fail_at < 360 ? 'lost' : ''}" data-w="${Math.max(6, 100 * s.people / maxP)}"></span></div><b class="num">${s.fail_at != null && s.fail_at < 360 ? tmin(s.fail_at) : 'safe'}</b></div>`).join('');
+  setTimeout(() => $$('#svcBars .bars span').forEach(b => b.style.width = b.dataset.w + '%'), 600);
+  const first = Math.min(...L.services.filter(s => s.people > 0 && s.fail_at != null).map(s => s.fail_at), 360);
+  const lostSvc = L.services.filter(s => s.fail_at === first).map(s => s.name);
+  $('#gVal').textContent = tmin(first).replace('none in 6 h', 'Safe');
+  $('#gCap').textContent = lostSvc.length ? `${lostSvc.join(' and ')} lost` : 'No service lost in 6 hours';
+  $('#cB').textContent = `Worst attack, through ${L.worst_entry_name}`;
+  // gauge: arc of 6 hours with ticks, needle at the first failure
+  const g = $('#gauge'), cx = 150, cy = 150, R = 118;
+  const pt = (a, r) => [cx + r * Math.cos(Math.PI * (1 - a)), cy - r * Math.sin(Math.PI * (1 - a))];
+  let html = '';
+  for (let i = 0; i <= 60; i++) { const a = i / 60, [x1, y1] = pt(a, R), [x2, y2] = pt(a, i % 10 ? R - 8 : R - 15); html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(255,255,255,${i % 10 ? .45 : .9})" stroke-width="${i % 10 ? 1.5 : 2.5}"/>`; }
+  const a = first / 360, [nx, ny] = pt(a, R - 4);
+  html += `<path d="M${pt(0, R + 10).join(',')} A${R + 10},${R + 10} 0 0 1 ${pt(a, R + 10).join(',')}" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".95"/>`;
+  html += `<line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="7" fill="#fff"/>`;
+  html += `<text x="${pt(0, R + 26)[0]}" y="${cy + 4}" fill="rgba(255,255,255,.85)" font-size="11" text-anchor="middle">0 h</text><text x="${pt(1, R + 26)[0]}" y="${cy + 4}" fill="rgba(255,255,255,.85)" font-size="11" text-anchor="middle">6 h</text>`;
+  g.innerHTML = html;
+  // water sparkline
+  if (L.water) {
+    const sc = L.water.scores, n = sc.length, X = i => i / (n - 1) * 300, Y = v => 112 - v / 100 * 104;
+    let d = ''; sc.forEach((v, i) => d += `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`);
+    $('#spark').innerHTML = `<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#2F5BFF" stop-opacity=".3"/><stop offset="1" stop-color="#2F5BFF" stop-opacity="0"/></linearGradient></defs>
+      <path d="${d} L300,120 L0,120 Z" fill="url(#sg)"/><path d="${d}" fill="none" stroke="#2F5BFF" stroke-width="2"/><line x1="0" x2="300" y1="${Y(50)}" y2="${Y(50)}" stroke="#FF4FA3" stroke-dasharray="4 4"/>`;
+  }
+}
+
+function ticker() {
+  const items = L.events.map(e => `<span class="${e.lost ? 'lost' : ''}"><b>${tmin(e.t)}</b>${esc(e.text)}</span>`).join('');
+  $('#track').innerHTML = items + items;
+}
+
+async function zoomFrames() {
+  try { ZF = await fetch('/static/img/twin-frames.json').then(r => r.ok ? r.json() : null); } catch { ZF = null; }
+  if (ZF) {
+    const f4 = ZF.frames[4];
+    if (f4?.fixes?.length) $('#zFix').textContent = `Shown here: the optimiser's bundle (${f4.fixes.join('; ')}). Same attack, same minute: no essential service lost.`;
+  }
+  if (reduce) {                                    // reduced motion: frames stacked with their captions, nothing moves
+    const st = $('#zStack'); st.hidden = false;
+    st.innerHTML = `<div class="head" style="position:static;opacity:1"><span class="eyebrow">The digital twin</span><h2>One attack, five moments</h2></div>` +
+      frames.map((f, k) => `<figure><img src="${f.getAttribute('src')}" alt="${esc(f.alt)}" width="1600" height="900" loading="lazy"><figcaption>${calls[k].innerHTML}</figcaption></figure>`).join('');
+  }
+  onScroll();
+}
+function zoomData() {
+  $('#zSys').textContent = HERO.counts.assets;
+  const sp = L.spotlight; if (!sp) return;
+  const kev = sp.cves.filter(c => c.kev).length;
+  $('#zEntry').textContent = `Here: ${sp.name}. Internet-facing, ${kev ? `${kev} known-exploited CVE${kev > 1 ? 's' : ''}` : 'CVEs'}${sp.flags.length ? ', ' + sp.flags.map(f => f.replace(/_/g, ' ')).join(', ') : ''}.`;
+  const first = Math.min(...L.services.filter(s => s.people > 0 && s.fail_at != null).map(s => s.fail_at), 360);
+  const lost = L.services.filter(s => s.fail_at != null && s.fail_at < 360);
+  $('#zLost').textContent = tmin(first);
+  $('#zLostText').textContent = `${lost.map(s => s.name).join(', ')} lost within 6 hours: ${lost.reduce((a, s) => a + s.people, 0).toLocaleString()} people.`;
+  xray.innerHTML = `<span class="tagx">X-ray: the way in</span><h3>${esc(sp.name)}</h3><p class="sw">${esc(sp.software)} ${esc(sp.version)}</p>
+    <table><thead><tr><th>CVE</th><th class="n">CVSS</th><th class="n">EPSS</th><th></th></tr></thead><tbody>
+    ${sp.cves.map(c => `<tr><td>${esc(c.id)}</td><td class="n">${c.cvss}</td><td class="n">${c.epss.toFixed(2)}</td><td>${c.kev ? '<span class="kevtag">KEV</span>' : ''}</td></tr>`).join('')}</tbody></table>
+    <p class="meta"><b>Connects to:</b> ${sp.connects_to.map(esc).join(', ')}</p>
+    <p class="meta"><b>Weak configuration:</b> ${sp.flags.map(f => esc(f.replace(/_/g, ' '))).join(', ') || 'none'}</p>
+    <p class="meta"><b>Harm if used:</b> ${fmt(sp.harm)} people-minutes in 6 hours</p>
+    <a class="btn pink small" style="margin-top:14px" href="/app#/inventory">Open in the platform</a>`;
+}
+
+function counters() {
+  const cs = HERO.counts;
+  const el = $('#counters');
+  const go = () => $$('[data-count]').forEach(b => countUp(b, cs[b.dataset.count] || 0));
+  el.classList.contains('in') ? go() : el.addEventListener('reveal', go, { once: true });
+}
+
+function headline() {
+  if (!HL) { $('#cmpAv').innerHTML = $('#cmpBv').innerHTML = '…<small>re-simulating, a few seconds after start-up</small>'; }
+  getHeadline(d => {
+    const M = v => v === 0 ? '0' : (v / 1e6).toFixed(1) + 'M';
+    $('#cmpA').textContent = `CVSS-only patches ${d.cvss.first_label.replace(/^Patch /, '')} first (CVSS ${d.cvss.first_cvss}). After ${d.k} patches:`;
+    $('#cmpB').textContent = `Cascade's first pick: "${d.cascade.first_label}". After ${d.k} fixes:`;
+    $('#cmpAv').innerHTML = `${M(d.cvss.worst_after)}<small>people-min worst case left</small>`;
+    $('#cmpBv').innerHTML = `${M(d.cascade.worst_after)}<small>people-min worst case left</small>`;
+    const show = () => { $('#cmpAm').style.width = `${100 * d.cvss.worst_after / d.base_worst}%`; $('#cmpBm').style.width = `${Math.max(1, 100 * d.cascade.worst_after / d.base_worst)}%`; };
+    $('#compare').classList.contains('in') ? show() : $('#compare').addEventListener('reveal', show, { once: true });
+    $('#cmpNote').textContent = `Computed live on the loaded dataset (${d.dataset}). Bar = worst case left, out of ${M(d.base_worst)} people-minutes with no fixes.`;
+  });
+}
+
+function waterChart() {
+  const w = L.water; if (!w) return;
+  $('#w1').textContent = w.test.detected; $('#w2').textContent = w.test.fa_per_7d; $('#w3').textContent = w.test.precision;
+  const svg = $('#wLine'), Wd = Math.max(280, svg.getBoundingClientRect().width || 600), Hd = 280, l = 34, r = Wd - 10;
+  svg.setAttribute('viewBox', `0 0 ${Wd} ${Hd}`);
+  const sc = w.scores, n = sc.length, X = i => l + i / (n - 1) * (r - l), Y = v => 254 - v / 100 * 222;
+  let d = ''; sc.forEach((v, i) => d += `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`);
+  const bw = Math.max(2, (r - l) / n + .5);
+  const alerts = sc.map((_, i) => w.alerts[i] ? `<rect x="${(X(i) - bw / 2).toFixed(1)}" y="${Y(100)}" width="${bw.toFixed(1)}" height="${Y(0) - Y(100)}" fill="rgba(255,79,163,.16)"/>` : '').join('');
+  const day = t => t.slice(5, 10).replace('-', '/');
+  svg.innerHTML = `${[0, 50, 100].map(v => `<line x1="${l}" x2="${r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v === 50 ? '#FF4FA3' : 'rgba(11,22,64,.1)'}" stroke-dasharray="${v === 50 ? '5 5' : ''}"/><text x="${l - 6}" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="#6A78A6">${v}</text>`).join('')}
+    ${alerts}<path id="wPath" d="${d}" fill="none" stroke="#2F5BFF" stroke-width="2.2" stroke-linejoin="round"/>
+    ${[0, .25, .5, .75, 1].map(f => { const i = Math.round(f * (n - 1)); return `<text x="${X(i)}" y="${Hd - 6}" font-size="11" fill="#6A78A6" text-anchor="${f === 0 ? 'start' : f === 1 ? 'end' : 'middle'}">${esc(day(w.t[i]))}</text>`; }).join('')}
+    <text x="${r}" y="${Y(50) - 6}" font-size="11" fill="#FF4FA3" text-anchor="end">alert at 50</text>`;
+  const path = $('#wPath'), len = path.getTotalLength();
+  if (!reduce) { path.style.strokeDasharray = len; path.style.strokeDashoffset = len; }
+  const draw = () => { path.style.transition = 'stroke-dashoffset 2.6s ease'; path.style.strokeDashoffset = 0; };
+  const card = svg.closest('.wchart'); card.classList.contains('in') ? draw() : card.addEventListener('reveal', draw, { once: true });
+}
+
+// ---------- bento micro-visuals (from real data where there is data) ----------
+const box = svg => { const r = svg.getBoundingClientRect(); const W = Math.max(160, Math.round(r.width || svg.parentElement.clientWidth || 300)), H = Math.max(74, Math.round(r.height || 90)); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); return [W, H]; };
+const M1 = v => v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : v >= 1e3 ? Math.round(v / 1e3) + 'k' : String(Math.round(v));
+function drawMulti() {                 // schematic of preset B (illustration, labelled as such)
+  const m = $('#vMulti'), [W, H] = box(m), n = 7, x = i => 14 + i * (W - 28) / (n - 1), y = i => i % 2 ? H * .28 : H * .62;
+  let s = ''; for (let i = 0; i < n; i++) s += `<circle cx="${x(i)}" cy="${y(i)}" r="6" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5"/>`;
+  s += `<path d="M${x(0)},${y(0)} L${x(1)},${y(1)} L${x(2)},${y(2)} L${x(3)},${y(3)}" stroke="#FF6FB5" stroke-width="3" fill="none" stroke-linecap="round" class="dash"/>
+    <path d="M${x(6)},${y(6)} L${x(5)},${y(5)} L${x(4)},${y(4)} L${x(3)},${y(3)}" stroke="#4F8BFF" stroke-width="3" fill="none" stroke-linecap="round" class="dash"/>
+    <text x="${x(0)}" y="${H - 4}" fill="#FF6FB5" font-size="12" font-weight="600">Attacker A, T+0</text><text x="${x(6)}" y="${H - 4}" fill="#7FA8FF" font-size="12" font-weight="600" text-anchor="end">Attacker B joins at T+15</text>`;
+  m.innerHTML = s;
+  if (!reduce) m.querySelectorAll('.dash').forEach(p => { const l = p.getTotalLength(); p.style.strokeDasharray = l; p.style.strokeDashoffset = l; p.animate([{ strokeDashoffset: l }, { strokeDashoffset: 0 }, { strokeDashoffset: 0 }], { duration: 4000, iterations: Infinity }); });
+}
+function drawNovel() {                 // the five steps of the unknown-attack pipeline, the alarm step lit
+  const v = $('#vNovel'); if (!v) return; const [W, H] = box(v), st = ['Normal', 'Deviates', 'Alarm', 'What if?', 'Human'], x = i => 18 + i * (W - 36) / 4, cy = H * .5;
+  let s = `<line x1="${x(0)}" x2="${x(4)}" y1="${cy}" y2="${cy}" stroke="#D6E2FF" stroke-width="3"/>`;
+  st.forEach((t, i) => { const c = i === 2 ? '#F2A33A' : i === 4 ? '#FF4FA3' : '#2F5BFF'; s += `<circle cx="${x(i)}" cy="${cy}" r="${i === 2 ? 11 : 8}" fill="${c}"/>${i === 2 ? `<circle cx="${x(i)}" cy="${cy}" r="11" fill="none" stroke="${c}" stroke-width="2"><animate attributeName="r" values="11;19;11" dur="1.8s" repeatCount="${reduce ? 0 : 'indefinite'}"/><animate attributeName="opacity" values="1;0;1" dur="1.8s" repeatCount="${reduce ? 0 : 'indefinite'}"/></circle>` : ''}<text x="${x(i)}" y="${i % 2 ? cy - 18 : cy + 28}" text-anchor="${i === 0 ? 'start' : i === 4 ? 'end' : 'middle'}" dx="${i === 0 ? -8 : i === 4 ? 8 : 0}" font-size="12" fill="#0B1640">${t}</text>`; });   // labels alternate above and below so they never collide
+  v.innerHTML = s;
+}
+function drawOpt() {                   // optimiser before/after, only when the backend has computed it (never a placeholder number)
+  const v = $('#vOpt'), [W, H] = box(v), o = L.optimizer;
+  if (!o) { v.innerHTML = `<text x="${W / 2}" y="${H / 2}" text-anchor="middle" font-size="12" fill="#6A78A6">Computing the best bundle…</text>`; setTimeout(() => fetch('/api/public/landing').then(r => r.json()).then(d => { if (d.optimizer) { L.optimizer = d.optimizer; } drawOpt(); }).catch(() => {}), 6000); return; }
+  const bw = Math.min(90, W * .3), base = H - 18, top = 16, hb = base - top, ha = Math.max(3, hb * o.worst_after / o.worst_before), x1 = W * .5 - bw - 14, x2 = W * .5 + 14;
+  v.innerHTML = `<line x1="0" x2="${W}" y1="${base}" y2="${base}" stroke="#D6E2FF"/>
+    <rect x="${x1}" y="${top}" width="${bw}" height="${hb}" rx="6" fill="#B9C8F2"/><rect x="${x2}" y="${base - ha}" width="${bw}" height="${ha}" rx="6" fill="#2F5BFF"/>
+    <text x="${x1 + bw / 2}" y="${top + 16}" text-anchor="middle" font-size="12" font-weight="600" fill="#0B1640">${M1(o.worst_before)}</text>
+    <text x="${x2 + bw / 2}" y="${base - ha - 5}" text-anchor="middle" font-size="12" font-weight="600" fill="#2F5BFF">${M1(o.worst_after)} (−${Math.round(100 * (1 - o.worst_after / o.worst_before))}%)</text>
+    <text x="${x1 + bw / 2}" y="${H - 3}" text-anchor="middle" font-size="11" fill="#6A78A6">no fixes</text><text x="${x2 + bw / 2}" y="${H - 3}" text-anchor="middle" font-size="11" fill="#6A78A6">best ${o.labels?.length || 3} fixes</text>`;
+}
+let HL = null;
+function getHeadline(cb) {             // CVSS-only against Cascade; computed after start-up, so retry until ready
+  if (HL) return cb(HL);
+  fetch('/api/public/headline').then(r => r.json()).then(d => { if (d.ready) { HL = d; cb(d); } else setTimeout(() => getHeadline(cb), 3000); }).catch(() => setTimeout(() => getHeadline(cb), 5000));
+}
+function drawBase() {
+  const v = $('#vBase'), [W, H] = box(v);
+  if (!HL) { v.innerHTML = `<text x="${W / 2}" y="${H / 2}" text-anchor="middle" font-size="12" fill="#6A78A6">Re-simulating five strategies…</text>`; return getHeadline(drawBase); }
+  const d = HL, b0 = d.base_worst, L0 = 10, R = W - 160;
+  const y = v => 8 + (H - 30) * (1 - v / b0);
+  v.innerHTML = `<line x1="${L0}" x2="${R}" y1="${H - 20}" y2="${H - 20}" stroke="#D6E2FF"/>
+    <text x="${L0}" y="${H - 5}" font-size="11" fill="#6A78A6">no fixes</text><text x="${R}" y="${H - 5}" font-size="11" fill="#6A78A6" text-anchor="end">after ${d.k} fixes</text>
+    <path d="M${L0},${y(b0)} L${R},${y(d.cvss.worst_after)}" stroke="#8E9DCB" stroke-width="3" stroke-dasharray="6 5" fill="none"/>
+    <path d="M${L0},${y(b0)} L${L0 + (R - L0) / d.k},${y(d.cascade.worst_after_1)} L${R},${y(d.cascade.worst_after)}" stroke="#FF4FA3" stroke-width="3" fill="none"/>
+    <text x="${R + 8}" y="${y(d.cvss.worst_after) + 4}" font-size="12" fill="#4A5A88">CVSS only: ${M1(d.cvss.worst_after)} left</text>
+    <text x="${R + 8}" y="${Math.min(H - 22, y(d.cascade.worst_after) + 4)}" font-size="12" fill="#FF4FA3" font-weight="600">Cascade: ${M1(d.cascade.worst_after)} left</text>`;
+}
+function bentoViz() {
+  drawMulti(); drawNovel();
+  // water: the same replay
+  if (L.water) { const sc = L.water.scores, n = sc.length; let d = ''; sc.forEach((v, i) => d += `${i ? 'L' : 'M'}${(i / (n - 1) * 200).toFixed(1)},${(66 - v / 100 * 62).toFixed(1)}`); $('#vWater').innerHTML = `<path d="${d}" fill="none" stroke="#fff" stroke-width="1.6"/><line x1="0" x2="200" y1="35" y2="35" stroke="#FFB3D6" stroke-dasharray="3 3"/>`; }
+  drawOpt(); drawBase();
+  // response steps, inventory rows: real names from the simulation
+  $('#vResp').innerHTML = L.events.filter(e => !e.lost).slice(1, 3).map(e => `<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid rgba(11,22,64,.08)"><b class="num" style="color:#FF4FA3;min-width:52px">${tmin(Math.max(0, e.t - 5))}</b><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Isolate ${esc(e.text.split(' compromised')[0])}</span></div>`).join('');
+  $('#vInv').innerHTML = HERO.nodes.slice(0, 3).map(n => `<div style="display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid rgba(11,22,64,.08)"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(n.name)}</span><span style="color:#6A78A6">${esc(n.sector)}</span></div>`).join('');
+  // 2FA code that changes
+  if (!reduce) setInterval(() => $$('#vCode span').forEach(sp => sp.textContent = Math.floor(Math.random() * 10)), 2600);
+  // blast ripple
+  $('#vBlast').innerHTML = `<circle cx="50" cy="50" r="8" fill="#FF4FA3"/>${[18, 30, 42].map((r, i) => `<circle cx="50" cy="50" r="${r}" fill="none" stroke="#FF6FB5" stroke-opacity="${.7 - i * .2}" stroke-width="2"><animate attributeName="r" values="${r - 6};${r + 4};${r - 6}" dur="3s" begin="${i * .4}s" repeatCount="${reduce ? 0 : 'indefinite'}"/></circle>`).join('')}`;
+  fetch('/api/sensitivity').then(r => r.ok ? r.json() : null).then(sv => { if (sv?.total) $('#vSens').textContent = `${sv.top1_stable}/${sv.total}`; }).catch(() => {});
+}
+
+// ---------- attack the city (real engine via /api/public/attack) ----------
+// Everything drawn comes from the backend answer: each edge parent -> child grows between the parent's and the child's
+// compromise time; a system turns pink when the clock reaches its time. One clock drives map, services, events and harm.
+let cur = null, before = null, after = null, dT = 0, dPlaying = false, dRaf = 0, dLast = 0;
+const DRATE = 60;                                         // simulated minutes per second: 6 hours in 6 s
+const post = (url, body) => fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+  .then(async r => { if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `The server answered ${r.status}`); return r.json(); });
+function project(nodes, W, H) {
+  const xs = nodes.map(n => n.x), zs = nodes.map(n => n.z), pad = 40;
+  const minX = Math.min(...xs), maxX = Math.max(...xs), minZ = Math.min(...zs), maxZ = Math.max(...zs);
+  const s = Math.min((W - 2 * pad) / ((maxX - minX) || 1), (H - 2 * pad) / ((maxZ - minZ) || 1));
+  return n => [W / 2 + (n.x - (minX + maxX) / 2) * s, H / 2 + (n.z - (minZ + maxZ) / 2) * s];
+}
+// static layers built once (and on resize) so keyboard focus survives the animation; only colours and paths change
+function buildMap(svg, interactive) {
+  const mc = $('#mapcard').getBoundingClientRect();        // both maps share the card's size, so before and after line up
+  const W = Math.round(mc.width) || 700, H = Math.round(mc.height) || 520, P = project(HERO.nodes, W, H);
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg._size = `${W}x${H}`;
+  let s = `<rect width="${W}" height="${H}" fill="${svg.id === 'mapAfter' ? '#F2F7FF' : '#FFFFFF'}"/><g class="links">`;
+  for (const [a, b, atk] of HERO.links) {
+    const [x1, y1] = P(HERO.nodes[a]), [x2, y2] = P(HERO.nodes[b]);
+    s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${atk ? 'rgba(11,22,64,.18)' : 'rgba(11,22,64,.09)'}" stroke-width="1.2" ${atk ? '' : 'stroke-dasharray="3 4"'}/>`;
+  }
+  s += '</g><g class="paths"></g><g class="nodes">';
+  HERO.nodes.forEach(n => {
+    const [x, y] = P(n), r = 5 + n.crit * 1.4;
+    s += `<g ${interactive ? `class="node" tabindex="0" role="button" aria-label="Attack from ${esc(n.name)}" style="cursor:pointer"` : 'class="nodex"'} data-id="${n.id}">
+      <circle class="glow" cx="${x}" cy="${y}" r="${r + 7}" fill="rgba(255,79,163,.15)" visibility="hidden"/><circle cx="${x}" cy="${y}" r="${r + 8}" fill="transparent"/>
+      <circle class="dot" cx="${x}" cy="${y}" r="${r}" fill="#fff" stroke="${n.entry ? '#FF4FA3' : '#2F5BFF'}" stroke-width="${n.entry ? 2.6 : 1.8}"/>
+      <circle class="ring" cx="${x}" cy="${y}" r="${r + 6}" fill="none" stroke="transparent" stroke-width="2"/><title>${esc(n.name)}</title></g>`;
+  });
+  svg.innerHTML = s + '</g>';
+  svg._P = P; svg._pos = Object.fromEntries(HERO.nodes.map(n => [n.id, P(n)]));
+  svg._dots = Object.fromEntries([...svg.querySelectorAll('[data-id]')].map(g => [g.dataset.id, { g, dot: g.querySelector('.dot'), glow: g.querySelector('.glow'), ring: g.querySelector('.ring') }]));
+  if (interactive) svg.querySelectorAll('.node').forEach(g => {
+    g.onclick = () => attack(g.dataset.id);
+    g.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); attack(g.dataset.id); } };
+  });
+}
+function paintMap(svg, st, T) {
+  if (!svg._dots) buildMap(svg, svg.id === 'mapBefore');
+  const times = st?.times || {}, par = st?.parents || {};
+  for (const [id, d] of Object.entries(svg._dots)) {
+    const t = times[id], hit = t != null && t <= T;
+    d.dot.setAttribute('fill', hit ? '#FF4FA3' : '#fff'); d.glow.setAttribute('visibility', hit ? 'visible' : 'hidden');
+    d.g.dataset.hit = hit ? '1' : '0';
+    d.ring.setAttribute('stroke', id === cur ? '#0B1640' : 'transparent');
+  }
+  let s = '';
+  for (const [child, p] of Object.entries(par)) {
+    if (p == null) continue;
+    const t0 = times[p], t1 = times[child];
+    if (t0 == null || t1 == null || T < t0) continue;
+    const f = Math.min(1, t1 > t0 ? (T - t0) / (t1 - t0) : 1);
+    if (f <= 0) continue;
+    const [x1, y1] = svg._pos[p], [x2, y2] = svg._pos[child], ex = x1 + (x2 - x1) * f, ey = y1 + (y2 - y1) * f;
+    s += `<line class="edge" data-src="${p}" data-dst="${child}" x1="${x1}" y1="${y1}" x2="${ex}" y2="${ey}" stroke="#FF4FA3" stroke-width="2.6" stroke-linecap="round"/>`;
+    if (f < 1) s += `<circle cx="${ex}" cy="${ey}" r="4" fill="#FF4FA3"/>`;
+  }
+  svg.querySelector('.paths').innerHTML = s;
+}
+function demoInit() {
+  buildMap($('#mapBefore'), true); buildMap($('#mapAfter'), false); paintMap($('#mapBefore'), null, 0);
+  const w = L.entries.find(e => e.id === L.worst_entry); if (w) $('#mapHint').textContent = `Click a dot to attack from it (or Tab to it and press Enter). Try ${w.name}, the worst way in.`;
+}
+const dBusy = (on, text) => { $('#mBusy').hidden = !on; if (text) $('#mBusyT').textContent = text; };
+const dStatusSet = (text, err) => { const s = $('#dStatus'); s.textContent = text || ''; s.classList.toggle('err', !!err); };
+async function attack(id) {
+  dStop(); cur = id; after = null; $('#mapcard').classList.remove('split'); $('#hAfter').textContent = '–'; $('#dFix').textContent = '';
+  const n = HERO.nodes.find(x => x.id === id);
+  $('#dEntry').textContent = `Attack from ${n.name}`;
+  dBusy(true, `Simulating an attack from ${n.name}…`); dStatusSet('');
+  try { before = await post('/api/public/attack', { entry: id }); }
+  catch (e) { dBusy(false); before = null; dStatusSet(`Could not run the simulation: ${e.message}`, true); return; }
+  finally { dBusy(false); }
+  if (cur !== id) return;
+  $('#protect').disabled = false; $('#dPlay').disabled = false; $('#dScrub').disabled = false;
+  dStatusSet(`Simulated. ${Object.keys(before.times).length} systems reached; replaying the 6 hours.`);
+  dSet(0); dPlay();
+}
+function harmAt(st, T) {                                   // people × minutes lost up to minute T (the backend's harm at T = 360)
+  return st.services.reduce((a, s) => a + s.population * Math.max(0, Math.min(T, s.restored_at ?? Infinity, 360) - s.fail_at), 0);
+}
+function svcState(st, name, T) {
+  const f = st?.services.find(x => x.service === name);
+  if (!f || f.fail_at >= 360) return ['running', 'running'];
+  if (T >= f.fail_at && !(f.restored_at != null && T >= f.restored_at)) return ['lost', `lost ${tmin(f.fail_at)}`];
+  if (f.backup_from != null && T >= f.backup_from) return ['backup', `on backup, lost at ${tmin(f.fail_at)}`];
+  return ['running', 'running'];
+}
+function dFrame() {
+  const T = dT;
+  paintMap($('#mapBefore'), before, T);
+  if (after) paintMap($('#mapAfter'), after, T);
+  const c = $('#dClock'); c.textContent = T >= 360 ? 'T+06:00' : tmin(T);
+  const shown = after || before;
+  c.classList.toggle('lost', !!shown && shown.services.some(s => s.population > 0 && s.fail_at <= T));
+  $('#dScrub').value = T;
+  $('#dSvcs').innerHTML = L.services.map(s => {
+    const [k, txt] = svcState(before, s.name, T);
+    const [ka, ta] = after ? svcState(after, s.name, T) : [null, null];
+    const cls = after ? ka : k;
+    return `<div class="svc ${cls === 'running' ? '' : cls}"><span>${esc(s.name)}</span><b class="st num">${after ? `${ta}<small>was: ${txt}</small>` : txt}</b></div>`;
+  }).join('');
+  const evs = (before?.events || []).filter(e => e.t <= T).slice(-4).reverse();
+  $('#dEvents').innerHTML = evs.map(e => `<li class="${e.kind}"><b>${tmin(e.t)}</b><span>${esc(e.text.replace(/^Attacker A: /, '').replace(' (caused by attacker A)', ''))}</span></li>`).join('');
+  if (before) $('#hBefore').textContent = fmt(Math.round(harmAt(before, T)));
+  if (after) $('#hAfter').textContent = fmt(Math.round(harmAt(after, T)));
+}
+function dSet(T) { dT = Math.max(0, Math.min(360, T)); dFrame(); }
+function dPlay() {
+  if (!before) return;
+  if (dT >= 360) dT = 0;
+  dPlaying = true; dLast = performance.now();
+  $('#dPlay').innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h4v12H3zM9 2h4v12H9z"/></svg>'; $('#dPlay').setAttribute('aria-label', 'Pause');
+  if (reduce) { dSet(360); return dStop(); }
+  const step = now => { if (!dPlaying) return; dSet(dT + (now - dLast) / 1000 * DRATE); dLast = now; if (dT >= 360) return dStop(); dRaf = requestAnimationFrame(step); };
+  dRaf = requestAnimationFrame(step);
+}
+function dStop() { dPlaying = false; cancelAnimationFrame(dRaf); $('#dPlay').innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z"/></svg>'; $('#dPlay').setAttribute('aria-label', 'Play'); }
+$('#dPlay').onclick = () => dPlaying ? dStop() : dPlay();
+$('#dScrub').oninput = e => { dStop(); dSet(+e.target.value); };
+$('#protect').onclick = async () => {
+  if (!cur) return;
+  const b = $('#protect'); b.disabled = true; dStop();
+  let cached = true; try { cached = (await fetch('/api/public/attack/ready').then(r => r.json())).optimizer_cached; } catch { /* ask anyway */ }
+  const msg = 'Trying every fix against this attack and re-simulating…';
+  b.textContent = msg; dBusy(true, msg); dStatusSet(msg);
+  try { after = await post('/api/public/attack', { entry: cur, protect: true }); }
+  catch (e) { dStatusSet(`Could not compute the fixes: ${e.message}`, true); after = null; return; }
+  finally { dBusy(false); b.disabled = false; b.textContent = 'Protect with the recommended fixes'; }
+  if (!after.fixes.length) {                      // honest: nothing in the model helps against this start
+    $('#dFix').textContent = after.note || 'No fix in the model reduces this attack.';
+    dStatusSet('No fix changes this attack, so there is nothing to compare. Try a pink-ringed way in from outside.', true);
+    after = null; $('#hAfter').textContent = '–'; dSet(dT); return;
+  }
+  $('#dFix').textContent = `Fixes applied (the best ${after.fixes.length === 1 ? 'fix' : after.fixes.length + ' fixes'} against an attack from here, chosen by re-running this attack for every candidate): ${after.fix_labels.join('; ')}.`;
+  dStatusSet(after.harm < before.harm ? `Harm ${fmt(before.harm)} → ${fmt(after.harm)}. Both runs replay on the same clock; drag the divider to compare them at the same minute.`
+    : 'Both runs replay on the same clock; drag the divider to compare them.');
+  const mc = $('#mapcard'); mc.classList.add('split'); setCut(mc.clientWidth / 2);
+  dSet(0); dPlay();
+};
+window.__demo = { get before() { return before; }, get after() { return after; }, get T() { return dT; }, set: t => { dStop(); dSet(t); } };
+function setCut(px) { const mc = $('#mapcard'), w = mc.clientWidth; px = Math.max(0, Math.min(w, px)); mc.style.setProperty('--cut', `${px}px`); mc.style.setProperty('--cutpx', `${px}px`); }
+(() => { const btn = $('#divBtn'), mc = $('#mapcard'); let drag = false;
+  btn.addEventListener('pointerdown', e => { drag = true; btn.setPointerCapture(e.pointerId); });
+  btn.addEventListener('pointermove', e => { if (drag) setCut(e.clientX - mc.getBoundingClientRect().left); });
+  btn.addEventListener('pointerup', () => drag = false);
+  btn.addEventListener('keydown', e => { const cur = parseFloat(getComputedStyle(mc).getPropertyValue('--cutpx')) || mc.clientWidth / 2; if (e.key === 'ArrowLeft') setCut(cur - 30); if (e.key === 'ArrowRight') setCut(cur + 30); });
+})();
+let rsT = 0;
+addEventListener('resize', () => { clearTimeout(rsT); rsT = setTimeout(() => { if (!L) return; drawMulti(); drawNovel(); drawOpt(); drawBase(); waterChart(); }, 200); });
+new ResizeObserver(() => {                                   // the card grows with the panel beside it: rebuild both maps
+  if (!HERO) return; const r = $('#mapcard').getBoundingClientRect(), k = `${Math.round(r.width)}x${Math.round(r.height)}`;
+  if ($('#mapBefore')._size === k) return;
+  const f = document.activeElement?.closest?.('#mapBefore .node')?.dataset.id;
+  buildMap($('#mapBefore'), true); buildMap($('#mapAfter'), false); dFrame();
+  if (f) $(`#mapBefore .node[data-id="${f}"]`)?.focus({ preventScroll: true });
+}).observe($('#mapcard'));
+
+// ---------- why different ----------
+const WHY = [
+  ['What is risky?', 'Each device scored alone, by CVSS.', 'Scored inside the dependency graph: what it reaches and what depends on it.'],
+  ['How fast?', 'No clock.', 'Minute-by-minute spread, detection and isolation.'],
+  ['How many attackers?', 'One path at a time.', 'Several attackers, staggered starts, each with its own history.'],
+  ['What is lost?', 'Severity labels.', 'Essential services in people × minutes.'],
+  ['Which fix first?', 'Highest CVSS first.', 'Every fix re-simulated; ranked by harm removed and minutes bought.'],
+  ['With what budget?', 'Ignored.', 'Fix count, maintenance windows, staff hours and patch downtime.'],
+  ['An attack nobody has seen?', 'No CVE, no signature, no alert.', 'Water layers compare every hour with normal behaviour; a human checkpoint and failsafe timer follow.'],
+  ['After we fix it?', 'Assumes the attacker stays put.', 'The attacker re-picks the best remaining way in.'],
+];
+function why(v) {
+  $('#whylist').innerHTML = WHY.map(([q, a, b], i) => `<div class="why ${v}"><span class="ic">${v === 'us' ? '✓' : i + 1}</span><div><b>${q}</b><p>${v === 'us' ? b : a}</p></div></div>`).join('');
+  $$('.toggle button').forEach(x => x.classList.toggle('on', x.dataset.v === v));
+}
+$$('.toggle button').forEach(b => b.onclick = () => why(b.dataset.v)); why('us');
+
+// ---------- sectors marquee ----------
+function sectors() {
+  const IC = { power: '<path d="M13 3 6 14h5l-1 7 7-11h-5z"/>', water: '<path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>', transport: '<rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M8 21l1-4M16 21l-1-4"/>',
+    telecom: '<path d="M12 21V9M8 21l4-12 4 12M6 6a8 8 0 0 1 12 0M8.5 8.5a4.5 4.5 0 0 1 7 0"/>', health: '<path d="M4 9h5V4h6v5h5v6h-5v5H9v-5H4z"/>', industry: '<path d="M3 21V10l6 4V10l6 4V6h6v15z"/>', city: '<path d="M3 21h18M5 21V8h5v13M14 21V4h5v17"/>' };
+  const D = [['power', 'Power and energy', 'Substations, protection relays, feeder RTUs, grid SCADA.', 'Electricity'], ['water', 'Water', 'Pump SCADA, tank RTUs, treatment controllers.', 'Water'],
+    ['health', 'Healthcare', 'Hospital networks, EHR, imaging, medical IoT, backup power.', 'Healthcare'], ['telecom', 'Telecommunications', 'Fibre core, cellular gateways, emergency dispatch.', 'Telecommunications'],
+    ['transport', 'Transportation', 'Traffic signal control, enforcement cameras.', 'Transportation'], ['city', 'Smart city', 'Command centre, IoT gateways, city cloud.', 'Smart City / IoT'], ['industry', 'Industry', 'PLCs, HMIs, engineering workstations.', null]];
+  const card = ([ic, n, t, sec]) => { const c = sec ? HERO.nodes.filter(x => x.sector === sec).length : 0; return `<div class="sector"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[ic]}</svg><b>${n}</b><p>${t}</p><span class="cnt ${c ? '' : 'no'}">${c ? `${c} systems in the model` : 'Supported, not in this dataset'}</span></div>`; };
+  const row = D.map(card).join(''); $('#marqRow').innerHTML = row + row;
+}
+
+// ---------- architecture lights up in sequence ----------
+const boxes = $$('.abox'); let ai = 0, archTimer = 0;
+new IntersectionObserver(es => { if (es[0].isIntersecting && !archTimer && !reduce) archTimer = setInterval(() => { boxes.forEach((b, i) => b.classList.toggle('lit', i === ai % boxes.length)); ai++; }, 700); else if (!es[0].isIntersecting) { clearInterval(archTimer); archTimer = 0; } }).observe($('#arch'));
+})();
+</script>
+</body>
+</html>

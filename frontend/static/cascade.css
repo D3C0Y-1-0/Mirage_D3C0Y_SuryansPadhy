@@ -1,0 +1,66 @@
+/* Cascade shared styles: tokens, fonts, base elements. Used by landing.html, app.html and login.html.
+   The 3D twin (index.html) keeps its own copy of the same tokens. See DESIGN.md. */
+@font-face { font-family: "Big Shoulders Display"; font-weight: 600; font-display: swap; src: url(/vendor/fonts/big-shoulders-display-latin-600-normal.woff2) format("woff2"); }
+@font-face { font-family: "Big Shoulders Display"; font-weight: 700; font-display: swap; src: url(/vendor/fonts/big-shoulders-display-latin-700-normal.woff2) format("woff2"); }
+@font-face { font-family: "Big Shoulders Display"; font-weight: 800; font-display: swap; src: url(/vendor/fonts/big-shoulders-display-latin-800-normal.woff2) format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 400; font-display: swap; src: url(/vendor/fonts/plus-jakarta-sans-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 500; font-display: swap; src: url(/vendor/fonts/plus-jakarta-sans-latin-500-normal.woff2) format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 600; font-display: swap; src: url(/vendor/fonts/plus-jakarta-sans-latin-600-normal.woff2) format("woff2"); }
+
+@font-face { font-family: "Outfit"; font-weight: 400; font-display: swap; src: url(/vendor/fonts/outfit-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Outfit"; font-weight: 500; font-display: swap; src: url(/vendor/fonts/outfit-latin-500-normal.woff2) format("woff2"); }
+@font-face { font-family: "Outfit"; font-weight: 600; font-display: swap; src: url(/vendor/fonts/outfit-latin-600-normal.woff2) format("woff2"); }
+
+:root {
+  --abyss: #050B24; --deep: #0A1640; --navy: #12225E; --sheet-2: #1A2C72; --line: #2B3D86;
+  --white: #FFFFFF; --mute: #A9B4DA; --faint: #6F7DB5;
+  --pink: #FF6FB5; --pink-deep: #E43F8E;
+  --soft: #8E9DE0;                /* expected / secondary data series */
+  --warn: #F2B84B;                /* needs attention (always with an icon or word) */
+  /* attacker identities, validated for colour-blind separation on --navy (dataviz validator, dark mode) */
+  --atk-a: #E5559F; --atk-b: #2A8FD6; --atk-c: #9A74F0; --atk-d: #2BA58A;
+  --display: "Big Shoulders Display", "Arial Narrow", sans-serif;
+  --body: "Plus Jakarta Sans", system-ui, sans-serif;
+  --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --r: 14px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--abyss); color: var(--white); font: 400 14px/1.55 var(--body); }
+body { -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 700; line-height: 1.05; margin: 0; letter-spacing: .005em; }
+p { margin: 0; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; border-radius: 4px; }
+.num { font-variant-numeric: tabular-nums; }
+.mute { color: var(--mute); }
+.faint { color: var(--faint); }
+.pinkt { color: var(--pink); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 18px;
+  border-radius: 8px; border: 1px solid rgba(255,255,255,.3); background: transparent; color: var(--white);
+  font-weight: 600; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.btn:hover { border-color: var(--white); }
+.btn.primary { background: var(--white); color: var(--deep); border-color: var(--white); }
+.btn.primary:hover { background: #E6EAFA; }
+.btn.small { min-height: 32px; padding: 0 12px; font-size: 13px; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 1px 7px; border-radius: 3px; font-size: 12px;
+  border: 1px solid var(--line); color: var(--mute); white-space: nowrap; }
+.tag.pink { color: var(--pink); border-color: rgba(255,111,181,.5); }
+.tag.white { color: var(--white); border-color: rgba(255,255,255,.5); }
+.tag.warn { color: var(--warn); border-color: rgba(242,184,75,.5); }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+/* ---------- light theme (platform), matches the landing page. Toggle in the top bar. ---------- */
+:root[data-theme="light"] {
+  --abyss: #EEF3FF; --deep: #FFFFFF; --navy: #FFFFFF; --sheet-2: #F4F7FF; --line: #DCE4F7;
+  --white: #0B1640; --mute: #4A5A88; --faint: #7482AE; --soft: #4F6BDB; --royal: #1E3BFF; --royal-2: #2F5BFF;
+  color-scheme: light;
+}
+:root[data-theme="light"] h1, :root[data-theme="light"] h2, :root[data-theme="light"] h3, :root[data-theme="light"] h4 { font-family: "Outfit", var(--body); font-weight: 500; letter-spacing: -.02em; }
+:root[data-theme="light"] .btn.primary { background: linear-gradient(180deg, #3F6BFF, #1E3BFF); border-color: #1E3BFF; color: #fff; }
+:root[data-theme="light"] .btn.primary:hover { background: linear-gradient(180deg, #4F78FF, #2443FF); }
+:root[data-theme="light"] .btn { border-color: #CBD6F2; }

@@ -1,0 +1,4204 @@
+{
+ "banner": "HISTORICAL REPLAY of BATADAL dataset04 (C-Town benchmark simulation, 2016). Not live telemetry and not a real city installation.",
+ "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+ "events": [
+  {
+   "event_id": "WA-C-1.0.0-20160704T01",
+   "timestamp_start": "2016-07-04T01:00:00",
+   "timestamp_last_alert": "2016-07-04T10:00:00",
+   "alert_duration_h": 10,
+   "alert_hours": 8,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 118.2401,
+   "peak_timestamp": "2016-07-04T06:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 93.08,
+   "severity": "high",
+   "source_signal_ids": [
+    "P_J422",
+    "P_J269",
+    "L_T1",
+    "P_J415",
+    "P_J289",
+    "P_J302",
+    "P_J14",
+    "P_J256",
+    "P_J317",
+    "P_J300",
+    "P_J307",
+    "L_T4"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T1",
+    "zone_T2",
+    "zone_T3",
+    "zone_T7",
+    "station_PU9"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160704T01",
+    "time_window": [
+     "2016-07-04T01:00:00",
+     "2016-07-04T10:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T1",
+     "zone_T2",
+     "zone_T3",
+     "zone_T7",
+     "station_PU9"
+    ],
+    "signals": [
+     "P_J422",
+     "P_J269",
+     "L_T1",
+     "P_J415",
+     "P_J289",
+     "P_J302",
+     "P_J14",
+     "P_J256",
+     "P_J317",
+     "P_J300",
+     "P_J307",
+     "L_T4"
+    ],
+    "deviation_severity": "high",
+    "investigation_priority_hint": "investigate_first",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160707T01",
+   "timestamp_start": "2016-07-07T01:00:00",
+   "timestamp_last_alert": "2016-07-07T01:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 25.5892,
+   "peak_timestamp": "2016-07-07T01:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 74.44,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J289",
+    "P_J300",
+    "P_J422"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T3",
+    "zone_T2"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160707T01",
+    "time_window": [
+     "2016-07-07T01:00:00",
+     "2016-07-07T01:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T3",
+     "zone_T2"
+    ],
+    "signals": [
+     "P_J289",
+     "P_J300",
+     "P_J422"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160723T18",
+   "timestamp_start": "2016-07-23T18:00:00",
+   "timestamp_last_alert": "2016-07-23T18:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 12.3368,
+   "peak_timestamp": "2016-07-23T18:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 58.41,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J415",
+    "P_J14",
+    "P_J422"
+   ],
+   "hydraulic_zones": [
+    "zone_T2",
+    "zone_T4"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160723T18",
+    "time_window": [
+     "2016-07-23T18:00:00",
+     "2016-07-23T18:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T2",
+     "zone_T4"
+    ],
+    "signals": [
+     "P_J415",
+     "P_J14",
+     "P_J422"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160726T03",
+   "timestamp_start": "2016-07-26T03:00:00",
+   "timestamp_last_alert": "2016-07-26T04:00:00",
+   "alert_duration_h": 2,
+   "alert_hours": 2,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 15.0615,
+   "peak_timestamp": "2016-07-26T04:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 63.16,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J422",
+    "P_J269",
+    "P_J302",
+    "P_J300",
+    "P_J289"
+   ],
+   "hydraulic_zones": [
+    "zone_T2",
+    "zone_T1",
+    "station_PU9",
+    "zone_T3",
+    "zone_T4"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160726T03",
+    "time_window": [
+     "2016-07-26T03:00:00",
+     "2016-07-26T04:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T2",
+     "zone_T1",
+     "station_PU9",
+     "zone_T3",
+     "zone_T4"
+    ],
+    "signals": [
+     "P_J422",
+     "P_J269",
+     "P_J302",
+     "P_J300",
+     "P_J289"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160727T12",
+   "timestamp_start": "2016-07-27T12:00:00",
+   "timestamp_last_alert": "2016-07-27T12:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 9.9019,
+   "peak_timestamp": "2016-07-27T12:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 52.99,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J289",
+    "P_J300",
+    "P_J422"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T3",
+    "zone_T2"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160727T12",
+    "time_window": [
+     "2016-07-27T12:00:00",
+     "2016-07-27T12:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T3",
+     "zone_T2"
+    ],
+    "signals": [
+     "P_J289",
+     "P_J300",
+     "P_J422"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160728T14",
+   "timestamp_start": "2016-07-28T14:00:00",
+   "timestamp_last_alert": "2016-07-28T14:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 8.8962,
+   "peak_timestamp": "2016-07-28T14:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 50.31,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J317",
+    "P_J269",
+    "P_J422"
+   ],
+   "hydraulic_zones": [
+    "zone_T7",
+    "zone_T1",
+    "zone_T2"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160728T14",
+    "time_window": [
+     "2016-07-28T14:00:00",
+     "2016-07-28T14:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T7",
+     "zone_T1",
+     "zone_T2"
+    ],
+    "signals": [
+     "P_J317",
+     "P_J269",
+     "P_J422"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160803T22",
+   "timestamp_start": "2016-08-03T22:00:00",
+   "timestamp_last_alert": "2016-08-03T22:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 9.9409,
+   "peak_timestamp": "2016-08-03T22:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 53.08,
+   "severity": "low",
+   "source_signal_ids": [
+    "L_T6",
+    "L_T3",
+    "P_J269"
+   ],
+   "hydraulic_zones": [
+    "zone_T6",
+    "zone_T3",
+    "zone_T1"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160803T22",
+    "time_window": [
+     "2016-08-03T22:00:00",
+     "2016-08-03T22:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T6",
+     "zone_T3",
+     "zone_T1"
+    ],
+    "signals": [
+     "L_T6",
+     "L_T3",
+     "P_J269"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160807T07",
+   "timestamp_start": "2016-08-07T07:00:00",
+   "timestamp_last_alert": "2016-08-07T07:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 28.7399,
+   "peak_timestamp": "2016-08-07T07:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 76.59,
+   "severity": "medium",
+   "source_signal_ids": [
+    "P_J269",
+    "P_J302",
+    "P_J307"
+   ],
+   "hydraulic_zones": [
+    "zone_T1",
+    "station_PU9",
+    "zone_T7"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160807T07",
+    "time_window": [
+     "2016-08-07T07:00:00",
+     "2016-08-07T07:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T1",
+     "station_PU9",
+     "zone_T7"
+    ],
+    "signals": [
+     "P_J269",
+     "P_J302",
+     "P_J307"
+    ],
+    "deviation_severity": "medium",
+    "investigation_priority_hint": "investigate",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160824T05",
+   "timestamp_start": "2016-08-24T05:00:00",
+   "timestamp_last_alert": "2016-08-24T06:00:00",
+   "alert_duration_h": 2,
+   "alert_hours": 2,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 10.2871,
+   "peak_timestamp": "2016-08-24T05:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 53.94,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J415",
+    "L_T1",
+    "P_J14",
+    "P_J269"
+   ],
+   "hydraulic_zones": [
+    "zone_T1",
+    "zone_T4",
+    "zone_T2"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160824T05",
+    "time_window": [
+     "2016-08-24T05:00:00",
+     "2016-08-24T06:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T1",
+     "zone_T4",
+     "zone_T2"
+    ],
+    "signals": [
+     "P_J415",
+     "L_T1",
+     "P_J14",
+     "P_J269"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160826T13",
+   "timestamp_start": "2016-08-26T13:00:00",
+   "timestamp_last_alert": "2016-08-26T13:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 15.9723,
+   "peak_timestamp": "2016-08-26T13:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 64.51,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J300",
+    "P_J289",
+    "P_J422"
+   ],
+   "hydraulic_zones": [
+    "zone_T3",
+    "zone_T4",
+    "zone_T2"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160826T13",
+    "time_window": [
+     "2016-08-26T13:00:00",
+     "2016-08-26T13:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T3",
+     "zone_T4",
+     "zone_T2"
+    ],
+    "signals": [
+     "P_J300",
+     "P_J289",
+     "P_J422"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160828T07",
+   "timestamp_start": "2016-08-28T07:00:00",
+   "timestamp_last_alert": "2016-08-28T07:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 33.1784,
+   "peak_timestamp": "2016-08-28T07:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 79.06,
+   "severity": "medium",
+   "source_signal_ids": [
+    "P_J269",
+    "P_J14",
+    "L_T6"
+   ],
+   "hydraulic_zones": [
+    "zone_T1",
+    "zone_T2",
+    "zone_T6"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160828T07",
+    "time_window": [
+     "2016-08-28T07:00:00",
+     "2016-08-28T07:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T1",
+     "zone_T2",
+     "zone_T6"
+    ],
+    "signals": [
+     "P_J269",
+     "P_J14",
+     "L_T6"
+    ],
+    "deviation_severity": "medium",
+    "investigation_priority_hint": "investigate",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160901T07",
+   "timestamp_start": "2016-09-01T07:00:00",
+   "timestamp_last_alert": "2016-09-01T07:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 8.9423,
+   "peak_timestamp": "2016-09-01T07:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 50.44,
+   "severity": "low",
+   "source_signal_ids": [
+    "L_T4",
+    "L_T5",
+    "L_T2"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T5",
+    "zone_T2"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160901T07",
+    "time_window": [
+     "2016-09-01T07:00:00",
+     "2016-09-01T07:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T5",
+     "zone_T2"
+    ],
+    "signals": [
+     "L_T4",
+     "L_T5",
+     "L_T2"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160902T17",
+   "timestamp_start": "2016-09-02T17:00:00",
+   "timestamp_last_alert": "2016-09-02T17:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 18.985,
+   "peak_timestamp": "2016-09-02T17:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 68.36,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J422",
+    "L_T2",
+    "P_J415"
+   ],
+   "hydraulic_zones": [
+    "zone_T2",
+    "zone_T4"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160902T17",
+    "time_window": [
+     "2016-09-02T17:00:00",
+     "2016-09-02T17:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T2",
+     "zone_T4"
+    ],
+    "signals": [
+     "P_J422",
+     "L_T2",
+     "P_J415"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160905T13",
+   "timestamp_start": "2016-09-05T13:00:00",
+   "timestamp_last_alert": "2016-09-05T13:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 10.1097,
+   "peak_timestamp": "2016-09-05T13:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 53.5,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J415",
+    "P_J289",
+    "P_J422"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T2"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160905T13",
+    "time_window": [
+     "2016-09-05T13:00:00",
+     "2016-09-05T13:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T2"
+    ],
+    "signals": [
+     "P_J415",
+     "P_J289",
+     "P_J422"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160909T08",
+   "timestamp_start": "2016-09-09T08:00:00",
+   "timestamp_last_alert": "2016-09-09T08:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 10.4037,
+   "peak_timestamp": "2016-09-09T08:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 54.22,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J256",
+    "L_T1",
+    "P_J269"
+   ],
+   "hydraulic_zones": [
+    "zone_T1",
+    "zone_T3"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160909T08",
+    "time_window": [
+     "2016-09-09T08:00:00",
+     "2016-09-09T08:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T1",
+     "zone_T3"
+    ],
+    "signals": [
+     "P_J256",
+     "L_T1",
+     "P_J269"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160914T00",
+   "timestamp_start": "2016-09-14T00:00:00",
+   "timestamp_last_alert": "2016-09-16T02:00:00",
+   "alert_duration_h": 51,
+   "alert_hours": 51,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 60.4319,
+   "peak_timestamp": "2016-09-14T18:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 87.31,
+   "severity": "medium",
+   "source_signal_ids": [
+    "L_T6",
+    "P_J307",
+    "P_J302",
+    "L_T7",
+    "P_J317",
+    "L_T1",
+    "P_J415",
+    "P_J256",
+    "P_J306",
+    "P_J14",
+    "P_J269",
+    "L_T5",
+    "P_J422"
+   ],
+   "hydraulic_zones": [
+    "zone_T7",
+    "zone_T6",
+    "station_PU9",
+    "zone_T1",
+    "zone_T4",
+    "zone_T3",
+    "zone_T2",
+    "zone_T5"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 1,
+   "reference_note": "overlaps documented BATADAL attack 1 (2016-09-13 23h to 2016-09-16 00h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160914T00",
+    "time_window": [
+     "2016-09-14T00:00:00",
+     "2016-09-16T02:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T7",
+     "zone_T6",
+     "station_PU9",
+     "zone_T1",
+     "zone_T4",
+     "zone_T3",
+     "zone_T2",
+     "zone_T5"
+    ],
+    "signals": [
+     "L_T6",
+     "P_J307",
+     "P_J302",
+     "L_T7",
+     "P_J317",
+     "L_T1",
+     "P_J415",
+     "P_J256",
+     "P_J306",
+     "P_J14",
+     "P_J269",
+     "L_T5",
+     "P_J422"
+    ],
+    "deviation_severity": "medium",
+    "investigation_priority_hint": "investigate",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160916T14",
+   "timestamp_start": "2016-09-16T14:00:00",
+   "timestamp_last_alert": "2016-09-16T15:00:00",
+   "alert_duration_h": 2,
+   "alert_hours": 2,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 13.3995,
+   "peak_timestamp": "2016-09-16T14:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 60.4,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J269",
+    "L_T5",
+    "P_J317",
+    "L_T6",
+    "L_T2",
+    "L_T1"
+   ],
+   "hydraulic_zones": [
+    "zone_T1",
+    "zone_T5",
+    "zone_T7",
+    "zone_T6",
+    "zone_T2"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160916T14",
+    "time_window": [
+     "2016-09-16T14:00:00",
+     "2016-09-16T15:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T1",
+     "zone_T5",
+     "zone_T7",
+     "zone_T6",
+     "zone_T2"
+    ],
+    "signals": [
+     "P_J269",
+     "L_T5",
+     "P_J317",
+     "L_T6",
+     "L_T2",
+     "L_T1"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160918T01",
+   "timestamp_start": "2016-09-18T01:00:00",
+   "timestamp_last_alert": "2016-09-18T01:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 12.4922,
+   "peak_timestamp": "2016-09-18T01:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 58.71,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J302",
+    "P_J307",
+    "P_J317"
+   ],
+   "hydraulic_zones": [
+    "zone_T7",
+    "station_PU9"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160918T01",
+    "time_window": [
+     "2016-09-18T01:00:00",
+     "2016-09-18T01:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T7",
+     "station_PU9"
+    ],
+    "signals": [
+     "P_J302",
+     "P_J307",
+     "P_J317"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160925T07",
+   "timestamp_start": "2016-09-25T07:00:00",
+   "timestamp_last_alert": "2016-09-25T09:00:00",
+   "alert_duration_h": 3,
+   "alert_hours": 3,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 16.5927,
+   "peak_timestamp": "2016-09-25T07:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 65.38,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J269",
+    "P_J14",
+    "P_J256",
+    "L_T4",
+    "L_T2",
+    "L_T6",
+    "P_J415",
+    "L_T7"
+   ],
+   "hydraulic_zones": [
+    "zone_T1",
+    "zone_T2",
+    "zone_T4",
+    "zone_T3",
+    "zone_T6",
+    "zone_T7"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160925T07",
+    "time_window": [
+     "2016-09-25T07:00:00",
+     "2016-09-25T09:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T1",
+     "zone_T2",
+     "zone_T4",
+     "zone_T3",
+     "zone_T6",
+     "zone_T7"
+    ],
+    "signals": [
+     "P_J269",
+     "P_J14",
+     "P_J256",
+     "L_T4",
+     "L_T2",
+     "L_T6",
+     "P_J415",
+     "L_T7"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160926T11",
+   "timestamp_start": "2016-09-26T11:00:00",
+   "timestamp_last_alert": "2016-09-27T10:00:00",
+   "alert_duration_h": 24,
+   "alert_hours": 24,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 114.0597,
+   "peak_timestamp": "2016-09-26T17:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 92.85,
+   "severity": "high",
+   "source_signal_ids": [
+    "P_J307",
+    "P_J302",
+    "P_J317",
+    "L_T6",
+    "L_T7",
+    "P_J422",
+    "L_T1",
+    "P_J289",
+    "L_T3",
+    "L_T5"
+   ],
+   "hydraulic_zones": [
+    "zone_T7",
+    "station_PU9",
+    "zone_T6",
+    "zone_T2",
+    "zone_T1",
+    "zone_T4",
+    "zone_T3",
+    "zone_T5"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 2,
+   "reference_note": "overlaps documented BATADAL attack 2 (2016-09-26 11h to 2016-09-27 10h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160926T11",
+    "time_window": [
+     "2016-09-26T11:00:00",
+     "2016-09-27T10:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T7",
+     "station_PU9",
+     "zone_T6",
+     "zone_T2",
+     "zone_T1",
+     "zone_T4",
+     "zone_T3",
+     "zone_T5"
+    ],
+    "signals": [
+     "P_J307",
+     "P_J302",
+     "P_J317",
+     "L_T6",
+     "L_T7",
+     "P_J422",
+     "L_T1",
+     "P_J289",
+     "L_T3",
+     "L_T5"
+    ],
+    "deviation_severity": "high",
+    "investigation_priority_hint": "investigate_first",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20160930T13",
+   "timestamp_start": "2016-09-30T13:00:00",
+   "timestamp_last_alert": "2016-09-30T13:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 11.0429,
+   "peak_timestamp": "2016-09-30T13:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 55.69,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J415",
+    "P_J307",
+    "P_J14"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T7",
+    "zone_T2"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20160930T13",
+    "time_window": [
+     "2016-09-30T13:00:00",
+     "2016-09-30T13:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T7",
+     "zone_T2"
+    ],
+    "signals": [
+     "P_J415",
+     "P_J307",
+     "P_J14"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161006T15",
+   "timestamp_start": "2016-10-06T15:00:00",
+   "timestamp_last_alert": "2016-10-06T16:00:00",
+   "alert_duration_h": 2,
+   "alert_hours": 2,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 19.3551,
+   "peak_timestamp": "2016-10-06T15:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 68.78,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J289",
+    "P_J422",
+    "P_J300",
+    "L_T3"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T3",
+    "zone_T2"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161006T15",
+    "time_window": [
+     "2016-10-06T15:00:00",
+     "2016-10-06T16:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T3",
+     "zone_T2"
+    ],
+    "signals": [
+     "P_J289",
+     "P_J422",
+     "P_J300",
+     "L_T3"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161009T07",
+   "timestamp_start": "2016-10-09T07:00:00",
+   "timestamp_last_alert": "2016-10-09T18:00:00",
+   "alert_duration_h": 12,
+   "alert_hours": 9,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 35.424,
+   "peak_timestamp": "2016-10-09T07:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 80.13,
+   "severity": "medium",
+   "source_signal_ids": [
+    "P_J302",
+    "L_T1",
+    "P_J307",
+    "P_J14",
+    "P_J269",
+    "P_J300",
+    "L_T3",
+    "P_J422",
+    "P_J256"
+   ],
+   "hydraulic_zones": [
+    "zone_T1",
+    "station_PU9",
+    "zone_T7",
+    "zone_T2",
+    "zone_T3"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 3,
+   "reference_note": "overlaps documented BATADAL attack 3 (2016-10-09 09h to 2016-10-11 20h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161009T07",
+    "time_window": [
+     "2016-10-09T07:00:00",
+     "2016-10-09T18:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T1",
+     "station_PU9",
+     "zone_T7",
+     "zone_T2",
+     "zone_T3"
+    ],
+    "signals": [
+     "P_J302",
+     "L_T1",
+     "P_J307",
+     "P_J14",
+     "P_J269",
+     "P_J300",
+     "L_T3",
+     "P_J422",
+     "P_J256"
+    ],
+    "deviation_severity": "medium",
+    "investigation_priority_hint": "investigate",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161010T05",
+   "timestamp_start": "2016-10-10T05:00:00",
+   "timestamp_last_alert": "2016-10-10T16:00:00",
+   "alert_duration_h": 12,
+   "alert_hours": 8,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 21.4795,
+   "peak_timestamp": "2016-10-10T11:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 70.97,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J302",
+    "P_J307",
+    "L_T1",
+    "P_J14",
+    "P_J317",
+    "L_T2",
+    "P_J269",
+    "L_T6",
+    "P_J422"
+   ],
+   "hydraulic_zones": [
+    "zone_T7",
+    "station_PU9",
+    "zone_T2",
+    "zone_T1",
+    "zone_T6"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 3,
+   "reference_note": "overlaps documented BATADAL attack 3 (2016-10-09 09h to 2016-10-11 20h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161010T05",
+    "time_window": [
+     "2016-10-10T05:00:00",
+     "2016-10-10T16:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T7",
+     "station_PU9",
+     "zone_T2",
+     "zone_T1",
+     "zone_T6"
+    ],
+    "signals": [
+     "P_J302",
+     "P_J307",
+     "L_T1",
+     "P_J14",
+     "P_J317",
+     "L_T2",
+     "P_J269",
+     "L_T6",
+     "P_J422"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161011T03",
+   "timestamp_start": "2016-10-11T03:00:00",
+   "timestamp_last_alert": "2016-10-11T22:00:00",
+   "alert_duration_h": 20,
+   "alert_hours": 18,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 1927.8981,
+   "peak_timestamp": "2016-10-11T13:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 99.55,
+   "severity": "high",
+   "source_signal_ids": [
+    "P_J302",
+    "P_J269",
+    "P_J307",
+    "P_J14",
+    "L_T1",
+    "P_J422",
+    "L_T6",
+    "P_J300"
+   ],
+   "hydraulic_zones": [
+    "station_PU9",
+    "zone_T1",
+    "zone_T2",
+    "zone_T7",
+    "zone_T6",
+    "zone_T3"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 3,
+   "reference_note": "overlaps documented BATADAL attack 3 (2016-10-09 09h to 2016-10-11 20h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161011T03",
+    "time_window": [
+     "2016-10-11T03:00:00",
+     "2016-10-11T22:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "station_PU9",
+     "zone_T1",
+     "zone_T2",
+     "zone_T7",
+     "zone_T6",
+     "zone_T3"
+    ],
+    "signals": [
+     "P_J302",
+     "P_J269",
+     "P_J307",
+     "P_J14",
+     "L_T1",
+     "P_J422",
+     "L_T6",
+     "P_J300"
+    ],
+    "deviation_severity": "high",
+    "investigation_priority_hint": "investigate_first",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161021T09",
+   "timestamp_start": "2016-10-21T09:00:00",
+   "timestamp_last_alert": "2016-10-21T09:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 9.6404,
+   "peak_timestamp": "2016-10-21T09:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 52.32,
+   "severity": "low",
+   "source_signal_ids": [
+    "L_T6",
+    "L_T7",
+    "P_J269"
+   ],
+   "hydraulic_zones": [
+    "zone_T6",
+    "zone_T7",
+    "zone_T1"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161021T09",
+    "time_window": [
+     "2016-10-21T09:00:00",
+     "2016-10-21T09:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T6",
+     "zone_T7",
+     "zone_T1"
+    ],
+    "signals": [
+     "L_T6",
+     "L_T7",
+     "P_J269"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161021T14",
+   "timestamp_start": "2016-10-21T14:00:00",
+   "timestamp_last_alert": "2016-10-21T14:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 16.2867,
+   "peak_timestamp": "2016-10-21T14:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 64.96,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J289",
+    "P_J300",
+    "P_J422"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T3",
+    "zone_T2"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161021T14",
+    "time_window": [
+     "2016-10-21T14:00:00",
+     "2016-10-21T14:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T3",
+     "zone_T2"
+    ],
+    "signals": [
+     "P_J289",
+     "P_J300",
+     "P_J422"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161029T15",
+   "timestamp_start": "2016-10-29T15:00:00",
+   "timestamp_last_alert": "2016-10-29T15:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 18.8941,
+   "peak_timestamp": "2016-10-29T15:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 68.26,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J14",
+    "P_J289",
+    "P_J300"
+   ],
+   "hydraulic_zones": [
+    "zone_T2",
+    "zone_T4",
+    "zone_T3"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161029T15",
+    "time_window": [
+     "2016-10-29T15:00:00",
+     "2016-10-29T15:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T2",
+     "zone_T4",
+     "zone_T3"
+    ],
+    "signals": [
+     "P_J14",
+     "P_J289",
+     "P_J300"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161029T21",
+   "timestamp_start": "2016-10-29T21:00:00",
+   "timestamp_last_alert": "2016-10-30T01:00:00",
+   "alert_duration_h": 5,
+   "alert_hours": 5,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 18.8044,
+   "peak_timestamp": "2016-10-29T22:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 68.16,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J302",
+    "P_J307",
+    "L_T1",
+    "P_J14"
+   ],
+   "hydraulic_zones": [
+    "station_PU9",
+    "zone_T7",
+    "zone_T1",
+    "zone_T2"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 4,
+   "reference_note": "overlaps documented BATADAL attack 4 (2016-10-29 19h to 2016-11-02 16h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161029T21",
+    "time_window": [
+     "2016-10-29T21:00:00",
+     "2016-10-30T01:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "station_PU9",
+     "zone_T7",
+     "zone_T1",
+     "zone_T2"
+    ],
+    "signals": [
+     "P_J302",
+     "P_J307",
+     "L_T1",
+     "P_J14"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161030T06",
+   "timestamp_start": "2016-10-30T06:00:00",
+   "timestamp_last_alert": "2016-10-31T19:00:00",
+   "alert_duration_h": 38,
+   "alert_hours": 38,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 401.2243,
+   "peak_timestamp": "2016-10-30T14:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 97.86,
+   "severity": "high",
+   "source_signal_ids": [
+    "P_J302",
+    "P_J307",
+    "P_J14",
+    "P_J306",
+    "L_T1",
+    "P_J422",
+    "P_J317",
+    "L_T6"
+   ],
+   "hydraulic_zones": [
+    "station_PU9",
+    "zone_T7",
+    "zone_T2",
+    "zone_T1",
+    "zone_T6"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 4,
+   "reference_note": "overlaps documented BATADAL attack 4 (2016-10-29 19h to 2016-11-02 16h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161030T06",
+    "time_window": [
+     "2016-10-30T06:00:00",
+     "2016-10-31T19:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "station_PU9",
+     "zone_T7",
+     "zone_T2",
+     "zone_T1",
+     "zone_T6"
+    ],
+    "signals": [
+     "P_J302",
+     "P_J307",
+     "P_J14",
+     "P_J306",
+     "L_T1",
+     "P_J422",
+     "P_J317",
+     "L_T6"
+    ],
+    "deviation_severity": "high",
+    "investigation_priority_hint": "investigate_first",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161101T03",
+   "timestamp_start": "2016-11-01T03:00:00",
+   "timestamp_last_alert": "2016-11-01T19:00:00",
+   "alert_duration_h": 17,
+   "alert_hours": 17,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 403.0168,
+   "peak_timestamp": "2016-11-01T13:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 97.87,
+   "severity": "high",
+   "source_signal_ids": [
+    "P_J302",
+    "P_J307",
+    "P_J14",
+    "L_T1",
+    "P_J306"
+   ],
+   "hydraulic_zones": [
+    "station_PU9",
+    "zone_T7",
+    "zone_T2",
+    "zone_T1"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 4,
+   "reference_note": "overlaps documented BATADAL attack 4 (2016-10-29 19h to 2016-11-02 16h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161101T03",
+    "time_window": [
+     "2016-11-01T03:00:00",
+     "2016-11-01T19:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "station_PU9",
+     "zone_T7",
+     "zone_T2",
+     "zone_T1"
+    ],
+    "signals": [
+     "P_J302",
+     "P_J307",
+     "P_J14",
+     "L_T1",
+     "P_J306"
+    ],
+    "deviation_severity": "high",
+    "investigation_priority_hint": "investigate_first",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161102T05",
+   "timestamp_start": "2016-11-02T05:00:00",
+   "timestamp_last_alert": "2016-11-02T16:00:00",
+   "alert_duration_h": 12,
+   "alert_hours": 12,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 80.7849,
+   "peak_timestamp": "2016-11-02T16:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 90.19,
+   "severity": "medium",
+   "source_signal_ids": [
+    "P_J307",
+    "P_J302",
+    "P_J14",
+    "L_T1"
+   ],
+   "hydraulic_zones": [
+    "zone_T7",
+    "station_PU9",
+    "zone_T2",
+    "zone_T1"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 4,
+   "reference_note": "overlaps documented BATADAL attack 4 (2016-10-29 19h to 2016-11-02 16h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161102T05",
+    "time_window": [
+     "2016-11-02T05:00:00",
+     "2016-11-02T16:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T7",
+     "station_PU9",
+     "zone_T2",
+     "zone_T1"
+    ],
+    "signals": [
+     "P_J307",
+     "P_J302",
+     "P_J14",
+     "L_T1"
+    ],
+    "deviation_severity": "medium",
+    "investigation_priority_hint": "investigate",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161113T07",
+   "timestamp_start": "2016-11-13T07:00:00",
+   "timestamp_last_alert": "2016-11-13T08:00:00",
+   "alert_duration_h": 2,
+   "alert_hours": 2,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 16.3845,
+   "peak_timestamp": "2016-11-13T07:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 65.09,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J269",
+    "L_T6",
+    "P_J306",
+    "L_T7"
+   ],
+   "hydraulic_zones": [
+    "zone_T1",
+    "zone_T6",
+    "station_PU9",
+    "zone_T7"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161113T07",
+    "time_window": [
+     "2016-11-13T07:00:00",
+     "2016-11-13T08:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T1",
+     "zone_T6",
+     "station_PU9",
+     "zone_T7"
+    ],
+    "signals": [
+     "P_J269",
+     "L_T6",
+     "P_J306",
+     "L_T7"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161114T08",
+   "timestamp_start": "2016-11-14T08:00:00",
+   "timestamp_last_alert": "2016-11-14T08:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 9.5598,
+   "peak_timestamp": "2016-11-14T08:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 52.11,
+   "severity": "low",
+   "source_signal_ids": [
+    "L_T4",
+    "P_J256",
+    "P_J415"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T3"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161114T08",
+    "time_window": [
+     "2016-11-14T08:00:00",
+     "2016-11-14T08:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T3"
+    ],
+    "signals": [
+     "L_T4",
+     "P_J256",
+     "P_J415"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161116T08",
+   "timestamp_start": "2016-11-16T08:00:00",
+   "timestamp_last_alert": "2016-11-16T08:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 9.6085,
+   "peak_timestamp": "2016-11-16T08:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 52.24,
+   "severity": "low",
+   "source_signal_ids": [
+    "L_T6",
+    "P_J256",
+    "P_J306"
+   ],
+   "hydraulic_zones": [
+    "zone_T6",
+    "zone_T3",
+    "station_PU9"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161116T08",
+    "time_window": [
+     "2016-11-16T08:00:00",
+     "2016-11-16T08:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T6",
+     "zone_T3",
+     "station_PU9"
+    ],
+    "signals": [
+     "L_T6",
+     "P_J256",
+     "P_J306"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161123T16",
+   "timestamp_start": "2016-11-23T16:00:00",
+   "timestamp_last_alert": "2016-11-23T16:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 12.0817,
+   "peak_timestamp": "2016-11-23T16:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 57.9,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J415",
+    "L_T4",
+    "L_T3"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T3"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161123T16",
+    "time_window": [
+     "2016-11-23T16:00:00",
+     "2016-11-23T16:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T3"
+    ],
+    "signals": [
+     "P_J415",
+     "L_T4",
+     "L_T3"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161126T18",
+   "timestamp_start": "2016-11-26T18:00:00",
+   "timestamp_last_alert": "2016-11-29T05:00:00",
+   "alert_duration_h": 60,
+   "alert_hours": 58,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 69.8903,
+   "peak_timestamp": "2016-11-27T22:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 88.83,
+   "severity": "medium",
+   "source_signal_ids": [
+    "P_J415",
+    "L_T4",
+    "P_J289",
+    "P_J422",
+    "P_J300",
+    "P_J14",
+    "L_T2",
+    "L_T6",
+    "L_T3",
+    "P_J269",
+    "P_J256",
+    "P_J302",
+    "P_J317"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T2",
+    "zone_T3",
+    "zone_T6",
+    "zone_T1",
+    "station_PU9",
+    "zone_T7"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 5,
+   "reference_note": "overlaps documented BATADAL attack 5 (2016-11-26 17h to 2016-11-29 04h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161126T18",
+    "time_window": [
+     "2016-11-26T18:00:00",
+     "2016-11-29T05:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T2",
+     "zone_T3",
+     "zone_T6",
+     "zone_T1",
+     "station_PU9",
+     "zone_T7"
+    ],
+    "signals": [
+     "P_J415",
+     "L_T4",
+     "P_J289",
+     "P_J422",
+     "P_J300",
+     "P_J14",
+     "L_T2",
+     "L_T6",
+     "L_T3",
+     "P_J269",
+     "P_J256",
+     "P_J302",
+     "P_J317"
+    ],
+    "deviation_severity": "medium",
+    "investigation_priority_hint": "investigate",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161129T14",
+   "timestamp_start": "2016-11-29T14:00:00",
+   "timestamp_last_alert": "2016-11-29T14:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 17.4549,
+   "peak_timestamp": "2016-11-29T14:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 66.52,
+   "severity": "low",
+   "source_signal_ids": [
+    "P_J289",
+    "P_J300",
+    "P_J422"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T3",
+    "zone_T2"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161129T14",
+    "time_window": [
+     "2016-11-29T14:00:00",
+     "2016-11-29T14:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T3",
+     "zone_T2"
+    ],
+    "signals": [
+     "P_J289",
+     "P_J300",
+     "P_J422"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161205T14",
+   "timestamp_start": "2016-12-05T14:00:00",
+   "timestamp_last_alert": "2016-12-05T14:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 14.2455,
+   "peak_timestamp": "2016-12-05T14:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 61.85,
+   "severity": "low",
+   "source_signal_ids": [
+    "L_T4",
+    "L_T5",
+    "L_T6"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T5",
+    "zone_T6"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161205T14",
+    "time_window": [
+     "2016-12-05T14:00:00",
+     "2016-12-05T14:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T5",
+     "zone_T6"
+    ],
+    "signals": [
+     "L_T4",
+     "L_T5",
+     "L_T6"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161206T10",
+   "timestamp_start": "2016-12-06T10:00:00",
+   "timestamp_last_alert": "2016-12-06T13:00:00",
+   "alert_duration_h": 4,
+   "alert_hours": 2,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 12.7048,
+   "peak_timestamp": "2016-12-06T13:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 59.12,
+   "severity": "low",
+   "source_signal_ids": [
+    "L_T4",
+    "L_T6",
+    "L_T7",
+    "P_J14",
+    "P_J256"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T6",
+    "zone_T7",
+    "zone_T2",
+    "zone_T3"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 6,
+   "reference_note": "overlaps documented BATADAL attack 6 (2016-12-06 07h to 2016-12-10 04h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161206T10",
+    "time_window": [
+     "2016-12-06T10:00:00",
+     "2016-12-06T13:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T6",
+     "zone_T7",
+     "zone_T2",
+     "zone_T3"
+    ],
+    "signals": [
+     "L_T4",
+     "L_T6",
+     "L_T7",
+     "P_J14",
+     "P_J256"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161206T18",
+   "timestamp_start": "2016-12-06T18:00:00",
+   "timestamp_last_alert": "2016-12-10T02:00:00",
+   "alert_duration_h": 81,
+   "alert_hours": 76,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 112.3513,
+   "peak_timestamp": "2016-12-08T02:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 92.75,
+   "severity": "high",
+   "source_signal_ids": [
+    "P_J415",
+    "P_J289",
+    "P_J14",
+    "P_J300",
+    "P_J422",
+    "L_T4",
+    "L_T6",
+    "L_T7",
+    "P_J317",
+    "L_T5",
+    "L_T2"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T2",
+    "zone_T3",
+    "zone_T6",
+    "zone_T7",
+    "zone_T5"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 6,
+   "reference_note": "overlaps documented BATADAL attack 6 (2016-12-06 07h to 2016-12-10 04h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161206T18",
+    "time_window": [
+     "2016-12-06T18:00:00",
+     "2016-12-10T02:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T2",
+     "zone_T3",
+     "zone_T6",
+     "zone_T7",
+     "zone_T5"
+    ],
+    "signals": [
+     "P_J415",
+     "P_J289",
+     "P_J14",
+     "P_J300",
+     "P_J422",
+     "L_T4",
+     "L_T6",
+     "L_T7",
+     "P_J317",
+     "L_T5",
+     "L_T2"
+    ],
+    "deviation_severity": "high",
+    "investigation_priority_hint": "investigate_first",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161214T15",
+   "timestamp_start": "2016-12-14T15:00:00",
+   "timestamp_last_alert": "2016-12-14T15:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 21.9284,
+   "peak_timestamp": "2016-12-14T15:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 71.39,
+   "severity": "low",
+   "source_signal_ids": [
+    "L_T4",
+    "L_T7",
+    "L_T1"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T7",
+    "zone_T1"
+   ],
+   "mapped_city_asset_ids": [
+    "WA04"
+   ],
+   "mapping_status": "design_mapping_illustrative",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 7,
+   "reference_note": "overlaps documented BATADAL attack 7 (2016-12-14 15h to 2016-12-19 04h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161214T15",
+    "time_window": [
+     "2016-12-14T15:00:00",
+     "2016-12-14T15:00:00"
+    ],
+    "city_asset_ids": [
+     "WA04"
+    ],
+    "city_asset_mapping_status": "design_mapping_illustrative",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T7",
+     "zone_T1"
+    ],
+    "signals": [
+     "L_T4",
+     "L_T7",
+     "L_T1"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161214T21",
+   "timestamp_start": "2016-12-14T21:00:00",
+   "timestamp_last_alert": "2016-12-14T21:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 13.5551,
+   "peak_timestamp": "2016-12-14T21:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 60.67,
+   "severity": "low",
+   "source_signal_ids": [
+    "L_T4",
+    "P_J256",
+    "P_J300"
+   ],
+   "hydraulic_zones": [
+    "zone_T3",
+    "zone_T4"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 7,
+   "reference_note": "overlaps documented BATADAL attack 7 (2016-12-14 15h to 2016-12-19 04h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161214T21",
+    "time_window": [
+     "2016-12-14T21:00:00",
+     "2016-12-14T21:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T3",
+     "zone_T4"
+    ],
+    "signals": [
+     "L_T4",
+     "P_J256",
+     "P_J300"
+    ],
+    "deviation_severity": "low",
+    "investigation_priority_hint": "review",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161215T16",
+   "timestamp_start": "2016-12-15T16:00:00",
+   "timestamp_last_alert": "2016-12-16T15:00:00",
+   "alert_duration_h": 24,
+   "alert_hours": 12,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 80.7278,
+   "peak_timestamp": "2016-12-16T09:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 90.18,
+   "severity": "medium",
+   "source_signal_ids": [
+    "L_T4",
+    "P_J415",
+    "P_J289",
+    "P_J306",
+    "P_J300",
+    "P_J269",
+    "L_T5",
+    "P_J14",
+    "P_J256",
+    "L_T6",
+    "P_J317",
+    "L_T7",
+    "P_J307",
+    "L_T3"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T3",
+    "zone_T7",
+    "station_PU9",
+    "zone_T1",
+    "zone_T5",
+    "zone_T2",
+    "zone_T6"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 7,
+   "reference_note": "overlaps documented BATADAL attack 7 (2016-12-14 15h to 2016-12-19 04h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161215T16",
+    "time_window": [
+     "2016-12-15T16:00:00",
+     "2016-12-16T15:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T3",
+     "zone_T7",
+     "station_PU9",
+     "zone_T1",
+     "zone_T5",
+     "zone_T2",
+     "zone_T6"
+    ],
+    "signals": [
+     "L_T4",
+     "P_J415",
+     "P_J289",
+     "P_J306",
+     "P_J300",
+     "P_J269",
+     "L_T5",
+     "P_J14",
+     "P_J256",
+     "L_T6",
+     "P_J317",
+     "L_T7",
+     "P_J307",
+     "L_T3"
+    ],
+    "deviation_severity": "medium",
+    "investigation_priority_hint": "investigate",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161217T04",
+   "timestamp_start": "2016-12-17T04:00:00",
+   "timestamp_last_alert": "2016-12-17T10:00:00",
+   "alert_duration_h": 7,
+   "alert_hours": 7,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 77.6804,
+   "peak_timestamp": "2016-12-17T09:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 89.84,
+   "severity": "medium",
+   "source_signal_ids": [
+    "P_J415",
+    "L_T4",
+    "P_J289",
+    "P_J300",
+    "P_J14",
+    "L_T2",
+    "P_J317",
+    "L_T7"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T2",
+    "zone_T3",
+    "zone_T7"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 7,
+   "reference_note": "overlaps documented BATADAL attack 7 (2016-12-14 15h to 2016-12-19 04h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161217T04",
+    "time_window": [
+     "2016-12-17T04:00:00",
+     "2016-12-17T10:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T2",
+     "zone_T3",
+     "zone_T7"
+    ],
+    "signals": [
+     "P_J415",
+     "L_T4",
+     "P_J289",
+     "P_J300",
+     "P_J14",
+     "L_T2",
+     "P_J317",
+     "L_T7"
+    ],
+    "deviation_severity": "medium",
+    "investigation_priority_hint": "investigate",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161217T16",
+   "timestamp_start": "2016-12-17T16:00:00",
+   "timestamp_last_alert": "2016-12-17T21:00:00",
+   "alert_duration_h": 6,
+   "alert_hours": 4,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 68.1684,
+   "peak_timestamp": "2016-12-17T16:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 88.58,
+   "severity": "medium",
+   "source_signal_ids": [
+    "P_J415",
+    "L_T4",
+    "P_J289",
+    "P_J300",
+    "P_J306",
+    "L_T6",
+    "L_T7",
+    "P_J256"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T3",
+    "station_PU9",
+    "zone_T6",
+    "zone_T7"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 7,
+   "reference_note": "overlaps documented BATADAL attack 7 (2016-12-14 15h to 2016-12-19 04h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161217T16",
+    "time_window": [
+     "2016-12-17T16:00:00",
+     "2016-12-17T21:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T3",
+     "station_PU9",
+     "zone_T6",
+     "zone_T7"
+    ],
+    "signals": [
+     "P_J415",
+     "L_T4",
+     "P_J289",
+     "P_J300",
+     "P_J306",
+     "L_T6",
+     "L_T7",
+     "P_J256"
+    ],
+    "deviation_severity": "medium",
+    "investigation_priority_hint": "investigate",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161218T04",
+   "timestamp_start": "2016-12-18T04:00:00",
+   "timestamp_last_alert": "2016-12-18T14:00:00",
+   "alert_duration_h": 11,
+   "alert_hours": 9,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 158.1161,
+   "peak_timestamp": "2016-12-18T09:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 94.74,
+   "severity": "high",
+   "source_signal_ids": [
+    "P_J415",
+    "L_T4",
+    "P_J14",
+    "P_J289",
+    "P_J269",
+    "L_T3",
+    "L_T7",
+    "L_T2",
+    "P_J317",
+    "L_T5"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T2",
+    "zone_T1",
+    "zone_T7",
+    "zone_T3",
+    "zone_T5"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 7,
+   "reference_note": "overlaps documented BATADAL attack 7 (2016-12-14 15h to 2016-12-19 04h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161218T04",
+    "time_window": [
+     "2016-12-18T04:00:00",
+     "2016-12-18T14:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T2",
+     "zone_T1",
+     "zone_T7",
+     "zone_T3",
+     "zone_T5"
+    ],
+    "signals": [
+     "P_J415",
+     "L_T4",
+     "P_J14",
+     "P_J289",
+     "P_J269",
+     "L_T3",
+     "L_T7",
+     "L_T2",
+     "P_J317",
+     "L_T5"
+    ],
+    "deviation_severity": "high",
+    "investigation_priority_hint": "investigate_first",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161218T21",
+   "timestamp_start": "2016-12-18T21:00:00",
+   "timestamp_last_alert": "2016-12-18T22:00:00",
+   "alert_duration_h": 2,
+   "alert_hours": 2,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 38.8607,
+   "peak_timestamp": "2016-12-18T21:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 81.56,
+   "severity": "medium",
+   "source_signal_ids": [
+    "P_J302",
+    "P_J307",
+    "P_J306",
+    "P_J317",
+    "L_T7",
+    "L_T5"
+   ],
+   "hydraulic_zones": [
+    "zone_T7",
+    "station_PU9",
+    "zone_T5"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": 7,
+   "reference_note": "overlaps documented BATADAL attack 7 (2016-12-14 15h to 2016-12-19 04h); reference for evaluation/demo only, not a detector conclusion",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161218T21",
+    "time_window": [
+     "2016-12-18T21:00:00",
+     "2016-12-18T22:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T7",
+     "station_PU9",
+     "zone_T5"
+    ],
+    "signals": [
+     "P_J302",
+     "P_J307",
+     "P_J306",
+     "P_J317",
+     "L_T7",
+     "L_T5"
+    ],
+    "deviation_severity": "medium",
+    "investigation_priority_hint": "investigate",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  },
+  {
+   "event_id": "WA-C-1.0.0-20161225T00",
+   "timestamp_start": "2016-12-25T00:00:00",
+   "timestamp_last_alert": "2016-12-25T00:00:00",
+   "alert_duration_h": 1,
+   "alert_hours": 1,
+   "sector": "water",
+   "source_dataset": "BATADAL_dataset04",
+   "data_mode": "historical_replay",
+   "detector_name": "predictive_residual_hgb",
+   "model_version": "C-1.0.0",
+   "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+   "anomaly_score_raw_peak": 35.7549,
+   "peak_timestamp": "2016-12-25T00:00:00",
+   "alert_threshold": 8.78587,
+   "display_score_peak_0_100": 80.27,
+   "severity": "medium",
+   "source_signal_ids": [
+    "P_J415",
+    "L_T6",
+    "L_T4"
+   ],
+   "hydraulic_zones": [
+    "zone_T4",
+    "zone_T6"
+   ],
+   "mapped_city_asset_ids": [],
+   "mapping_status": "unmapped",
+   "observed_via_city_assets": [
+    "WA02",
+    "WA03"
+   ],
+   "classification": "advisory_physical_process_anomaly",
+   "disclaimer": "Advisory physical-process anomaly. Not a confirmed cyberattack, device compromise or service outage; requires investigation.",
+   "documented_attack_overlap": null,
+   "reference_note": "no documented BATADAL attack overlaps this episode",
+   "risk_engine_evidence": {
+    "evidence_type": "physical_process_anomaly",
+    "advisory": true,
+    "sector": "water",
+    "event_id": "WA-C-1.0.0-20161225T00",
+    "time_window": [
+     "2016-12-25T00:00:00",
+     "2016-12-25T00:00:00"
+    ],
+    "city_asset_ids": [],
+    "city_asset_mapping_status": "unmapped",
+    "telemetry_path_assets": [
+     "WA02",
+     "WA03"
+    ],
+    "hydraulic_zones": [
+     "zone_T4",
+     "zone_T6"
+    ],
+    "signals": [
+     "P_J415",
+     "L_T6",
+     "L_T4"
+    ],
+    "deviation_severity": "medium",
+    "investigation_priority_hint": "investigate",
+    "suggested_correlation": [
+     "Review vulnerabilities and attack paths that reach the listed city assets and telemetry-path assets",
+     "Check whether an entry point on those paths shows other evidence (logins, config changes)",
+     "Verify field readings independently before acting on the process"
+    ],
+    "must_not_be_used_as": [
+     "confirmed_cyberattack",
+     "device_compromise",
+     "service_outage",
+     "exploit_prob"
+    ],
+    "model_version": "C-1.0.0"
+   }
+  }
+ ]
+}

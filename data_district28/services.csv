@@ -1,0 +1,8 @@
+service_id,name,population_affected,required_logic,buffer_min
+S01,Hospital Power,5000,D20 OR D22 OR D27,20
+S02,Patient Records,5000,D09 AND D10,15
+S03,Infusion and ICU Monitoring,400,D12 AND D08,10
+S04,City Power,60000,D20 AND D21,5
+S05,Water Supply,90000,D23 AND D24,120
+S06,Traffic Signals,40000,D19 AND D26,15
+S07,Emergency Communications,30000,D06,10

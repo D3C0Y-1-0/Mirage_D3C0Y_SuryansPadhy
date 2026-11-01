@@ -1,0 +1,3 @@
+service_id,name,population_affected,required_logic,buffer_min
+S01,Hospital Power,5000,A05 OR A06,30
+S02,Hospital IT Systems,5000,A03,10

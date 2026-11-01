@@ -1,0 +1,71 @@
+{
+ "note": "Summarised from each module's own handoff report (files in this folder and ml_water/, ml_electricity/). Gates were declared before training; held-out data was scored once by a locked script, or not at all.",
+ "sectors": [
+  {
+   "sector": "Water",
+   "folder": "ml_water/",
+   "decision": "approved",
+   "label": "Approved: advisory anomaly detection",
+   "dataset": "BATADAL (C-Town water network simulation, 2016)",
+   "model": "Model C: predictive residual, HistGradientBoostingRegressor, trained on normal data only",
+   "held_out": "4/4 documented attacks detected, precision 0.953, recall 0.679, PR-AUC 0.868, 1.37 false alarms per 7 days (evaluated once)",
+   "allowed_wording": "Historical replay of a benchmark simulation; advisory evidence, never marks a device compromised or a service lost.",
+   "page": "#/water"
+  },
+  {
+   "sector": "Electricity",
+   "folder": "ml_electricity/",
+   "decision": "approved",
+   "label": "Approved: advisory attack screening (low coverage)",
+   "dataset": "MSU-ORNL Power System Attack Dataset, three-class release (benchmark samples, no timestamps)",
+   "model": "Random Forest, 100 trees, 89 load-invariant features, attack threshold 0.655",
+   "held_out": "attack precision 0.946, attack recall 0.396, natural disturbance called attack 7.2%, normal called attack 0% (data13-15, evaluated once)",
+   "allowed_wording": "Sample explorer of benchmark data. A flag means investigate; no flag never means safe (about 40% of attacks flagged).",
+   "page": "#/electricity"
+  },
+  {
+   "sector": "IoT",
+   "folder": "ml_sectors/iot_*.md",
+   "decision": "demo_only",
+   "label": "Demonstration benchmark only (protocol gates unmet)",
+   "dataset": "TON_IoT telemetry (3 device files) and CICIoT2023 (curated Parquet derivative)",
+   "model": "HistGradientBoosting on 29 features (capture artefact and window aggregates excluded)",
+   "held_out": "Protocol test impossible (no session fields). Demonstration on the provided random split, run once: attack recall 0.889 at 4.0% benign false positives; on test rows never seen in training, recall 0.786. Floods ~100%, Recon 54%, Web 47%.",
+   "allowed_wording": "Random-split, in-distribution benchmark demonstration on a curated CICIoT2023 derivative; not an independent evaluation. The IoT protocol gates remain unmet.",
+   "page": "#/evaluation"
+  },
+  {
+   "sector": "Healthcare",
+   "folder": "ml_sectors/healthcare_checkpoint4_report.md",
+   "decision": "no_go",
+   "label": "NO-GO at the held-out test",
+   "dataset": "WUSTL-EHMS-2020 (single recording)",
+   "model": "Random Forest data-alteration advisory detector (frozen before the test)",
+   "held_out": "found all 7 data-alteration bursts (recall 100%), but normal false-positive rate 7.07% against a 1% gate and precision 46.4% against an 80% gate",
+   "allowed_wording": "The man-in-the-middle delay signature is real but could not be separated from normal latency episodes at a usable false-alarm rate on this recording.",
+   "page": null
+  },
+  {
+   "sector": "Telecom",
+   "folder": "ml_sectors/telecom_HANDOFF_STATUS.md",
+   "decision": "no_go",
+   "label": "NO-GO at validation (held-out never scored)",
+   "dataset": "UNSW-NB15 research benchmark (synthetic lab traffic, not operator or 5G telemetry)",
+   "model": "LR, Random Forest, HistGradientBoosting compared",
+   "held_out": "not run. Best validation (HGB): recall 0.882 against a 0.90 gate, unique-vector recall 0.745 against 0.85, Fuzzers recall 0.36 against 0.50",
+   "allowed_wording": "Flow classifiers evaluated on the UNSW-NB15 research benchmark did not meet pre-declared detection criteria once testbed artefacts and duplicate records were controlled for.",
+   "page": null
+  },
+  {
+   "sector": "Transportation",
+   "folder": "ml_sectors/transportation_HANDOFF_STATUS.md",
+   "decision": "no_go",
+   "label": "NO-GO at validation (held-out never scored)",
+   "dataset": "Synthetic traffic-control security simulator (v2, passed its own integrity audit)",
+   "model": "LR, Random Forest, HistGradientBoosting compared",
+   "held_out": "not run. Best (HGB): ROC-AUC 0.745, harmful-event coverage 0.70 against a 0.80 gate; false alarms during natural detector faults above 5%",
+   "allowed_wording": "A synthetic traffic-control security testbed was built; detectors evaluated on it did not meet operational false-alarm and coverage criteria.",
+   "page": null
+  }
+ ]
+}

@@ -1,0 +1,263 @@
+{
+ "data_mode": "benchmark_sample_explorer",
+ "notice": "Blocks are contiguous rows sharing one benchmark label inside a source file. They are NOT scenario numbers and NOT a time sequence; samples are 1% random draws with no timestamps.",
+ "split": "validation files data10-12 (held-out data13-15 are reported only as aggregate Checkpoint 4 metrics)",
+ "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+ "blocks": [
+  {
+   "source_file": "data10.csv",
+   "label_block": 1,
+   "benchmark_label": "normal_operation",
+   "rows": 326,
+   "row_range": [
+    0,
+    325
+   ],
+   "attack_flag_rate": 0.0,
+   "mean_p_cyberattack": 0.1056,
+   "predicted_distribution": {
+    "normal_operation": 306,
+    "natural_disturbance": 20,
+    "cyberattack": 0
+   }
+  },
+  {
+   "source_file": "data10.csv",
+   "label_block": 2,
+   "benchmark_label": "cyberattack",
+   "rows": 3191,
+   "row_range": [
+    326,
+    3516
+   ],
+   "attack_flag_rate": 0.4663,
+   "mean_p_cyberattack": 0.6797,
+   "predicted_distribution": {
+    "normal_operation": 180,
+    "natural_disturbance": 1523,
+    "cyberattack": 1488
+   }
+  },
+  {
+   "source_file": "data10.csv",
+   "label_block": 3,
+   "benchmark_label": "natural_disturbance",
+   "rows": 345,
+   "row_range": [
+    3517,
+    3861
+   ],
+   "attack_flag_rate": 0.0783,
+   "mean_p_cyberattack": 0.4528,
+   "predicted_distribution": {
+    "normal_operation": 21,
+    "natural_disturbance": 297,
+    "cyberattack": 27
+   }
+  },
+  {
+   "source_file": "data10.csv",
+   "label_block": 4,
+   "benchmark_label": "cyberattack",
+   "rows": 730,
+   "row_range": [
+    3862,
+    4591
+   ],
+   "attack_flag_rate": 0.0959,
+   "mean_p_cyberattack": 0.4856,
+   "predicted_distribution": {
+    "normal_operation": 14,
+    "natural_disturbance": 646,
+    "cyberattack": 70
+   }
+  },
+  {
+   "source_file": "data10.csv",
+   "label_block": 5,
+   "benchmark_label": "natural_disturbance",
+   "rows": 977,
+   "row_range": [
+    4592,
+    5568
+   ],
+   "attack_flag_rate": 0.089,
+   "mean_p_cyberattack": 0.4597,
+   "predicted_distribution": {
+    "normal_operation": 5,
+    "natural_disturbance": 885,
+    "cyberattack": 87
+   }
+  },
+  {
+   "source_file": "data11.csv",
+   "label_block": 1,
+   "benchmark_label": "normal_operation",
+   "rows": 145,
+   "row_range": [
+    0,
+    144
+   ],
+   "attack_flag_rate": 0.0,
+   "mean_p_cyberattack": 0.1178,
+   "predicted_distribution": {
+    "normal_operation": 137,
+    "natural_disturbance": 8,
+    "cyberattack": 0
+   }
+  },
+  {
+   "source_file": "data11.csv",
+   "label_block": 2,
+   "benchmark_label": "cyberattack",
+   "rows": 3153,
+   "row_range": [
+    145,
+    3297
+   ],
+   "attack_flag_rate": 0.4275,
+   "mean_p_cyberattack": 0.6553,
+   "predicted_distribution": {
+    "normal_operation": 134,
+    "natural_disturbance": 1671,
+    "cyberattack": 1348
+   }
+  },
+  {
+   "source_file": "data11.csv",
+   "label_block": 3,
+   "benchmark_label": "natural_disturbance",
+   "rows": 294,
+   "row_range": [
+    3298,
+    3591
+   ],
+   "attack_flag_rate": 0.0612,
+   "mean_p_cyberattack": 0.4602,
+   "predicted_distribution": {
+    "normal_operation": 7,
+    "natural_disturbance": 269,
+    "cyberattack": 18
+   }
+  },
+  {
+   "source_file": "data11.csv",
+   "label_block": 4,
+   "benchmark_label": "cyberattack",
+   "rows": 816,
+   "row_range": [
+    3592,
+    4407
+   ],
+   "attack_flag_rate": 0.0956,
+   "mean_p_cyberattack": 0.4936,
+   "predicted_distribution": {
+    "normal_operation": 16,
+    "natural_disturbance": 722,
+    "cyberattack": 78
+   }
+  },
+  {
+   "source_file": "data11.csv",
+   "label_block": 5,
+   "benchmark_label": "natural_disturbance",
+   "rows": 843,
+   "row_range": [
+    4408,
+    5250
+   ],
+   "attack_flag_rate": 0.0842,
+   "mean_p_cyberattack": 0.4511,
+   "predicted_distribution": {
+    "normal_operation": 25,
+    "natural_disturbance": 747,
+    "cyberattack": 71
+   }
+  },
+  {
+   "source_file": "data12.csv",
+   "label_block": 1,
+   "benchmark_label": "normal_operation",
+   "rows": 384,
+   "row_range": [
+    0,
+    383
+   ],
+   "attack_flag_rate": 0.0,
+   "mean_p_cyberattack": 0.1308,
+   "predicted_distribution": {
+    "normal_operation": 358,
+    "natural_disturbance": 26,
+    "cyberattack": 0
+   }
+  },
+  {
+   "source_file": "data12.csv",
+   "label_block": 2,
+   "benchmark_label": "cyberattack",
+   "rows": 2749,
+   "row_range": [
+    384,
+    3132
+   ],
+   "attack_flag_rate": 0.4453,
+   "mean_p_cyberattack": 0.661,
+   "predicted_distribution": {
+    "normal_operation": 217,
+    "natural_disturbance": 1308,
+    "cyberattack": 1224
+   }
+  },
+  {
+   "source_file": "data12.csv",
+   "label_block": 3,
+   "benchmark_label": "natural_disturbance",
+   "rows": 123,
+   "row_range": [
+    3133,
+    3255
+   ],
+   "attack_flag_rate": 0.0325,
+   "mean_p_cyberattack": 0.4557,
+   "predicted_distribution": {
+    "normal_operation": 17,
+    "natural_disturbance": 102,
+    "cyberattack": 4
+   }
+  },
+  {
+   "source_file": "data12.csv",
+   "label_block": 4,
+   "benchmark_label": "cyberattack",
+   "rows": 704,
+   "row_range": [
+    3256,
+    3959
+   ],
+   "attack_flag_rate": 0.1648,
+   "mean_p_cyberattack": 0.51,
+   "predicted_distribution": {
+    "normal_operation": 20,
+    "natural_disturbance": 568,
+    "cyberattack": 116
+   }
+  },
+  {
+   "source_file": "data12.csv",
+   "label_block": 5,
+   "benchmark_label": "natural_disturbance",
+   "rows": 1264,
+   "row_range": [
+    3960,
+    5223
+   ],
+   "attack_flag_rate": 0.1036,
+   "mean_p_cyberattack": 0.4781,
+   "predicted_distribution": {
+    "normal_operation": 12,
+    "natural_disturbance": 1121,
+    "cyberattack": 131
+   }
+  }
+ ]
+}

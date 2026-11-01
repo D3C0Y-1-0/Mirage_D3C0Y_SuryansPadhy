@@ -1,0 +1,66 @@
+{
+ "generated_at": "2026-10-31T19:58:43",
+ "raw_inputs": {
+  "BATADAL_dataset03.csv": "8ca6cb851242254d2605b5a53ba3ba5009e2213a545d65396615f1ce0b426e1b",
+  "BATADAL_dataset04.csv": "4746beab2cfcdb5e68c7fa197a7522aecb70189d61dcc3eb1f870d2ce387068b"
+ },
+ "reference_files": {
+  "attack_windows_dataset04.csv": "8958ff70877226196e19d4e84538d56d3f9f883bfe6581f935fefc498e47ebe8",
+  "signal_dictionary.csv": "d49852ebb124b6f11c10f5e7f32edcdd4c43a342455e5e718cb68b0993ddcb9e"
+ },
+ "frozen_models": {
+  "primary": {
+   "file": "models/model_C_predictive_residual.joblib",
+   "sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f"
+  },
+  "baseline": {
+   "file": "models/model_A_statistical.joblib",
+   "sha256": "85bce7db61c0050fd4c15e0b89ed8ddf206e7f81217ff5fc0f3114d168ebc7f3"
+  }
+ },
+ "freeze_manifest_sha256": "8fc3f65710864c3034165d03779bf4da4e1690d7b071fd8eba5f294c0f96df93",
+ "source_code_sha256": {
+  "__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "alerting.py": "394b5ed0fa2e11a6c57782dc161f3db6666c016a2161241cc052c4ef305052de",
+  "baseline.py": "d76fdd8e677e53c663c34c23d5e35a2232d0deffd31ed75df12b04366580cc7c",
+  "build_integration.py": "262457d11426c489deac08f59f88065fe605dbd8d6192cf9d9fb75c81b247e6a",
+  "config.py": "bb546343227690da838d095dfad2d74f1cbb908c8a4d2da0c44cc453c913403f",
+  "data.py": "cfa28136d67e3ce85fbb8b8ce2cb59801b9d2cd392acb130e450bb4621c7dcec",
+  "display.py": "f4a2d01a5812be3a0f02b757629a12d04b68e38f14b901f734687908ba8d4c82",
+  "evaluate.py": "b02398d668ddb6bba9090324640afe79b830f328d34e90cb728a89916907d40a",
+  "evidence.py": "fcc211c137631558d433c4cef7345e0760aac0b262a0b52f28d3f03d7c340608",
+  "features.py": "06f53e49a463374f6b5007c350a401baf219d34b05d700c195af2652a5283175",
+  "inference.py": "608f2e263a60b499b2e1658e19e5f6016143a56df52ac644b874b0b1fcf326fc",
+  "isoforest.py": "6fcd0d7cdcc54a480c038aa0602c641569e71f8fb6b711be2bc0a1cf4e3297ec",
+  "mapping.py": "44d9f6dd6261ed6acadddaa00b28033451ba923beef184b626d14c59528566bf",
+  "residual.py": "af8c72d9e59865854811e1e0e9b94de89f0ee83099b5e2bdbdd18117e6401701",
+  "run_baseline.py": "679429fba90daaedf2853f04856493d9a900215faf297ae7d199e0c31db3b893",
+  "run_checkpoint3.py": "843e402381c78606ff073d74f9d711221d5c0d3afac6bd8073b4f14d0b05b358",
+  "run_final_test.py": "35fdb606e76c4586f273f91cfde5b7d54bf131aeddc42edce718b1d1d9a4c716"
+ },
+ "evaluation_reports": [
+  "reports/checkpoint3_results.json",
+  "reports/checkpoint4_final_test.json"
+ ],
+ "final_test_lock": [
+  "started 2026-10-31T19:36:01",
+  "completed 2026-10-31T19:36:03"
+ ],
+ "reproducibility_check": {
+  "validation_alerts_identical": true,
+  "validation_max_abs_score_diff": 4.993711641132492e-05,
+  "test_alerts_identical": true,
+  "test_max_abs_score_diff": 4.9975867739249225e-05,
+  "note": "Replay re-runs inference only. No metric is recomputed and the final-test lock is untouched."
+ },
+ "counts": {
+  "hours_replayed": 4177,
+  "alert_hours": 398,
+  "alert_episodes": 49,
+  "episodes_overlapping_documented_attacks": 19
+ },
+ "mapping_summary": {
+  "unmapped": 38,
+  "design_mapping_illustrative": 5
+ }
+}

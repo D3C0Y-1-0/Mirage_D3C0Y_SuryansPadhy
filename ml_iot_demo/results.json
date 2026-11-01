@@ -1,0 +1,295 @@
+{
+ "declaration_sha256": "6e050d8075b189bd1c532c93cc39af6eae78aeae555eb8ebfe0e7e8856d943a3",
+ "run_at": "2026-11-01T02:15:31",
+ "seconds": 69.7,
+ "label": "Random-split, in-distribution benchmark demonstration. NOT an independent evaluation. The IoT gates of EVALUATION_PROTOCOL.md remain UNMET.",
+ "run_note": "A first attempt stopped with a pandas error while subsampling the training rows, before any model was trained or the test file was opened; the sampling line was fixed (same stratified fraction, same seed) and the script re-run. The declaration was not changed.",
+ "features_used": [
+  "Header_Length",
+  "Protocol Type",
+  "Time_To_Live",
+  "fin_flag_number",
+  "syn_flag_number",
+  "rst_flag_number",
+  "psh_flag_number",
+  "ack_flag_number",
+  "ece_flag_number",
+  "cwr_flag_number",
+  "HTTP",
+  "HTTPS",
+  "DNS",
+  "Telnet",
+  "SMTP",
+  "SSH",
+  "IRC",
+  "TCP",
+  "UDP",
+  "DHCP",
+  "ARP",
+  "ICMP",
+  "IGMP",
+  "IPv",
+  "LLC",
+  "Min",
+  "Max",
+  "AVG",
+  "Tot size"
+ ],
+ "n_features": 29,
+ "train": {
+  "rows": 1073851,
+  "after_dedup": 548664,
+  "duplicates_removed": 525187,
+  "subsample": 300000
+ },
+ "shortcut_rule_number_eq_100_on_validation": {
+  "n": 134232,
+  "attack_recall": 0.6988,
+  "attack_precision": 1.0,
+  "benign_fpr": 0.0,
+  "macro_f1": 0.6801,
+  "roc_auc": 0.8494,
+  "pr_auc": 0.9551,
+  "confusion": {
+   "tn": 19999,
+   "fp": 0,
+   "fn": 34409,
+   "tp": 79824
+  }
+ },
+ "baseline": {
+  "tau": 0.63226,
+  "folds": [
+   {
+    "n": 100000,
+    "attack_recall": 0.6285,
+    "attack_precision": 0.9777,
+    "benign_fpr": 0.0494,
+    "macro_f1": 0.6769,
+    "roc_auc": 0.8468,
+    "pr_auc": 0.956,
+    "confusion": {
+     "tn": 21399,
+     "fp": 1111,
+     "fn": 28786,
+     "tp": 48704
+    }
+   },
+   {
+    "n": 100000,
+    "attack_recall": 0.6271,
+    "attack_precision": 0.9767,
+    "benign_fpr": 0.0514,
+    "macro_f1": 0.6754,
+    "roc_auc": 0.8461,
+    "pr_auc": 0.9557,
+    "confusion": {
+     "tn": 21351,
+     "fp": 1158,
+     "fn": 28895,
+     "tp": 48596
+    }
+   },
+   {
+    "n": 100000,
+    "attack_recall": 0.6295,
+    "attack_precision": 0.9778,
+    "benign_fpr": 0.0492,
+    "macro_f1": 0.6776,
+    "roc_auc": 0.8473,
+    "pr_auc": 0.9561,
+    "confusion": {
+     "tn": 21402,
+     "fp": 1107,
+     "fn": 28713,
+     "tp": 48778
+    }
+   }
+  ],
+  "validation": {
+   "n": 134232,
+   "attack_recall": 0.7936,
+   "attack_precision": 0.9891,
+   "benign_fpr": 0.05,
+   "macro_f1": 0.7439,
+   "roc_auc": 0.9114,
+   "pr_auc": 0.9847,
+   "confusion": {
+    "tn": 18999,
+    "fp": 1000,
+    "fn": 23579,
+    "tp": 90654
+   }
+  },
+  "validation_unseen_vectors": {
+   "n": 64392,
+   "attack_recall": 0.6157,
+   "attack_precision": 0.9761,
+   "benign_fpr": 0.0508,
+   "macro_f1": 0.6702,
+   "roc_auc": 0.8401,
+   "pr_auc": 0.9529,
+   "confusion": {
+    "tn": 13996,
+    "fp": 749,
+    "fn": 19079,
+    "tp": 30568
+   }
+  }
+ },
+ "candidate": {
+  "tau": 0.521673,
+  "folds": [
+   {
+    "n": 100000,
+    "attack_recall": 0.7931,
+    "attack_precision": 0.9815,
+    "benign_fpr": 0.0516,
+    "macro_f1": 0.7951,
+    "roc_auc": 0.9382,
+    "pr_auc": 0.9828,
+    "confusion": {
+     "tn": 21349,
+     "fp": 1161,
+     "fn": 16034,
+     "tp": 61456
+    }
+   },
+   {
+    "n": 100000,
+    "attack_recall": 0.7932,
+    "attack_precision": 0.9819,
+    "benign_fpr": 0.0504,
+    "macro_f1": 0.7955,
+    "roc_auc": 0.9384,
+    "pr_auc": 0.9828,
+    "confusion": {
+     "tn": 21374,
+     "fp": 1135,
+     "fn": 16027,
+     "tp": 61464
+    }
+   },
+   {
+    "n": 100000,
+    "attack_recall": 0.7933,
+    "attack_precision": 0.9827,
+    "benign_fpr": 0.048,
+    "macro_f1": 0.7963,
+    "roc_auc": 0.9397,
+    "pr_auc": 0.9832,
+    "confusion": {
+     "tn": 21429,
+     "fp": 1080,
+     "fn": 16020,
+     "tp": 61471
+    }
+   }
+  ],
+  "validation": {
+   "n": 134232,
+   "attack_recall": 0.8888,
+   "attack_precision": 0.9923,
+   "benign_fpr": 0.0394,
+   "macro_f1": 0.8389,
+   "roc_auc": 0.9699,
+   "pr_auc": 0.9949,
+   "confusion": {
+    "tn": 19211,
+    "fp": 788,
+    "fn": 12703,
+    "tp": 101530
+   }
+  },
+  "validation_unseen_vectors": {
+   "n": 64392,
+   "attack_recall": 0.7841,
+   "attack_precision": 0.9822,
+   "benign_fpr": 0.0479,
+   "macro_f1": 0.7914,
+   "roc_auc": 0.9365,
+   "pr_auc": 0.9819,
+   "confusion": {
+    "tn": 14039,
+    "fp": 706,
+    "fn": 10717,
+    "tp": 38930
+   }
+  }
+ },
+ "gates": {
+  "G1": true,
+  "G2": true,
+  "G3": false,
+  "G4": false,
+  "G5": true
+ },
+ "gates_met": [
+  "G1",
+  "G2",
+  "G5"
+ ],
+ "gates_unmet": [
+  "G3",
+  "G4"
+ ],
+ "test_once": {
+  "candidate": {
+   "n": 134231,
+   "attack_recall": 0.889,
+   "attack_precision": 0.9922,
+   "benign_fpr": 0.04,
+   "macro_f1": 0.8389,
+   "roc_auc": 0.9696,
+   "pr_auc": 0.9948,
+   "confusion": {
+    "tn": 19199,
+    "fp": 800,
+    "fn": 12684,
+    "tp": 101548
+   }
+  },
+  "candidate_unseen_vectors": {
+   "n": 64707,
+   "attack_recall": 0.7863,
+   "attack_precision": 0.9819,
+   "benign_fpr": 0.0491,
+   "macro_f1": 0.792,
+   "roc_auc": 0.9368,
+   "pr_auc": 0.9821,
+   "confusion": {
+    "tn": 14013,
+    "fp": 723,
+    "fn": 10681,
+    "tp": 39290
+   }
+  },
+  "baseline": {
+   "n": 134231,
+   "attack_recall": 0.7949,
+   "attack_precision": 0.9893,
+   "benign_fpr": 0.0489,
+   "macro_f1": 0.7453,
+   "roc_auc": 0.9126,
+   "pr_auc": 0.9849,
+   "confusion": {
+    "tn": 19021,
+    "fp": 978,
+    "fn": 23434,
+    "tp": 90798
+   }
+  },
+  "candidate_flag_rate_by_class": {
+   "Benign": 0.04,
+   "BruteForce": 0.5816,
+   "DDoS": 0.9996,
+   "DoS": 1.0,
+   "Mirai": 1.0,
+   "Recon": 0.5387,
+   "Spoofing": 0.8477,
+   "Web-based": 0.468
+  },
+  "unseen_vector_share": 0.4821
+ },
+ "verdict": "Demonstration only. G3 (session confound) cannot be checked on this data, so the IoT gates remain UNMET whatever the scores. Scores are in-distribution: train, validation and test are random row splits of the same lab captures."
+}

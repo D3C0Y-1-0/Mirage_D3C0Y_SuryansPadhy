@@ -1,0 +1,8 @@
+attack_id,start,end,duration_h,description,scada_concealment,labelled_hours_official,labelled_hours_found_in_csv,source
+1,2016-09-13 23:00,2016-09-16 00:00,50,"Attacker changes L_T7 thresholds (which control PU10/PU11) by altering SCADA transmission to PLC9. Low levels in T7.","Replay attack on L_T7.",42,42,02_ATTACK_DATASETS/BATADAL/raw/Attacks_TrainingDataset2.png (manual transcription)
+2,2016-09-26 11:00,2016-09-27 10:00,24,"Like Attack #1.","Like Attack #1 but replay attack extended to PU10/PU11 flow and status.",0,0,02_ATTACK_DATASETS/BATADAL/raw/Attacks_TrainingDataset2.png (manual transcription)
+3,2016-10-09 09:00,2016-10-11 20:00,60,"Attack alters L_T1 readings sent by PLC2 to PLC1, which reads a constant low level and keeps pumps PU1/PU2 ON. Overflow in T1.","Polyline to offset L_T1 increase.",60,60,02_ATTACK_DATASETS/BATADAL/raw/Attacks_TrainingDataset2.png (manual transcription)
+4,2016-10-29 19:00,2016-11-02 16:00,94,"Like Attack #3.","Replay attack on L_T1, PU1/PU2 flow and status, as well as pressure at pumps outlet.",37,37,02_ATTACK_DATASETS/BATADAL/raw/Attacks_TrainingDataset2.png (manual transcription)
+5,2016-11-26 17:00,2016-11-29 04:00,60,"Working speed of PU7 reduced to 0.9 of nominal speed causes lower water levels in T4.","",7,7,02_ATTACK_DATASETS/BATADAL/raw/Attacks_TrainingDataset2.png (manual transcription)
+6,2016-12-06 07:00,2016-12-10 04:00,94,"Like Attack #5, but speed reduced to 0.7.","L_T4 drop concealed with replay attack.",73,73,02_ATTACK_DATASETS/BATADAL/raw/Attacks_TrainingDataset2.png (manual transcription)
+7,2016-12-14 15:00,2016-12-19 04:00,110,"Like Attack #6.","Replay attack on L_T1, as well as PU1/PU2 flow and status.",0,0,02_ATTACK_DATASETS/BATADAL/raw/Attacks_TrainingDataset2.png (manual transcription)

@@ -1,0 +1,7 @@
+asset_id,name,type,zone,criticality,exposure,internet_facing,vendor_access,software,version,cve_ids,patchable_without_downtime,downtime_hours_to_patch,config_flags,monitored,layout_x,layout_y
+A01,Vendor Portal,vendor_portal,vendor,2,0.9,1,1,Generic Web Portal,2.1,CVE-0000-0001,1,0.5,no_mfa,0,,
+A02,VPN Gateway,vpn_gateway,dmz,3,0.8,1,1,Example VPN Appliance,7.0,CVE-0000-0002,0,2,,0,,
+A03,Hospital IT Network,hospital_network,enterprise,4,0.4,0,0,Windows Server,2016,CVE-0000-0003,1,1,flat_network,0,,
+A04,SCADA Server,scada,control,5,0.2,0,0,Example SCADA,5.2,CVE-0000-0004,0,6,default_creds,0,,
+A05,Substation PLC,plc,field,5,0.1,0,0,Example PLC Firmware,3.4,CVE-0000-0005,0,8,unencrypted_protocol,0,,
+A06,Backup Generator Controller,generator,field,4,0.05,0,0,Example Gen Controller,1.9,,0,4,,0,,

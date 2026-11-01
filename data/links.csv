@@ -1,0 +1,7 @@
+src,dst,link_type,protocol,bidirectional,base_traverse_min,segmented,firewall_level
+A01,A02,vendor,https,1,10,0,1
+A02,A03,network,vpn,1,15,0,1
+A03,A04,network,rdp,1,20,0,1
+A04,A05,network,modbus,1,10,0,0
+A04,A06,network,modbus,1,10,0,0
+A05,A03,dependency,physical,0,0,0,0

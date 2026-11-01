@@ -1,0 +1,6 @@
+cve_id,cvss,vector,cwe,vendor,product,kev,epss,ics_flag,patch_available,patch_type
+CVE-0000-0001,6.5,,CWE-306,Example,Web Portal,0,0.02,0,1,patch
+CVE-0000-0002,9.8,,CWE-287,Example,VPN Appliance,1,0.9,0,1,patch
+CVE-0000-0003,7.8,,CWE-269,Microsoft,Windows Server,1,0.5,0,1,patch
+CVE-0000-0004,8.1,,CWE-798,Example,SCADA,0,0.1,1,0,workaround
+CVE-0000-0005,5.3,,CWE-319,Example,PLC,0,0.03,1,0,none

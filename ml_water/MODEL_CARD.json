@@ -1,0 +1,64 @@
+{
+ "name": "SENTINEL water anomaly detector (Model C, predictive residual)",
+ "version": "C-1.0.0",
+ "model_sha256": "6436bffe68d45f92c8abcc1835673ee286c2dae437ed91a231c3ab3d7c70c26f",
+ "threshold": 8.78587,
+ "config": {
+  "top_k": 1,
+  "smooth_h": 1
+ },
+ "frozen_at": "2026-10-31T19:35:36",
+ "intended_use": "Advisory early warning of physical-process inconsistencies in C-Town-style water telemetry for SENTINEL investigation prioritisation and digital-twin display.",
+ "not_intended_for": [
+  "declaring cyberattacks, compromise or outages",
+  "other sectors (not validated)",
+  "CVE exploitation prediction / vulns.csv exploit_prob"
+ ],
+ "training_data": "BATADAL dataset03 2014-01-06..2014-10-19 (normal operation only)",
+ "threshold_calibration": "dataset03 2014-10-20..2015-01-06 normal holdout, <= 1 alert episode / 7 days, 2 h persistence, episodes merged across <= 3 h gaps",
+ "inputs": "36 informative BATADAL channels at t-1, t-2; pump/valve status and flow at t; hour of day",
+ "outputs": "residual |z| for 7 tank levels + 12 junction pressures; hourly score = max",
+ "validation_attacks_1_3": {
+  "caught_new_episode": "3/3",
+  "latency_new_episode_h": {
+   "1": 1,
+   "2": 0,
+   "3": 20
+  },
+  "fa_strict": 1.37,
+  "precision": 0.727,
+  "recall": 0.776,
+  "f1": 0.751,
+  "pr_auc": 0.743
+ },
+ "held_out_test_attacks_4_7_evaluated_once": {
+  "attacks_detected": "4/4",
+  "latency_h_new_episode": {
+   "4": 2,
+   "5": 1,
+   "6": 3,
+   "7": 0
+  },
+  "latency_h_both_persistence_hours_in_window": {
+   "4": 2,
+   "5": 1,
+   "6": 3,
+   "7": 6
+  },
+  "false_alarms_per_7d_strict": 1.37,
+  "false_alarms_per_7d_with_24h_grace": 1.34,
+  "precision": 0.953,
+  "recall": 0.679,
+  "f1": 0.793,
+  "pr_auc": 0.868
+ },
+ "limitations": [
+  "One simulated network (C-Town) and 7 attacks; not evidence for real utilities or other sectors",
+  "Anomaly location can be downstream of the attacked component when sensors are replayed (attack 4)",
+  "Coverage inside long attacks is partial (attack 7: 36/110 hours, 18 h gap)",
+  "Score jumps about 1 h before documented attack starts (likely timestamp convention, unverified)",
+  "Raw scores are heavy-tailed; use display_score_0_100 or the log scale for presentation"
+ ],
+ "display_transform": "display = 100*r/(1+r), r = raw/threshold (50 at threshold); alerts use raw score",
+ "severity_bands": "low >=1x, medium >=3x, high >=10x threshold (statistical deviation, not impact)"
+}

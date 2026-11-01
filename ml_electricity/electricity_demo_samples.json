@@ -1,0 +1,2348 @@
+{
+ "banner": "BENCHMARK SAMPLES from the MSU-ORNL power-system dataset (validation files). Not live telemetry, not a SENTINEL installation, no timestamps.",
+ "selection": "up to 3 evenly spaced rows per source file x outcome category (attack_flagged, attack_missed, false_attack_flag, correct, non_attack_confusion); not chosen by score",
+ "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+ "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+ "samples": [
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 333,
+    "label_block": 2
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.283,
+    "cyberattack": 0.717
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0002086248462,
+     "influence_on_attack_probability": 0.0454,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R1_IC_over_Ipos",
+     "description": "R1 phase C current relative to positive sequence",
+     "value": 0.996747965266895,
+     "influence_on_attack_probability": 0.0376,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R1_IB_over_Ipos",
+     "description": "R1 phase B current relative to positive sequence",
+     "value": 1.0052845506137975,
+     "influence_on_attack_probability": 0.037,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.72 >= threshold 0.655. Largest model influences: R4 phase A voltage relative to positive sequence (+0.045); R1 phase C current relative to positive sequence (+0.038).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_flagged"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 2271,
+    "label_block": 2
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.0,
+    "cyberattack": 1.0
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R3_VA_over_Vpos",
+     "description": "R3 phase A voltage relative to positive sequence",
+     "value": 1.0015473890822784,
+     "influence_on_attack_probability": 0.0752,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R1_VB_over_Vpos",
+     "description": "R1 phase B voltage relative to positive sequence",
+     "value": 0.9998093419950451,
+     "influence_on_attack_probability": 0.0644,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R1_VC_over_Vpos",
+     "description": "R1 phase C voltage relative to positive sequence",
+     "value": 1.0005719732240463,
+     "influence_on_attack_probability": 0.064,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 1.00 >= threshold 0.655. Largest model influences: R3 phase A voltage relative to positive sequence (+0.075); R1 phase B voltage relative to positive sequence (+0.064).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_flagged"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 4582,
+    "label_block": 4
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.0739,
+    "cyberattack": 0.9261
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R2_VB_over_Vpos",
+     "description": "R2 phase B voltage relative to positive sequence",
+     "value": 1.207103950124459,
+     "influence_on_attack_probability": 0.0763,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "relay2_log",
+     "description": "relay2 log",
+     "value": 1.0,
+     "influence_on_attack_probability": -0.0625,
+     "direction": "away_from_attack",
+     "benchmark_device": "logs"
+    },
+    {
+     "feature": "R3_V_neg_pos",
+     "description": "R3 negative/positive-sequence voltage ratio (unbalance)",
+     "value": 0.3230376877265844,
+     "influence_on_attack_probability": 0.0554,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.93 >= threshold 0.655. Largest model influences: R2 phase B voltage relative to positive sequence (+0.076); R3 negative/positive-sequence voltage ratio (unbalance) (+0.055).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_flagged"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 326,
+    "label_block": 2
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.4807,
+    "cyberattack": 0.5193
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0001935733795981,
+     "influence_on_attack_probability": 0.0349,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R2_V_unbalance",
+     "description": "R2 phase voltage magnitude unbalance",
+     "value": 0.000580794966545226,
+     "influence_on_attack_probability": 0.0319,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R4_VC_over_Vpos",
+     "description": "R4 phase C voltage relative to positive sequence",
+     "value": 1.0007816290732439,
+     "influence_on_attack_probability": 0.0275,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.52 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R4 phase A voltage relative to positive sequence (+0.035); R2 phase voltage magnitude unbalance (+0.032).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_missed"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 2929,
+    "label_block": 2
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.1426,
+    "natural_disturbance": 0.3201,
+    "cyberattack": 0.5373
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R4_I_neg_pos",
+     "description": "R4 negative/positive-sequence current ratio",
+     "value": 0.025188916807273722,
+     "influence_on_attack_probability": 0.0242,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R1_I_neg_pos",
+     "description": "R1 negative/positive-sequence current ratio",
+     "value": 0.02552552545575578,
+     "influence_on_attack_probability": 0.0227,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R2_VC_over_Vpos",
+     "description": "R2 phase C voltage relative to positive sequence",
+     "value": 1.000803749841775,
+     "influence_on_attack_probability": -0.0226,
+     "direction": "away_from_attack",
+     "benchmark_device": "R2"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.54 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R4 negative/positive-sequence current ratio (+0.024); R1 negative/positive-sequence current ratio (+0.023).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_missed"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 4591,
+    "label_block": 4
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.0077,
+    "natural_disturbance": 0.5394,
+    "cyberattack": 0.4529
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R4_IB_over_Ipos",
+     "description": "R4 phase B current relative to positive sequence",
+     "value": 0.998361325091254,
+     "influence_on_attack_probability": 0.054,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R2_IA_over_Ipos",
+     "description": "R2 phase A current relative to positive sequence",
+     "value": 1.0017583943067339,
+     "influence_on_attack_probability": 0.0483,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R2_IB_over_Ipos",
+     "description": "R2 phase B current relative to positive sequence",
+     "value": 0.9990454399862525,
+     "influence_on_attack_probability": 0.0479,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.45 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R4 phase B current relative to positive sequence (+0.054); R2 phase A current relative to positive sequence (+0.048).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_missed"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 0,
+    "label_block": 1
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "normal_operation",
+   "probabilities": {
+    "normal_operation": 0.8965,
+    "natural_disturbance": 0.0563,
+    "cyberattack": 0.0472
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "normal_operation",
+   "evidence": [
+    {
+     "feature": "R3_freq_dev",
+     "description": "R3 frequency deviation from 60 Hz",
+     "value": 0.006999999999997897,
+     "influence_on_attack_probability": -0.0499,
+     "direction": "away_from_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R2_freq_dev",
+     "description": "R2 frequency deviation from 60 Hz",
+     "value": 0.00699997000000252,
+     "influence_on_attack_probability": -0.0375,
+     "direction": "away_from_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R4_freq_dev",
+     "description": "R4 frequency deviation from 60 Hz",
+     "value": 0.006999999999997897,
+     "influence_on_attack_probability": -0.0275,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.05 < 0.655); classified normal operation. This is NOT evidence that no attack occurred. Largest model influences: R3 frequency deviation from 60 Hz (-0.050); R2 frequency deviation from 60 Hz (-0.037).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "correct"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 4746,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.005,
+    "natural_disturbance": 0.6131,
+    "cyberattack": 0.3819
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.000197893866201,
+     "influence_on_attack_probability": 0.0435,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R2_IC_over_Ipos",
+     "description": "R2 phase C current relative to positive sequence",
+     "value": 1.001082834073031,
+     "influence_on_attack_probability": -0.0267,
+     "direction": "away_from_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R4_V_unbalance",
+     "description": "R4 phase voltage magnitude unbalance",
+     "value": 0.001680616359650994,
+     "influence_on_attack_probability": 0.0204,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.38 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R4 phase A voltage relative to positive sequence (+0.043); R4 phase voltage magnitude unbalance (+0.020).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "correct"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 5568,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.4261,
+    "cyberattack": 0.5739
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0013275176103593,
+     "influence_on_attack_probability": -0.0441,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R2_IC_over_Ipos",
+     "description": "R2 phase C current relative to positive sequence",
+     "value": 1.007616729649401,
+     "influence_on_attack_probability": 0.0425,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R4_IB_over_Ipos",
+     "description": "R4 phase B current relative to positive sequence",
+     "value": 0.9971077328666645,
+     "influence_on_attack_probability": 0.0345,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.57 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R2 phase C current relative to positive sequence (+0.043); R4 phase B current relative to positive sequence (+0.035).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "correct"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 3582,
+    "label_block": 3
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.3397,
+    "cyberattack": 0.6603
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0001755515676891,
+     "influence_on_attack_probability": 0.0473,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_V_unbalance",
+     "description": "R4 phase voltage magnitude unbalance",
+     "value": 0.0016977226389037518,
+     "influence_on_attack_probability": 0.0316,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_VC_over_Vpos",
+     "description": "R4 phase C voltage relative to positive sequence",
+     "value": 1.0007824647411256,
+     "influence_on_attack_probability": 0.028,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.66 >= threshold 0.655. Largest model influences: R4 phase A voltage relative to positive sequence (+0.047); R4 phase voltage magnitude unbalance (+0.032).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "false_attack_flag"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 4886,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.3438,
+    "cyberattack": 0.6562
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0001524496440628,
+     "influence_on_attack_probability": 0.0382,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_VC_over_Vpos",
+     "description": "R4 phase C voltage relative to positive sequence",
+     "value": 1.0008124335396629,
+     "influence_on_attack_probability": 0.0302,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R2_V_unbalance",
+     "description": "R2 phase voltage magnitude unbalance",
+     "value": 0.00019324939374725463,
+     "influence_on_attack_probability": 0.0272,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.66 >= threshold 0.655. Largest model influences: R4 phase A voltage relative to positive sequence (+0.038); R4 phase C voltage relative to positive sequence (+0.030).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "false_attack_flag"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 5544,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.3085,
+    "cyberattack": 0.6915
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R3_IC_over_Ipos",
+     "description": "R3 phase C current relative to positive sequence",
+     "value": 0.9426356549240928,
+     "influence_on_attack_probability": 0.0309,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R1_Z_angle",
+     "description": "R1 apparent impedance angle",
+     "value": -0.263501882,
+     "influence_on_attack_probability": 0.0274,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R4_Z_angle",
+     "description": "R4 apparent impedance angle",
+     "value": -0.240170951,
+     "influence_on_attack_probability": 0.0269,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.69 >= threshold 0.655. Largest model influences: R3 phase C current relative to positive sequence (+0.031); R1 apparent impedance angle (+0.027).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "false_attack_flag"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 5,
+    "label_block": 1
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.1733,
+    "natural_disturbance": 0.4785,
+    "cyberattack": 0.3482
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "normal_operation",
+   "evidence": [
+    {
+     "feature": "R1_I_unbalance",
+     "description": "R1 phase current magnitude unbalance",
+     "value": 0.029562981935968596,
+     "influence_on_attack_probability": 0.0313,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R2_I_unbalance",
+     "description": "R2 phase current magnitude unbalance",
+     "value": 0.02730592143252378,
+     "influence_on_attack_probability": 0.0238,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R4_V_unbalance",
+     "description": "R4 phase voltage magnitude unbalance",
+     "value": 0.005151361052643615,
+     "influence_on_attack_probability": -0.0201,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.35 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R1 phase current magnitude unbalance (+0.031); R2 phase current magnitude unbalance (+0.024).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "non_attack_confusion"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 3659,
+    "label_block": 3
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "normal_operation",
+   "probabilities": {
+    "normal_operation": 0.3332,
+    "natural_disturbance": 0.2508,
+    "cyberattack": 0.416
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R2_IC_over_Ipos",
+     "description": "R2 phase C current relative to positive sequence",
+     "value": 0.9991238657770778,
+     "influence_on_attack_probability": 0.1382,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R4_IA_over_Ipos",
+     "description": "R4 phase A current relative to positive sequence",
+     "value": 1.0014456069862332,
+     "influence_on_attack_probability": 0.0335,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0013438280592248,
+     "influence_on_attack_probability": -0.031,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.42 < 0.655); classified normal operation. This is NOT evidence that no attack occurred. Largest model influences: R2 phase C current relative to positive sequence (+0.138); R4 phase A current relative to positive sequence (+0.034).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "non_attack_confusion"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data10.csv",
+    "row_in_file": 5519,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "normal_operation",
+   "probabilities": {
+    "normal_operation": 0.4714,
+    "natural_disturbance": 0.2515,
+    "cyberattack": 0.2771
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R3_freq_dev",
+     "description": "R3 frequency deviation from 60 Hz",
+     "value": 0.014000000000002899,
+     "influence_on_attack_probability": -0.0332,
+     "direction": "away_from_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0015299295385753,
+     "influence_on_attack_probability": -0.0237,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R2_VC_over_Vpos",
+     "description": "R2 phase C voltage relative to positive sequence",
+     "value": 1.0008070931597102,
+     "influence_on_attack_probability": -0.0233,
+     "direction": "away_from_attack",
+     "benchmark_device": "R2"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.28 < 0.655); classified normal operation. This is NOT evidence that no attack occurred. Largest model influences: R3 frequency deviation from 60 Hz (-0.033); R4 phase A voltage relative to positive sequence (-0.024).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "non_attack_confusion"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 155,
+    "label_block": 2
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.2604,
+    "cyberattack": 0.7396
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R4_VB_over_Vpos",
+     "description": "R4 phase B voltage relative to positive sequence",
+     "value": 0.9989780595844236,
+     "influence_on_attack_probability": 0.0385,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R3_IC_over_Ipos",
+     "description": "R3 phase C current relative to positive sequence",
+     "value": 0.9960303120030607,
+     "influence_on_attack_probability": 0.0356,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.00017655396024,
+     "influence_on_attack_probability": 0.0323,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.74 >= threshold 0.655. Largest model influences: R4 phase B voltage relative to positive sequence (+0.038); R3 phase C current relative to positive sequence (+0.036).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_flagged"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 2025,
+    "label_block": 2
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.0087,
+    "cyberattack": 0.9913
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R3_VA_over_Vpos",
+     "description": "R3 phase A voltage relative to positive sequence",
+     "value": 1.001732768340811,
+     "influence_on_attack_probability": 0.0713,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R1_VB_over_Vpos",
+     "description": "R1 phase B voltage relative to positive sequence",
+     "value": 0.9994297662725058,
+     "influence_on_attack_probability": 0.0592,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R3_VC_over_Vpos",
+     "description": "R3 phase C voltage relative to positive sequence",
+     "value": 1.001732768340811,
+     "influence_on_attack_probability": 0.0564,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.99 >= threshold 0.655. Largest model influences: R3 phase A voltage relative to positive sequence (+0.071); R1 phase B voltage relative to positive sequence (+0.059).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_flagged"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 4399,
+    "label_block": 4
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.339,
+    "cyberattack": 0.661
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R1_VC_over_Vpos",
+     "description": "R1 phase C voltage relative to positive sequence",
+     "value": 1.0003508153594733,
+     "influence_on_attack_probability": 0.0584,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R2_freq_dev",
+     "description": "R2 frequency deviation from 60 Hz",
+     "value": 0.05300139999999942,
+     "influence_on_attack_probability": 0.0512,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R3_IA_over_Ipos",
+     "description": "R3 phase A current relative to positive sequence",
+     "value": 0.9975783007026197,
+     "influence_on_attack_probability": 0.0505,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.66 >= threshold 0.655. Largest model influences: R1 phase C voltage relative to positive sequence (+0.058); R2 frequency deviation from 60 Hz (+0.051).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_flagged"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 145,
+    "label_block": 2
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.587,
+    "cyberattack": 0.413
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0001693526528,
+     "influence_on_attack_probability": 0.0378,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R3_I_zero_pos",
+     "description": "R3 zero/positive-sequence current ratio (ground fault signature)",
+     "value": 0.023520764377636328,
+     "influence_on_attack_probability": 0.0206,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R2_V_unbalance",
+     "description": "R2 phase voltage magnitude unbalance",
+     "value": 0.0003953347310944405,
+     "influence_on_attack_probability": 0.019,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.41 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R4 phase A voltage relative to positive sequence (+0.038); R3 zero/positive-sequence current ratio (ground fault signature) (+0.021).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_missed"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 2687,
+    "label_block": 2
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.0676,
+    "natural_disturbance": 0.4307,
+    "cyberattack": 0.5017
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R4_VC_over_Vpos",
+     "description": "R4 phase C voltage relative to positive sequence",
+     "value": 1.0017107011521589,
+     "influence_on_attack_probability": -0.0524,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_V_unbalance",
+     "description": "R4 phase voltage magnitude unbalance",
+     "value": 0.005132429426185887,
+     "influence_on_attack_probability": -0.0452,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R1_Z_angle",
+     "description": "R1 apparent impedance angle",
+     "value": -0.096468167,
+     "influence_on_attack_probability": 0.0416,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.50 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R1 apparent impedance angle (+0.042).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_missed"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 4407,
+    "label_block": 4
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.3957,
+    "cyberattack": 0.6043
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R3_IA_over_Ipos",
+     "description": "R3 phase A current relative to positive sequence",
+     "value": 1.0038095217211418,
+     "influence_on_attack_probability": 0.0448,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R2_IB_over_Ipos",
+     "description": "R2 phase B current relative to positive sequence",
+     "value": 0.9972988320961,
+     "influence_on_attack_probability": 0.0429,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R2_IA_over_Ipos",
+     "description": "R2 phase A current relative to positive sequence",
+     "value": 1.002096987187702,
+     "influence_on_attack_probability": 0.0381,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.60 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R3 phase A current relative to positive sequence (+0.045); R2 phase B current relative to positive sequence (+0.043).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_missed"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 0,
+    "label_block": 1
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "normal_operation",
+   "probabilities": {
+    "normal_operation": 0.8121,
+    "natural_disturbance": 0.1369,
+    "cyberattack": 0.051
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "normal_operation",
+   "evidence": [
+    {
+     "feature": "R3_freq_dev",
+     "description": "R3 frequency deviation from 60 Hz",
+     "value": 0.03399999999999892,
+     "influence_on_attack_probability": -0.0333,
+     "direction": "away_from_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R1_freq_dev",
+     "description": "R1 frequency deviation from 60 Hz",
+     "value": 0.029000000000003467,
+     "influence_on_attack_probability": -0.0267,
+     "direction": "away_from_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R1_Z_angle",
+     "description": "R1 apparent impedance angle",
+     "value": 0.056058437,
+     "influence_on_attack_probability": -0.0265,
+     "direction": "away_from_attack",
+     "benchmark_device": "R1"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.05 < 0.655); classified normal operation. This is NOT evidence that no attack occurred. Largest model influences: R3 frequency deviation from 60 Hz (-0.033); R1 frequency deviation from 60 Hz (-0.027).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "correct"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 4598,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.5567,
+    "cyberattack": 0.4433
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0001475107484268,
+     "influence_on_attack_probability": 0.0358,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R3_V_unbalance",
+     "description": "R3 phase voltage magnitude unbalance",
+     "value": 0.0011565148805795225,
+     "influence_on_attack_probability": -0.0316,
+     "direction": "away_from_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R4_VC_over_Vpos",
+     "description": "R4 phase C voltage relative to positive sequence",
+     "value": 1.0007935798704493,
+     "influence_on_attack_probability": 0.0252,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.44 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R4 phase A voltage relative to positive sequence (+0.036); R4 phase C voltage relative to positive sequence (+0.025).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "correct"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 5250,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.0073,
+    "natural_disturbance": 0.5512,
+    "cyberattack": 0.4415
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R2_I_unbalance",
+     "description": "R2 phase current magnitude unbalance",
+     "value": 0.007510407423959482,
+     "influence_on_attack_probability": 0.0401,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R3_I_unbalance",
+     "description": "R3 phase current magnitude unbalance",
+     "value": 0.008216176714513293,
+     "influence_on_attack_probability": 0.0382,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R2_IC_over_Ipos",
+     "description": "R2 phase C current relative to positive sequence",
+     "value": 1.0022260407223007,
+     "influence_on_attack_probability": 0.0334,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.44 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R2 phase current magnitude unbalance (+0.040); R3 phase current magnitude unbalance (+0.038).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "correct"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 3397,
+    "label_block": 3
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.3154,
+    "cyberattack": 0.6846
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0001772142885665,
+     "influence_on_attack_probability": 0.0381,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R2_IA_over_Ipos",
+     "description": "R2 phase A current relative to positive sequence",
+     "value": 0.9999999977101894,
+     "influence_on_attack_probability": 0.0347,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R2_VB_over_Vpos",
+     "description": "R2 phase B voltage relative to positive sequence",
+     "value": 0.9996124034022204,
+     "influence_on_attack_probability": 0.0346,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.68 >= threshold 0.655. Largest model influences: R4 phase A voltage relative to positive sequence (+0.038); R2 phase A current relative to positive sequence (+0.035).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "false_attack_flag"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 4618,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.2181,
+    "cyberattack": 0.7819
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R4_IB_over_Ipos",
+     "description": "R4 phase B current relative to positive sequence",
+     "value": 1.0006981895406066,
+     "influence_on_attack_probability": 0.0612,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0001800965567758,
+     "influence_on_attack_probability": 0.0418,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R1_IB_over_Ipos",
+     "description": "R1 phase B current relative to positive sequence",
+     "value": 1.0014822107365153,
+     "influence_on_attack_probability": 0.0355,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.78 >= threshold 0.655. Largest model influences: R4 phase B current relative to positive sequence (+0.061); R4 phase A voltage relative to positive sequence (+0.042).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "false_attack_flag"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 5217,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.004,
+    "natural_disturbance": 0.2644,
+    "cyberattack": 0.7316
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R1_Z_angle",
+     "description": "R1 apparent impedance angle",
+     "value": -0.145951943,
+     "influence_on_attack_probability": 0.0324,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R3_IA_over_Ipos",
+     "description": "R3 phase A current relative to positive sequence",
+     "value": 0.9777510491042138,
+     "influence_on_attack_probability": 0.0298,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R1_I_unbalance",
+     "description": "R1 phase current magnitude unbalance",
+     "value": 0.09730387156006744,
+     "influence_on_attack_probability": 0.0288,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.73 >= threshold 0.655. Largest model influences: R1 apparent impedance angle (+0.032); R3 phase A current relative to positive sequence (+0.030).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "false_attack_flag"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 7,
+    "label_block": 1
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.329,
+    "natural_disturbance": 0.3647,
+    "cyberattack": 0.3063
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "normal_operation",
+   "evidence": [
+    {
+     "feature": "R1_Z_angle",
+     "description": "R1 apparent impedance angle",
+     "value": 0.04783875,
+     "influence_on_attack_probability": -0.0363,
+     "direction": "away_from_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R2_I_unbalance",
+     "description": "R2 phase current magnitude unbalance",
+     "value": 0.01769945172807018,
+     "influence_on_attack_probability": 0.0215,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R1_I_unbalance",
+     "description": "R1 phase current magnitude unbalance",
+     "value": 0.01994337063563414,
+     "influence_on_attack_probability": 0.0207,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.31 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R2 phase current magnitude unbalance (+0.021); R1 phase current magnitude unbalance (+0.021).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "non_attack_confusion"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 4981,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "normal_operation",
+   "probabilities": {
+    "normal_operation": 0.6074,
+    "natural_disturbance": 0.1054,
+    "cyberattack": 0.2872
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R4_I_unbalance",
+     "description": "R4 phase current magnitude unbalance",
+     "value": 0.009359605886150374,
+     "influence_on_attack_probability": 0.0327,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R2_I_unbalance",
+     "description": "R2 phase current magnitude unbalance",
+     "value": 0.009016751588826763,
+     "influence_on_attack_probability": 0.0254,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R3_I_unbalance",
+     "description": "R3 phase current magnitude unbalance",
+     "value": 0.008749189866600225,
+     "influence_on_attack_probability": 0.0245,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.29 < 0.655); classified normal operation. This is NOT evidence that no attack occurred. Largest model influences: R4 phase current magnitude unbalance (+0.033); R2 phase current magnitude unbalance (+0.025).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "non_attack_confusion"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data11.csv",
+    "row_in_file": 5224,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "normal_operation",
+   "probabilities": {
+    "normal_operation": 0.3662,
+    "natural_disturbance": 0.1895,
+    "cyberattack": 0.4443
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R4_Z_angle",
+     "description": "R4 apparent impedance angle",
+     "value": -0.035683952,
+     "influence_on_attack_probability": 0.028,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_VC_over_Vpos",
+     "description": "R4 phase C voltage relative to positive sequence",
+     "value": 1.0019011406768137,
+     "influence_on_attack_probability": -0.0249,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0013307985473183,
+     "influence_on_attack_probability": -0.0245,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.44 < 0.655); classified normal operation. This is NOT evidence that no attack occurred. Largest model influences: R4 apparent impedance angle (+0.028).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "non_attack_confusion"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 391,
+    "label_block": 2
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.2382,
+    "cyberattack": 0.7618
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0001419706096437,
+     "influence_on_attack_probability": 0.0444,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_V_unbalance",
+     "description": "R4 phase voltage magnitude unbalance",
+     "value": 0.0018287544520744622,
+     "influence_on_attack_probability": 0.0332,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_IB_over_Ipos",
+     "description": "R4 phase B current relative to positive sequence",
+     "value": 1.0030866506073055,
+     "influence_on_attack_probability": 0.0328,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.76 >= threshold 0.655. Largest model influences: R4 phase A voltage relative to positive sequence (+0.044); R4 phase voltage magnitude unbalance (+0.033).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_flagged"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 1849,
+    "label_block": 2
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.0,
+    "cyberattack": 1.0
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R3_VA_over_Vpos",
+     "description": "R3 phase A voltage relative to positive sequence",
+     "value": 1.0015414261185704,
+     "influence_on_attack_probability": 0.0758,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R1_VB_over_Vpos",
+     "description": "R1 phase B voltage relative to positive sequence",
+     "value": 0.9998098133822622,
+     "influence_on_attack_probability": 0.0643,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R3_VB_over_Vpos",
+     "description": "R3 phase B voltage relative to positive sequence",
+     "value": 0.9967244700503693,
+     "influence_on_attack_probability": 0.0556,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 1.00 >= threshold 0.655. Largest model influences: R3 phase A voltage relative to positive sequence (+0.076); R1 phase B voltage relative to positive sequence (+0.064).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_flagged"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 3958,
+    "label_block": 4
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0036,
+    "natural_disturbance": 0.2508,
+    "cyberattack": 0.7456
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R3_IC_over_Ipos",
+     "description": "R3 phase C current relative to positive sequence",
+     "value": 1.0046315766372664,
+     "influence_on_attack_probability": 0.056,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0017201840127314,
+     "influence_on_attack_probability": -0.0559,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_IB_over_Ipos",
+     "description": "R4 phase B current relative to positive sequence",
+     "value": 0.9953111656284777,
+     "influence_on_attack_probability": 0.051,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.75 >= threshold 0.655. Largest model influences: R3 phase C current relative to positive sequence (+0.056); R4 phase B current relative to positive sequence (+0.051).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_flagged"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 384,
+    "label_block": 2
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.4803,
+    "cyberattack": 0.5197
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R1_VC_over_Vpos",
+     "description": "R1 phase C voltage relative to positive sequence",
+     "value": 1.0021129468225531,
+     "influence_on_attack_probability": -0.0416,
+     "direction": "away_from_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0002087948811071,
+     "influence_on_attack_probability": 0.0386,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_VC_over_Vpos",
+     "description": "R4 phase C voltage relative to positive sequence",
+     "value": 1.0007668916058374,
+     "influence_on_attack_probability": 0.0259,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.52 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R4 phase A voltage relative to positive sequence (+0.039); R4 phase C voltage relative to positive sequence (+0.026).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_missed"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 2576,
+    "label_block": 2
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.6155,
+    "cyberattack": 0.3845
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0002113188443447,
+     "influence_on_attack_probability": 0.0467,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R3_VC_over_Vpos",
+     "description": "R3 phase C voltage relative to positive sequence",
+     "value": 1.0005779232441865,
+     "influence_on_attack_probability": -0.0271,
+     "direction": "away_from_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R4_VC_over_Vpos",
+     "description": "R4 phase C voltage relative to positive sequence",
+     "value": 1.0007953713685653,
+     "influence_on_attack_probability": 0.027,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.38 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R4 phase A voltage relative to positive sequence (+0.047); R4 phase C voltage relative to positive sequence (+0.027).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_missed"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 3959,
+    "label_block": 4
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.35,
+    "cyberattack": 0.65
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "cyberattack",
+   "evidence": [
+    {
+     "feature": "R2_IB_over_Ipos",
+     "description": "R2 phase B current relative to positive sequence",
+     "value": 0.9966906802068584,
+     "influence_on_attack_probability": 0.0446,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R3_IB_over_Ipos",
+     "description": "R3 phase B current relative to positive sequence",
+     "value": 0.9962089277841221,
+     "influence_on_attack_probability": 0.0419,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R2_IC_over_Ipos",
+     "description": "R2 phase C current relative to positive sequence",
+     "value": 1.0046043143506493,
+     "influence_on_attack_probability": 0.0397,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.65 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R2 phase B current relative to positive sequence (+0.045); R3 phase B current relative to positive sequence (+0.042).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "attack_missed"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 3,
+    "label_block": 1
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "normal_operation",
+   "probabilities": {
+    "normal_operation": 0.4127,
+    "natural_disturbance": 0.27,
+    "cyberattack": 0.3173
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "normal_operation",
+   "evidence": [
+    {
+     "feature": "R1_Z_angle",
+     "description": "R1 apparent impedance angle",
+     "value": 0.028745252,
+     "influence_on_attack_probability": -0.0358,
+     "direction": "away_from_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R4_freq_dev",
+     "description": "R4 frequency deviation from 60 Hz",
+     "value": 0.0030000000000001137,
+     "influence_on_attack_probability": -0.0221,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0015540010809225,
+     "influence_on_attack_probability": -0.0192,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.32 < 0.655); classified normal operation. This is NOT evidence that no attack occurred. Largest model influences: R1 apparent impedance angle (-0.036); R4 frequency deviation from 60 Hz (-0.022).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "correct"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 4323,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.007,
+    "natural_disturbance": 0.423,
+    "cyberattack": 0.57
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0002538077153642,
+     "influence_on_attack_probability": 0.0433,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_VC_over_Vpos",
+     "description": "R4 phase C voltage relative to positive sequence",
+     "value": 1.000753409918889,
+     "influence_on_attack_probability": 0.0277,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R2_VB_over_Vpos",
+     "description": "R2 phase B voltage relative to positive sequence",
+     "value": 0.9998084288819217,
+     "influence_on_attack_probability": 0.0276,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.57 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R4 phase A voltage relative to positive sequence (+0.043); R4 phase C voltage relative to positive sequence (+0.028).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "correct"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 5223,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.091,
+    "natural_disturbance": 0.4535,
+    "cyberattack": 0.4556
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R3_I_unbalance",
+     "description": "R3 phase current magnitude unbalance",
+     "value": 0.004975124361212578,
+     "influence_on_attack_probability": 0.04,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R2_V_unbalance",
+     "description": "R2 phase voltage magnitude unbalance",
+     "value": 0.0018188516571177903,
+     "influence_on_attack_probability": -0.0311,
+     "direction": "away_from_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R2_I_unbalance",
+     "description": "R2 phase current magnitude unbalance",
+     "value": 0.0065137180895928366,
+     "influence_on_attack_probability": 0.0274,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.46 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R3 phase current magnitude unbalance (+0.040); R2 phase current magnitude unbalance (+0.027).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "correct"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 3198,
+    "label_block": 3
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.2627,
+    "cyberattack": 0.7373
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R2_I_unbalance",
+     "description": "R2 phase current magnitude unbalance",
+     "value": 0.401052896209475,
+     "influence_on_attack_probability": 0.0431,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R4_Z_angle",
+     "description": "R4 apparent impedance angle",
+     "value": -2.563105343,
+     "influence_on_attack_probability": 0.0343,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R1_I_unbalance",
+     "description": "R1 phase current magnitude unbalance",
+     "value": 0.40248640163245597,
+     "influence_on_attack_probability": 0.0324,
+     "direction": "toward_attack",
+     "benchmark_device": "R1"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.74 >= threshold 0.655. Largest model influences: R2 phase current magnitude unbalance (+0.043); R4 apparent impedance angle (+0.034).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "false_attack_flag"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 4462,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.2709,
+    "cyberattack": 0.7291
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R2_IB_over_Ipos",
+     "description": "R2 phase B current relative to positive sequence",
+     "value": 1.000931529824739,
+     "influence_on_attack_probability": 0.0398,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R2_IA_over_Ipos",
+     "description": "R2 phase A current relative to positive sequence",
+     "value": 1.0004657636405487,
+     "influence_on_attack_probability": 0.0381,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0001434697218778,
+     "influence_on_attack_probability": 0.0339,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.73 >= threshold 0.655. Largest model influences: R2 phase B current relative to positive sequence (+0.040); R2 phase A current relative to positive sequence (+0.038).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "false_attack_flag"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 5187,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "cyberattack",
+   "probabilities": {
+    "normal_operation": 0.0,
+    "natural_disturbance": 0.3381,
+    "cyberattack": 0.6619
+   },
+   "attack_screening_flag": true,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R2_IB_over_Ipos",
+     "description": "R2 phase B current relative to positive sequence",
+     "value": 0.9969867119951112,
+     "influence_on_attack_probability": 0.0471,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R2_IC_over_Ipos",
+     "description": "R2 phase C current relative to positive sequence",
+     "value": 1.005524355358093,
+     "influence_on_attack_probability": 0.0465,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R3_IB_over_Ipos",
+     "description": "R3 phase B current relative to positive sequence",
+     "value": 0.9970642181852605,
+     "influence_on_attack_probability": 0.0447,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "Attack-screening flag raised: P(cyberattack) 0.66 >= threshold 0.655. Largest model influences: R2 phase B current relative to positive sequence (+0.047); R2 phase C current relative to positive sequence (+0.046).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "false_attack_flag"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 0,
+    "label_block": 1
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "natural_disturbance",
+   "probabilities": {
+    "normal_operation": 0.1352,
+    "natural_disturbance": 0.5555,
+    "cyberattack": 0.3093
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "normal_operation",
+   "evidence": [
+    {
+     "feature": "R2_V_unbalance",
+     "description": "R2 phase voltage magnitude unbalance",
+     "value": 0.0018288658313559668,
+     "influence_on_attack_probability": -0.03,
+     "direction": "away_from_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R4_VC_over_Vpos",
+     "description": "R4 phase C voltage relative to positive sequence",
+     "value": 1.0018850141293651,
+     "influence_on_attack_probability": -0.028,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0011310083242513,
+     "influence_on_attack_probability": 0.0262,
+     "direction": "toward_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.31 < 0.655); classified natural disturbance. This is NOT evidence that no attack occurred. Largest model influences: R4 phase A voltage relative to positive sequence (+0.026).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "non_attack_confusion"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 3191,
+    "label_block": 3
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "normal_operation",
+   "probabilities": {
+    "normal_operation": 0.3739,
+    "natural_disturbance": 0.2908,
+    "cyberattack": 0.3353
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R3_IA_over_Ipos",
+     "description": "R3 phase A current relative to positive sequence",
+     "value": 0.9988331367348013,
+     "influence_on_attack_probability": 0.0508,
+     "direction": "toward_attack",
+     "benchmark_device": "R3"
+    },
+    {
+     "feature": "R2_IC_over_Ipos",
+     "description": "R2 phase C current relative to positive sequence",
+     "value": 1.00136237988278,
+     "influence_on_attack_probability": 0.0418,
+     "direction": "toward_attack",
+     "benchmark_device": "R2"
+    },
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0015319803825784,
+     "influence_on_attack_probability": -0.0308,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.34 < 0.655); classified normal operation. This is NOT evidence that no attack occurred. Largest model influences: R3 phase A current relative to positive sequence (+0.051); R2 phase C current relative to positive sequence (+0.042).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "non_attack_confusion"
+  },
+  {
+   "sample_ref": {
+    "dataset": "MSU-ORNL Power System Attack Dataset (three-class release)",
+    "source_file": "data12.csv",
+    "row_in_file": 5173,
+    "label_block": 5
+   },
+   "data_mode": "benchmark_sample",
+   "sector": "electricity",
+   "predicted_class": "normal_operation",
+   "probabilities": {
+    "normal_operation": 0.5984,
+    "natural_disturbance": 0.2028,
+    "cyberattack": 0.1988
+   },
+   "attack_screening_flag": false,
+   "attack_threshold": 0.655311,
+   "benchmark_label": "natural_disturbance",
+   "evidence": [
+    {
+     "feature": "R4_V_unbalance",
+     "description": "R4 phase voltage magnitude unbalance",
+     "value": 0.005180021054478106,
+     "influence_on_attack_probability": -0.0225,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    },
+    {
+     "feature": "R1_Z_angle",
+     "description": "R1 apparent impedance angle",
+     "value": 0.066054555,
+     "influence_on_attack_probability": -0.0211,
+     "direction": "away_from_attack",
+     "benchmark_device": "R1"
+    },
+    {
+     "feature": "R4_VA_over_Vpos",
+     "description": "R4 phase A voltage relative to positive sequence",
+     "value": 1.0015349197156234,
+     "influence_on_attack_probability": -0.02,
+     "direction": "away_from_attack",
+     "benchmark_device": "R4"
+    }
+   ],
+   "attack_probability_baseline": 0.3331,
+   "explanation": "No attack-screening flag (P(cyberattack) 0.20 < 0.655); classified normal operation. This is NOT evidence that no attack occurred. Largest model influences: R4 phase voltage magnitude unbalance (-0.022); R1 apparent impedance angle (-0.021).",
+   "explanation_note": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+   "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+   "model_version": "electricity-rf-compact-59151fb44e49",
+   "classification": "advisory_screening",
+   "demo_category": "non_attack_confusion"
+  }
+ ]
+}

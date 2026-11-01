@@ -1,0 +1,189 @@
+{
+ "name": "SENTINEL electricity attack-screening model (compact Random Forest, load-invariant features)",
+ "model_version": "electricity-rf-compact-59151fb44e49",
+ "model_sha256": "59151fb44e4951c45ff4c078bee4ff3099a70ac9d08f55d2d644cd891282dff7",
+ "frozen_at": "2026-11-01T00:04:48",
+ "intended_use": "Advisory screening of benchmark power-system measurements for cyber-physical attack signatures; raises investigation priority. High precision, low coverage.",
+ "not_intended_for": [
+  "declaring that an attack did or did not occur",
+  "assuring a grid is safe when no flag is raised",
+  "SENTINEL city telemetry (not validated)",
+  "CVE exploitation scoring (exploit_prob)"
+ ],
+ "warning": "Advisory screening only. On held-out benchmark data this model flagged about 40% of attack observations (recall 0.396); a missing flag never means the grid is safe. A flag is evidence to investigate, not proof of an attack, compromise or outage.",
+ "source": {
+  "dataset": "MSU-ORNL Power System Attack Datasets (three-class release, 'triple')",
+  "authors": "Uttam Adhikari, Shengyi Pan, Tommy Morris (Mississippi State University) with Raymond Borges and Justin Beaver (Oak Ridge National Laboratory)",
+  "readme": "https://ece.uah.edu/~thm0009/icsdatasets/PowerSystem_Dataset_README.pdf (dated 4/15/2014)",
+  "landing_page": "https://sites.google.com/a/uah.edu/tommy-morris-uah/ics-data-sets",
+  "citation_hint": "Pan, Morris, Adhikari, IEEE Trans. Smart Grid (doi:10.1109/TSG.2015.2409775) and related papers listed on the landing page",
+  "nature": "Simulated benchmark of a two-generator, two-line, four-IED transmission test system; 1% random samples; no timestamps. Not SENTINEL city telemetry."
+ },
+ "classes": [
+  "normal_operation",
+  "natural_disturbance",
+  "cyberattack"
+ ],
+ "decision_rule": "predict Attack if P(Attack) >= tau; otherwise argmax(P(NoEvents), P(Natural))",
+ "attack_threshold": 0.655311,
+ "tau_source": "grouped out-of-fold predictions inside train files data1-9, lowest tau with <= 10% natural->attack",
+ "model": {
+  "bootstrap": true,
+  "class_weight": "balanced",
+  "criterion": "gini",
+  "max_depth": null,
+  "max_features": "sqrt",
+  "min_samples_leaf": 5,
+  "n_estimators": 100,
+  "random_state": 20261031,
+  "type": "sklearn.ensemble.RandomForestClassifier",
+  "size_bytes": 46926145
+ },
+ "features": {
+  "n": 80,
+  "definition": "src/invariant.py (row-wise ratios: sequence components, phase unbalance, per-phase vs positive sequence, frequency deviation, df/dt, impedance angle/infinite flag, relay status, logs)",
+  "required_raw_columns": 80
+ },
+ "training": {
+  "files": [
+   "data1.csv",
+   "data2.csv",
+   "data3.csv",
+   "data4.csv",
+   "data5.csv",
+   "data6.csv",
+   "data7.csv",
+   "data8.csv",
+   "data9.csv"
+  ],
+  "split": "grouped by source file"
+ },
+ "validation_data10_12": {
+  "natural_called_attack_rate": 0.0879,
+  "normal_called_attack_rate": 0.0,
+  "attack_precision": 0.9275,
+  "attack_recall": 0.3812,
+  "normal_recall": 0.9368,
+  "natural_recall": 0.8895,
+  "macro_f1": 0.5756,
+  "confusion_rows_true_cols_pred": {
+   "labels": [
+    "NoEvents",
+    "Natural",
+    "Attack"
+   ],
+   "matrix": [
+    [
+     801,
+     54,
+     0
+    ],
+    [
+     87,
+     3421,
+     338
+    ],
+    [
+     581,
+     6438,
+     4324
+    ]
+   ]
+  }
+ },
+ "held_out_test_data13_15_evaluated_once": {
+  "run_at": "2026-11-01T00:09:13",
+  "n": 15662,
+  "class_counts": {
+   "NoEvents": 796,
+   "Natural": 3571,
+   "Attack": 11295
+  },
+  "per_class": {
+   "NoEvents": {
+    "precision": 0.5412,
+    "recall": 0.9397,
+    "f1": 0.6869,
+    "support": 796
+   },
+   "Natural": {
+    "precision": 0.3356,
+    "recall": 0.8981,
+    "f1": 0.4886,
+    "support": 3571
+   },
+   "Attack": {
+    "precision": 0.9458,
+    "recall": 0.3955,
+    "f1": 0.5577,
+    "support": 11295
+   }
+  },
+  "macro_f1": 0.5777,
+  "attack_precision": 0.9458,
+  "attack_recall": 0.3955,
+  "natural_disturbance_called_attack_rate": 0.0717,
+  "normal_operation_called_attack_rate": 0.0,
+  "normal_recall": 0.9397,
+  "confusion_rows_true_cols_pred": {
+   "labels": [
+    "NoEvents",
+    "Natural",
+    "Attack"
+   ],
+   "matrix": [
+    [
+     748,
+     48,
+     0
+    ],
+    [
+     108,
+     3207,
+     256
+    ],
+    [
+     526,
+     6302,
+     4467
+    ]
+   ]
+  },
+  "per_file": {
+   "data13.csv": {
+    "natural_called_attack_rate": 0.0632,
+    "attack_precision": 0.9643,
+    "attack_recall": 0.3941,
+    "normal_recall": 0.9557,
+    "macro_f1": 0.5344
+   },
+   "data14.csv": {
+    "natural_called_attack_rate": 0.0848,
+    "attack_precision": 0.9296,
+    "attack_recall": 0.3791,
+    "normal_recall": 0.9747,
+    "macro_f1": 0.474
+   },
+   "data15.csv": {
+    "natural_called_attack_rate": 0.0653,
+    "attack_precision": 0.9416,
+    "attack_recall": 0.4152,
+    "normal_recall": 0.928,
+    "macro_f1": 0.6479
+   }
+  }
+ },
+ "limitations": [
+  "About 60% of attack observations are not flagged (held-out recall 0.396); most are classified as natural disturbances",
+  "A 'normal' prediction is only 0.54 precise on held-out data; never present it as 'no attack'",
+  "Single 1% snapshots without timestamps or command context; attacks designed to mimic natural faults are hard to separate",
+  "One benchmark system (2 lines, 4 IEDs) and 37 scenario types; no evidence for unseen attack types or other grids",
+  "About 7-9% of natural disturbances are flagged as cyberattacks (designed cap 10%)",
+  "Explanations are model feature influence (tree-path contributions), not causal attribution"
+ ],
+ "explanations": "Feature influence = this model's additive contribution to P(cyberattack) for this sample. It shows what drove the score, not what caused any event.",
+ "inference_ms": {
+  "single_sample_with_explanation": "about 30 (CPU)",
+  "batch_per_row_probability": 0.0024
+ }
+}

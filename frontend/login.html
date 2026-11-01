@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in: Cascade</title>
+<script>try { document.documentElement.dataset.theme = localStorage.getItem("cascade.theme") || "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+<link rel="stylesheet" href="/static/cascade.css">
+<style>
+  body { min-height: 100vh; display: grid; place-items: center; padding: 16px; background: var(--abyss); }
+  .card { width: min(400px, 100%); background: var(--navy); border: 1px solid var(--line); border-radius: var(--r); padding: 28px; }
+  .brand { font: 800 30px/1 var(--display); text-decoration: none; }
+  .brand i { font-style: normal; color: var(--pink); }
+  h1 { font-size: 30px; margin: 22px 0 6px; }
+  p.sub { color: var(--mute); font-size: 13px; }
+  form { display: grid; gap: 12px; margin-top: 18px; }
+  label { display: grid; gap: 4px; font-size: 12px; color: var(--mute); }
+  input { height: 42px; border-radius: 8px; border: 1px solid var(--line); background: var(--deep); padding: 0 12px; color: var(--white); }
+  input:focus { outline: none; border-color: var(--mute); }
+  .err { color: var(--pink); font-size: 13px; min-height: 18px; }
+  .code { font: 600 24px var(--mono); letter-spacing: .3em; text-align: center; }
+  .foot { margin-top: 18px; font-size: 12px; color: var(--faint); }
+</style>
+</head>
+<body>
+<main class="card">
+  <a class="brand" href="/">Cascade<i>.</i></a>
+  <section id="pw">
+    <h1>Sign in</h1><p class="sub">Critical infrastructure cyber-risk platform. Simulated data.</p>
+    <form id="f1"><label>Username<input name="u" autocomplete="username" required autofocus></label>
+      <label>Password<input name="p" type="password" autocomplete="current-password" required></label>
+      <button class="btn primary">Continue</button><p class="err" id="e1" role="alert"></p></form>
+  </section>
+  <section id="code" hidden>
+    <h1>Enter your code</h1><p class="sub">Open your authenticator app and type the 6-digit code for Cascade. Lost your phone? Use one of your recovery codes.</p>
+    <form id="f2"><label>Code<input class="code" name="c" inputmode="numeric" autocomplete="one-time-code" required maxlength="11"></label>
+      <button class="btn primary">Verify</button><p class="err" id="e2" role="alert"></p></form>
+  </section>
+  <p class="foot">Forgot everything? On the server run <code>python backend/auth.py --reset</code>; it removes accounts, not data.</p>
+</main>
+<script>
+const next = new URLSearchParams(location.search).get('next') || '/app';
+const safeNext = next.startsWith('/') && !next.startsWith('//') ? next : '/app';
+const post = async (url, body) => { const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); const d = await r.json().catch(() => ({})); if (!r.ok) throw new Error(d.detail || 'Failed'); return d; };
+fetch('/api/auth/status').then(r => r.json()).then(s => { if (!s.accounts_exist) location.href = '/app#/security'; else if (s.user) location.href = safeNext; else if (s.stage === 'pw') show2(); });
+function show2() { document.getElementById('pw').hidden = true; document.getElementById('code').hidden = false; document.querySelector('#f2 input').focus(); }
+document.getElementById('f1').onsubmit = async e => { e.preventDefault(); const f = new FormData(e.target);
+  try { const r = await post('/api/auth/login', { username: f.get('u'), password: f.get('p') }); r.next === 'code' ? show2() : location.href = safeNext; }
+  catch (x) { document.getElementById('e1').textContent = x.message; } };
+document.getElementById('f2').onsubmit = async e => { e.preventDefault();
+  try { const r = await post('/api/auth/code', { code: new FormData(e.target).get('c') }); if (r.used === 'recovery') { document.getElementById('e2').textContent = `Recovery code used; ${r.recovery_left} left. Signing in…`; setTimeout(() => location.href = safeNext, 1800); } else location.href = safeNext; }
+  catch (x) { document.getElementById('e2').textContent = x.message; } };
+</script>
+</body>
+</html>

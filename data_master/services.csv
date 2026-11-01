@@ -1,0 +1,7 @@
+service_id,name,population_affected,required_logic,buffer_min
+SV01,Hospital Critical-Care Power,120,(EL05 AND EL06) OR HC07,10
+SV02,Hospital Clinical Systems,330,HC03 AND HC04 AND HC06 AND ((EL05 AND EL06) OR HC07),15
+SV03,District Water Supply,60000,WA01 AND WA02 AND WA03 AND WA04 AND (EL05 AND EL06),180
+SV04,District Electricity Supply,60000,(EL05 AND EL06),0
+SV05,Traffic Signal Operation,12000,TR02 AND (EL05 AND EL06),0
+SV06,Emergency 112 Dispatch,60000,TC04 AND TC01,30

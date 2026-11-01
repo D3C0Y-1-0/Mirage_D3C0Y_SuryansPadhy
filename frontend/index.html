@@ -1,0 +1,2403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cascade cyber twin</title>
+<style>
+  /* ---------- fonts (shipped locally, see DESIGN.md) ---------- */
+  @font-face { font-family: "Big Shoulders Display"; font-weight: 600; font-display: swap; src: url(/vendor/fonts/big-shoulders-display-latin-600-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Big Shoulders Display"; font-weight: 700; font-display: swap; src: url(/vendor/fonts/big-shoulders-display-latin-700-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Big Shoulders Display"; font-weight: 800; font-display: swap; src: url(/vendor/fonts/big-shoulders-display-latin-800-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Plus Jakarta Sans"; font-weight: 400; font-display: swap; src: url(/vendor/fonts/plus-jakarta-sans-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Plus Jakarta Sans"; font-weight: 500; font-display: swap; src: url(/vendor/fonts/plus-jakarta-sans-latin-500-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Plus Jakarta Sans"; font-weight: 600; font-display: swap; src: url(/vendor/fonts/plus-jakarta-sans-latin-600-normal.woff2) format("woff2"); }
+
+  /* ---------- tokens ---------- */
+  :root {
+    --abyss: #050B24; --deep: #0A1640; --navy: #12225E; --sheet-2: #1A2C72; --line: #2B3D86;
+    --white: #FFFFFF; --mute: #A9B4DA; --pink: #FF6FB5; --pink-deep: #E43F8E; --bar-soft: #8E9DE0;
+    --display: "Big Shoulders Display", sans-serif;
+    --body: "Plus Jakarta Sans", sans-serif;
+    --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 72px;
+    --dossier-w: 400px; --rail-w: 260px; --ticker-h: 84px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: clip; background: var(--abyss); color: var(--white); font-family: var(--body); font-size: 14px; line-height: 1.45; }
+  body { overflow: hidden; }
+  button, input, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
+  h2 { font-family: var(--display); font-weight: 700; font-size: 27px; line-height: 1.05; margin: 0 0 var(--s3); letter-spacing: .01em; }
+  h3 { font-family: var(--display); font-weight: 700; font-size: 20px; margin: var(--s5) 0 var(--s2); letter-spacing: .01em; }
+  .hint { color: var(--mute); margin: 0 0 var(--s3); max-width: 62ch; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* ---------- shell ---------- */
+  .app { position: relative; height: 100vh; }
+  .stage { position: absolute; inset: 0; overflow: hidden; background: var(--abyss); }
+  .stage canvas { display: block; }
+  #labels { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+  .stage::before { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background: linear-gradient(90deg, rgba(5,11,36,.94) 0, rgba(5,11,36,.86) 270px, rgba(5,11,36,0) 350px),
+                linear-gradient(180deg, rgba(5,11,36,.75) 0, rgba(5,11,36,0) 70px); }
+
+  .nav { position: absolute; top: var(--s4); left: var(--s5); right: calc(var(--dossier-w) + var(--s5) * 2); z-index: 4; display: flex; align-items: center; gap: var(--s5); }
+  .brand { font-family: var(--display); font-weight: 800; font-size: 30px; line-height: 1; letter-spacing: .02em; }
+  .tabs { display: flex; gap: var(--s1); }
+  .tabs button { white-space: nowrap; background: none; border: 0; border-bottom: 2px solid transparent; padding: 6px 2px; margin-right: var(--s3); cursor: pointer; color: var(--mute); font-weight: 500; min-height: 36px; }
+  .tabs button[aria-selected="true"] { color: var(--white); border-bottom-color: var(--white); }
+  .menu { display: none; }
+  .simnote { margin-left: auto; color: var(--mute); font-size: 12px; white-space: nowrap; border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; cursor: help; }
+
+  /* left column: clock, first-screen question, then the rail. Stacked, so they never collide. */
+  .clockblock { position: absolute; top: 64px; left: var(--s5); bottom: calc(var(--ticker-h) + var(--s5) + var(--s4)); z-index: 3; pointer-events: none; display: flex; flex-direction: column; }
+  .clockblock > * { pointer-events: auto; }
+  .clock { align-self: flex-start; font-family: var(--display); font-weight: 800; font-size: 96px; line-height: .9; letter-spacing: .01em; display: flex; }
+  .clock span { display: inline-block; text-align: center; }
+  .clock .d { width: .5em; }
+  .clock .sep { width: .24em; }
+  .clock .plus { width: .5em; }
+  .clock .tchar { width: .5em; }
+  .clock.alarm { color: var(--pink); }
+  .clocksub { font-size: 17.5px; color: var(--mute); margin-top: var(--s2); max-width: 26em; min-height: 1.4em; }
+  .clocksub b { color: var(--white); font-weight: 600; }
+  .clock.alarm + .clocksub b { color: var(--pink); }
+  .hero { margin-top: var(--s5); max-width: 22em; }
+  .hero p { font-family: var(--display); font-weight: 700; font-size: 34px; line-height: 1.05; margin: 0 0 var(--s4); }
+  .hero .row { gap: var(--s3); }
+  .hero small { color: var(--mute); font-size: 13px; }
+
+  .rail { flex: 1 1 auto; min-height: 0; margin-top: var(--s5); width: var(--rail-w); overflow-y: auto; padding-right: var(--s2); }
+  .sheet { background: var(--navy); border: 1px solid var(--line); border-radius: 14px; }
+  .dossier { position: absolute; right: var(--s5); top: 72px; bottom: calc(var(--ticker-h) + var(--s5) + var(--s4)); width: var(--dossier-w); z-index: 3; overflow-y: auto; padding: var(--s5); }
+  .card { position: absolute; right: calc(var(--s5) + var(--s4)); top: 88px; bottom: calc(var(--ticker-h) + var(--s5)); width: var(--dossier-w); z-index: 5; overflow-y: auto; padding: var(--s5);
+          background: var(--sheet-2); transform: translateX(calc(100% + 60px)); visibility: hidden; transition: transform .26s cubic-bezier(.2,.7,.2,1), visibility 0s linear .26s; }
+  .card.open { transform: none; visibility: visible; transition: transform .26s cubic-bezier(.2,.7,.2,1), visibility 0s; }
+  .ticker { position: absolute; left: var(--s5); right: var(--s5); bottom: var(--s5); height: var(--ticker-h); z-index: 4; display: grid; grid-template-columns: auto 1fr auto; gap: var(--s4); align-items: center; padding: 0 var(--s4); }
+
+  .caption { position: absolute; top: 210px; z-index: 3; font-family: var(--display); font-size: 22px; font-weight: 700; display: none; max-width: 30%; line-height: 1.1; padding: 8px 12px; background: rgba(5,11,36,.88); border-radius: 8px; }
+  .caption.after { color: var(--white); }
+  .caption.before { color: var(--mute); }
+  .split .caption { display: block; }
+  .divider { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line); display: none; z-index: 2; }
+  .split .divider { display: block; }
+  .banner { position: absolute; left: 50%; top: var(--s4); transform: translateX(-50%); z-index: 6; padding: var(--s2) var(--s4); background: var(--navy); border: 1px solid var(--line); border-radius: 8px; display: none; max-width: 60%; }
+  .banner.show { display: block; }
+  .banner.error { border-color: var(--pink); }
+
+  /* ---------- labels in the 3D scene ---------- */
+  .label { font-size: 11.5px; padding: 2px 7px; border-radius: 3px; background: rgba(5, 11, 36, .86); border: 1px solid var(--line); white-space: nowrap; transition: opacity .18s; }
+  .label.culled { opacity: 0 !important; pointer-events: none; }
+  .atkdot { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; color: #fff; font: 700 11px/1 var(--font, system-ui); margin-right: 8px; flex: none; vertical-align: -3px; }
+  .atkdot.sm { width: 16px; height: 16px; font-size: 10px; margin: 0 6px 0 0; }
+  .atkline { display: flex; gap: 2px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .atkline small { display: block; color: var(--mute); font-size: 12px; margin-top: 2px; }
+  .atkline small.adapt { color: #F2B84B; }
+  .atkline .m { color: var(--mute); font-weight: 400; }
+  .scnbox { display: grid; gap: 4px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; margin: 8px 0 4px; font-size: 13px; }
+  .scnbox > span { color: var(--mute); display: flex; align-items: center; flex-wrap: wrap; }
+  .scnbox .linkbtn { justify-self: start; background: none; border: 0; color: var(--white); text-decoration: underline; padding: 0; font: inherit; cursor: pointer; }
+  .ctxstart { display: flex; align-items: center; gap: 6px; padding: 8px 12px; font-size: 12.5px; color: var(--mute); }
+  .ctxstart input { width: 64px; background: rgba(255,255,255,.06); color: #fff; border: 1px solid var(--line); border-radius: 4px; padding: 4px 6px; font: inherit; }
+  .label.culled:focus-visible { opacity: 1 !important; }
+  .label.minor { opacity: .78; }
+  .label.anomaly { border-color: #F2B84B; }
+  .label[data-atk]:not([data-atk=""]) { border-color: var(--atk); box-shadow: inset 3px 0 0 var(--atk); }
+  .label.breach[data-atk]:not([data-atk=""]) small { color: var(--atk); }
+  .label.anomaly small { color: #F2B84B; }
+  .label small { color: var(--mute); margin-left: 6px; font-variant-numeric: tabular-nums; font-size: 11px; }
+  .label.breach { border-color: var(--pink); }
+  .label.breach small { color: var(--pink); }
+  .label.selected { border-color: var(--white); }
+
+  /* ---------- rail ---------- */
+  .service { padding: var(--s3) 0 var(--s3) var(--s3); border-left: 2px solid var(--white); margin-bottom: var(--s2); background: rgba(5,11,36,.55); border-radius: 0 8px 8px 0; }
+  .service.backup { border-left-color: var(--pink); border-left-style: dashed; }
+  .service.lost { border-left-color: var(--pink-deep); border-left-width: 4px; }
+  .service .name { font-weight: 600; }
+  .service .state { font-size: 13px; color: var(--mute); }
+  .service.lost .state, .service.backup .state { color: var(--pink); }
+  .service .count { font-family: var(--display); font-size: 27px; font-weight: 700; line-height: 1.1; }
+  .detect { font-size: 13px; padding: var(--s2) var(--s3); border-radius: 8px; background: rgba(5,11,36,.55); color: var(--mute); }
+  .detect.on { color: var(--white); }
+  .log { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+  .log li { display: grid; grid-template-columns: 62px 1fr; gap: var(--s2); padding: 6px 0; border-bottom: 1px solid rgba(43,61,134,.6); color: var(--mute); }
+  .log .when { color: var(--white); font-variant-numeric: tabular-nums; }
+  .log .compromise .what { color: var(--white); }
+  .log .service_down .what { color: var(--pink); font-weight: 600; }
+  .legend { display: grid; gap: 6px; font-size: 12px; color: var(--mute); margin-top: var(--s5); }
+  .legend i { display: inline-block; width: 10px; height: 10px; margin-right: 8px; vertical-align: -1px; }
+  .rail h3:first-child { margin-top: 0; }
+
+  /* ---------- ticker ---------- */
+  .play { width: 48px; height: 48px; border-radius: 50%; border: 0; background: var(--white); color: var(--deep); cursor: pointer; font-size: 16px; }
+  .trackwrap { display: grid; gap: 6px; min-width: 0; }
+  .track { position: relative; height: 26px; }
+  .track input { position: absolute; inset: 0; width: 100%; margin: 0; background: transparent; -webkit-appearance: none; appearance: none; z-index: 2; cursor: pointer; }
+  .track input::-webkit-slider-runnable-track { height: 2px; background: var(--line); }
+  .track input::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -7px; border-radius: 50%; background: var(--white); }
+  .track input::-moz-range-track { height: 2px; background: var(--line); }
+  .track input::-moz-range-thumb { width: 16px; height: 16px; border: 0; border-radius: 50%; background: var(--white); }
+  .ticks { position: absolute; left: 8px; right: 8px; top: 0; bottom: 0; pointer-events: none; }
+  .tick { position: absolute; top: 7px; width: 2px; height: 12px; background: var(--mute); }
+  .tick.compromise { background: var(--pink); opacity: .7; }
+  .tick.service_down { background: var(--pink); height: 26px; top: 0; width: 3px; opacity: 1; }
+  .tick.detected, .tick.contained { background: var(--white); }
+  .latest { font-size: 13px; color: var(--mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .latest b { color: var(--white); font-weight: 600; font-variant-numeric: tabular-nums; margin-right: 8px; }
+  .rate { display: flex; gap: 2px; }
+  .rate button { border: 1px solid transparent; background: none; padding: 6px 10px; border-radius: 8px; color: var(--mute); cursor: pointer; font-variant-numeric: tabular-nums; min-height: 36px; }
+  .rate button[aria-pressed="true"] { border-color: var(--line); color: var(--white); }
+
+  /* ---------- controls ---------- */
+  .row { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+  .btn { border: 1px solid rgba(255,255,255,.3); background: transparent; border-radius: 8px; padding: 10px 16px; cursor: pointer; font-weight: 500; min-height: 44px; }
+  .btn:hover { border-color: var(--white); }
+  .btn.primary { background: var(--white); color: var(--deep); border-color: var(--white); font-weight: 600; }
+  .btn[disabled] { opacity: .55; cursor: wait; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 7px 13px; cursor: pointer; min-height: 36px; }
+  .chip[aria-pressed="true"] { border-color: var(--pink); background: rgba(255,111,181,.16); }
+  .chip small { color: var(--mute); margin-left: 6px; font-variant-numeric: tabular-nums; }
+  .field { display: grid; gap: 6px; margin-bottom: var(--s3); }
+  .field label { font-size: 13px; color: var(--mute); display: flex; justify-content: space-between; }
+  .field label b { color: var(--white); font-variant-numeric: tabular-nums; }
+  input[type=range].plain { width: 100%; accent-color: var(--white); }
+  input[type=number], select { background: var(--deep); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; width: 100%; min-height: 40px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); }
+
+  .figures { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); margin: var(--s3) 0; }
+  .figures div { padding: var(--s3) 0; border-bottom: 1px solid var(--line); }
+  .figures div:nth-child(odd) { padding-right: var(--s3); border-right: 1px solid var(--line); }
+  .figures div:nth-child(even) { padding-left: var(--s3); }
+  .figures dt { font-size: 12px; color: var(--mute); }
+  .figures dd { margin: 2px 0 0; font-family: var(--display); font-size: 30px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .figures dd.bad { color: var(--pink); }
+  .figures dd.small { font-size: 20px; font-family: var(--body); font-weight: 600; }
+
+  .fix { padding: var(--s3) 0; border-bottom: 1px solid var(--line); }
+  .fix .head { display: flex; align-items: center; gap: var(--s3); }
+  .fix .head label { flex: 1; cursor: pointer; font-weight: 600; line-height: 1.3; }
+  .fix input[type=checkbox] { accent-color: var(--white); width: 18px; height: 18px; }
+  .kind { font-size: 11px; color: var(--mute); border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; }
+  .bars { display: grid; grid-template-columns: 92px 1fr 52px; gap: 4px var(--s2); align-items: center; margin-top: var(--s2); font-size: 12px; color: var(--mute); }
+  .bar { height: 5px; background: var(--deep); border-radius: 3px; overflow: hidden; }
+  .bar > span { display: block; height: 100%; background: var(--bar-soft); }
+  .bar.worst > span { background: var(--white); }
+  .bars .v { text-align: right; color: var(--white); font-variant-numeric: tabular-nums; }
+  .fix .note { font-size: 12px; color: var(--pink); margin-top: 6px; }
+  .fix .meta { font-size: 12px; color: var(--mute); margin-top: 6px; }
+  .bundle { list-style: none; padding: 0; margin: 0 0 var(--s3); counter-reset: b; }
+  .bundle li { padding: 9px 0 9px 32px; border-bottom: 1px solid var(--line); position: relative; font-weight: 600; }
+  .bundle li::before { counter-increment: b; content: counter(b); position: absolute; left: 0; top: 7px; font-family: var(--display); font-size: 20px; color: var(--mute); }
+  .moved { line-height: 1.55; padding: var(--s3) 0; margin-bottom: var(--s3); border-bottom: 1px solid var(--line); }
+  .moved b { color: var(--pink); }
+  .runner { font-size: 12px; color: var(--mute); padding: 7px 0; border-bottom: 1px solid var(--line); }
+
+  /* ---------- fix ranking: rank, filter, assumption test ---------- */
+  .fix { display: grid; grid-template-columns: 34px 1fr; column-gap: var(--s2); }
+  .fix > .rank { font-family: var(--display); font-weight: 700; font-size: 22px; color: var(--mute); line-height: 1.1; padding-top: 1px; }
+  .fix.first > .rank { color: var(--white); font-size: 34px; }
+  .fix.first .head label { font-size: 17.5px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 var(--s3); }
+  .filters .chip[aria-pressed="true"] { border-color: var(--white); background: rgba(255,255,255,.1); }
+  .stability { font-family: var(--display); font-weight: 700; font-size: 34px; line-height: 1; margin: var(--s2) 0 var(--s1); }
+  .stability small { font-family: var(--body); font-weight: 500; font-size: 14px; color: var(--mute); margin-left: var(--s2); }
+  .run { display: grid; grid-template-columns: 1fr auto; gap: 2px var(--s3); padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .run .what { color: var(--white); }
+  .run .change { color: var(--mute); font-variant-numeric: tabular-nums; text-align: right; }
+  .run .result { grid-column: 1 / -1; color: var(--mute); }
+  .run.changed .result { color: var(--pink); }
+
+  /* ---------- response plan ---------- */
+  .callout { font-size: 17.5px; line-height: 1.4; padding: var(--s3) 0 var(--s4); border-bottom: 1px solid var(--line); margin-bottom: var(--s2); }
+  .callout b { font-family: var(--display); font-weight: 800; font-size: 34px; display: block; line-height: 1; margin-bottom: 6px; }
+  .callout.bad b { color: var(--pink); }
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .step { display: grid; grid-template-columns: 78px 1fr; gap: 2px var(--s3); padding: var(--s3) 0; border-bottom: 1px solid var(--line); }
+  .step .by { font-family: var(--display); font-weight: 700; font-size: 22px; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .step .by small { display: block; font-family: var(--body); font-size: 11px; font-weight: 500; color: var(--mute); margin-top: 2px; }
+  .step .act { font-weight: 600; line-height: 1.35; }
+  .step .reason { grid-column: 2; font-size: 13px; color: var(--mute); margin-top: 2px; }
+  .step .status { grid-column: 2; font-size: 12px; color: var(--mute); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; }
+  .step .by { grid-row: span 3; }
+  .step.missed .by, .step.missed .status .left { color: var(--pink); }
+  .step.missed .act { color: var(--mute); }
+  .step.svc .act::before { content: ''; display: inline-block; width: 8px; height: 8px; border: 1px solid var(--white); border-radius: 50%; margin-right: 8px; vertical-align: 1px; }
+
+  /* ---------- nav tools: graphics + present ---------- */
+  .navtools { display: flex; gap: var(--s1); }
+  .navbtn { background: none; border: 1px solid transparent; border-radius: 8px; color: var(--mute); padding: 6px 10px; cursor: pointer; min-height: 36px; white-space: nowrap; font-weight: 500; }
+  .navbtn:hover, .navbtn[aria-pressed="true"] { color: var(--white); border-color: var(--line); }
+
+  /* ---------- performance meter ---------- */
+  .perf { position: absolute; z-index: 6; top: 64px; left: 50%; transform: translateX(-50%); padding: var(--s3) var(--s4); display: grid; grid-template-columns: auto auto; gap: var(--s2) var(--s5); align-items: center; }
+  .perf[hidden] { display: none; }
+  .perf .fps { font-family: var(--display); font-weight: 800; font-size: 42px; line-height: .9; font-variant-numeric: tabular-nums; }
+  .perf .fps small { font-family: var(--body); font-size: 13px; font-weight: 500; color: var(--mute); margin-left: 6px; }
+  .perf .detail { font-size: 12px; color: var(--mute); font-variant-numeric: tabular-nums; }
+  .perf .quality { grid-column: 1 / -1; display: flex; gap: 4px; align-items: center; font-size: 12px; color: var(--mute); }
+  .perf .quality span { margin-right: 6px; }
+  .perf .quality button { border: 1px solid var(--line); background: none; border-radius: 6px; padding: 5px 10px; cursor: pointer; min-height: 32px; }
+  .perf .quality button[aria-pressed="true"] { border-color: var(--white); background: rgba(255,255,255,.1); }
+
+  /* ---------- presenter ---------- */
+  .present { position: absolute; z-index: 6; left: 50%; transform: translateX(-50%); bottom: calc(var(--ticker-h) + var(--s5) + var(--s4)); width: min(560px, calc(100% - 2 * var(--s5))); padding: var(--s4) var(--s5); background: var(--sheet-2); }
+  .present[hidden] { display: none; }
+  .present .count { font-size: 12px; color: var(--mute); font-variant-numeric: tabular-nums; }
+  .present h3 { margin: 2px 0 6px; font-size: 27px; }
+  .present p { margin: 0 0 var(--s3); font-size: 15px; line-height: 1.5; min-height: 3em; }
+  .present .row { justify-content: flex-end; }
+  .present .row .exit { margin-right: auto; }
+  .presenting .hero { display: none !important; }
+
+  /* ---------- water monitoring tab ---------- */
+  .wbanner { border: 1px solid rgba(242,184,75,.6); background: rgba(242,184,75,.08); border-radius: 10px; padding: 10px 12px; font-size: 12px; line-height: 1.45; margin-bottom: var(--s3); }
+  .wbanner b { color: #F2B84B; }
+  .wlvl { display: flex; align-items: baseline; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 34px; line-height: 1; margin: 4px 0 2px; }
+  .wlvl.alarm, .wlvl.advisory { color: #F2B84B; }
+  .wgauge { position: relative; height: 8px; border-radius: 4px; background: var(--deep); border: 1px solid var(--line); margin: 10px 0 4px; }
+  .wgauge span { position: absolute; inset: 0 auto 0 0; border-radius: 4px; }
+  .wgauge i { position: absolute; left: 50%; top: -4px; bottom: -4px; width: 2px; background: var(--white); }
+  .wzones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin: 8px 0; }
+  .wzones div { border: 1px solid var(--line); border-radius: 6px; padding: 5px 7px; font-size: 11px; color: var(--mute); }
+  .wzones div b { display: block; color: var(--white); font-family: var(--display); font-size: 16px; }
+  .wzones div.hot { border-color: #F2B84B; background: rgba(242,184,75,.16); }
+  .wplay { display: flex; gap: 10px; align-items: center; margin: 8px 0; }
+  .wplay input { flex: 1; accent-color: #fff; }
+  .wsig { font-size: 12px; color: var(--mute); margin: 3px 0; }
+  .wsig b { color: var(--white); font-weight: 600; }
+
+  /* ---------- labels: quiet when the district is busy ---------- */
+  .label.quiet { opacity: 0; pointer-events: none; }
+  .label.quiet:focus-visible { opacity: 1; }
+
+  /* ---------- building menu ---------- */
+  .ctx { position: absolute; z-index: 6; width: 268px; background: var(--sheet-2); border: 1px solid var(--line); border-radius: 14px; padding: var(--s3); }
+  .ctx[hidden] { display: none; }
+  .ctx.pop { animation: pop .14s ease-out; transform-origin: top left; }
+  @keyframes pop { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
+  .ctx h4 { font-family: var(--display); font-weight: 700; font-size: 22px; margin: 2px 6px 2px; line-height: 1.05; }
+  .ctx .sub { color: var(--mute); font-size: 12px; margin: 0 6px var(--s2); }
+  .ctx .sub b { color: var(--pink); font-weight: 600; }
+  .ctx button { display: block; width: 100%; text-align: left; background: none; border: 0; border-radius: 8px; padding: 9px 8px; min-height: 44px; cursor: pointer; font-weight: 600; }
+  .ctx button:hover, .ctx button:focus-visible { background: rgba(255,255,255,.08); }
+  .ctx button small { display: block; color: var(--mute); font-size: 12px; font-weight: 400; margin-top: 1px; }
+  .ctx button.attack { color: var(--pink); }
+  .label { pointer-events: auto; cursor: pointer; }
+  .label.hover { border-color: var(--white); background: rgba(18,34,94,.95); }
+  #labels .label:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
+
+  /* ---------- scenarios ---------- */
+  .scenarios { display: grid; gap: 6px; }
+  .scenario { text-align: left; border: 1px solid var(--line); background: transparent; border-radius: 8px; padding: 9px 12px; cursor: pointer; min-height: 44px; font-weight: 600; }
+  .scenario small { display: block; color: var(--mute); font-weight: 400; font-size: 12px; }
+  .scenario:hover { border-color: var(--white); }
+  .scenario[aria-pressed="true"] { border-color: var(--pink); background: rgba(255,111,181,.12); }
+
+  /* ---------- clock flash when a service is lost ---------- */
+  .clock.flash { animation: flash .7s ease-out; transform-origin: left center; }
+  @keyframes flash { 0% { transform: scale(1.07); text-shadow: 0 0 28px rgba(255,111,181,.9); } 100% { transform: none; text-shadow: none; } }
+  @media (prefers-reduced-motion: reduce) { .clock.flash, .ctx.pop { animation: none; } }
+
+  /* ---------- asset card ---------- */
+  .card .close { float: right; margin: -6px -6px 0 0; }
+  .card .sw { color: var(--mute); font-size: 13px; margin-bottom: var(--s4); }
+  .score { font-family: var(--display); font-size: 72px; font-weight: 800; line-height: .9; }
+  .score small { font-family: var(--body); font-size: 13px; color: var(--mute); font-weight: 500; margin-left: var(--s2); }
+  .why { line-height: 1.55; padding: var(--s3) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: var(--s4) 0; }
+  .cve { padding: var(--s2) 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .cve .id { font-weight: 600; }
+  .tag { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 3px; border: 1px solid var(--line); color: var(--mute); margin-left: 6px; }
+  .tag.kev { border-color: var(--pink); color: var(--pink); }
+  .falls { color: var(--pink); margin: var(--s2) 0 0; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 1360px) { .simnote { display: none; } }
+  @media (max-width: 1100px) {
+    .stage::before { background: linear-gradient(180deg, rgba(5,11,36,.85) 0, rgba(5,11,36,0) 210px); }
+    .rail { display: none; }
+    .dossier .railcopy { display: block; }
+  }
+  .dossier .railcopy { display: none; }
+  @media (max-width: 760px) {
+    .navtools { display: none; }
+    .stage::before { background: linear-gradient(180deg, rgba(5,11,36,.85) 0, rgba(5,11,36,0) 150px); }
+    html, body { overflow: visible; }
+    body { overflow-x: clip; }
+    .app { height: auto; display: flex; flex-direction: column; }
+    .nav { position: relative; top: 0; left: 0; right: 0; padding: var(--s3) var(--s4); flex-wrap: wrap; gap: var(--s3); order: 0; }
+    .menu { display: inline-flex; margin-left: auto; }
+    .tabs { display: none; width: 100%; flex-direction: column; }
+    .nav.open .tabs { display: flex; }
+    .simnote { display: none; }
+    .stage { position: relative; inset: auto; height: 52vh; order: 1; }
+    .clockblock { top: var(--s3); left: var(--s4); bottom: auto; }
+    .clock { font-size: 56px; }
+    .clocksub { font-size: 14px; }
+    .hero { display: none; }
+    .ticker { position: sticky; bottom: 0; left: 0; right: 0; height: auto; order: 2; border-radius: 0; padding: var(--s3) var(--s4); grid-template-columns: auto 1fr; }
+    .ticker .rate { grid-column: 1 / -1; }
+    .dossier { position: relative; inset: auto; width: auto; order: 3; margin: var(--s4); }
+    .card { position: fixed; inset: auto 0 0 0; top: 30vh; width: auto; border-radius: 14px 14px 0 0; transform: translateY(105%); }
+    .card.open { transform: none; }
+    .caption { top: auto; bottom: var(--s3); font-size: 15px; max-width: 45%; }
+  }
+  @media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+</style>
+<script type="importmap">
+{ "imports": { "three": "/vendor/three.module.js", "three/addons/": "/vendor/" } }
+</script>
+</head>
+<body>
+<div class="app">
+  <header class="nav" id="nav">
+    <div class="brand">Cascade</div>
+    <button class="btn menu" id="menu" aria-expanded="false" aria-controls="tabs">Menu</button>
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Views">
+      <button role="tab" aria-selected="true" data-tab="replay">Attack replay</button>
+      <button role="tab" aria-selected="false" data-tab="fixes">Fix ranking</button>
+      <button role="tab" aria-selected="false" data-tab="optimize">Optimizer</button>
+      <button role="tab" aria-selected="false" data-tab="respond">Response plan</button>
+      <button role="tab" aria-selected="false" data-tab="water">Water anomalies</button>
+    </nav>
+    <div class="navtools">
+      <button class="navbtn" id="demoBtn" aria-pressed="false">Present</button>
+      <button class="navbtn" id="heatBtn" aria-pressed="false" title="Tint every building's ring by its risk score (H)">Risk heatmap</button>
+      <button class="navbtn" id="perfBtn" aria-pressed="false" title="Graphics and frame rate (P)">Graphics</button>
+    </div>
+    <span class="simnote" id="simnote" title="All infrastructure data is modelled">Simulated</span>
+  </header>
+
+  <main class="stage" id="stage">
+    <div id="labels"></div>
+    <div class="divider" id="divider"></div>
+    <div class="caption before" id="capL"></div>
+    <div class="caption after" id="capR"></div>
+    <div class="banner" id="banner" role="status"></div>
+    <div class="ctx" id="ctx" role="menu" aria-label="Building actions" hidden></div>
+    <div class="perf sheet" id="perf" hidden aria-live="off">
+      <div class="fps" id="fps">–<small>fps</small></div>
+      <div class="detail" id="fpsDetail"></div>
+      <div class="quality" role="group" aria-label="Graphics quality"><span>Graphics</span>
+        <button data-q="high">High</button><button data-q="balanced">Balanced</button><button data-q="low">Low</button></div>
+    </div>
+    <section class="present sheet" id="present" hidden aria-live="polite">
+      <div class="count" id="pCount"></div>
+      <h3 id="pTitle"></h3>
+      <p id="pText"></p>
+      <div class="row"><button class="btn exit" id="pExit">End</button><button class="btn" id="pBack">Back</button><button class="btn primary" id="pNext">Next</button></div>
+    </section>
+    <div class="clockblock">
+      <div class="clock" id="clock" aria-label="Simulated time"></div>
+      <div class="clocksub" id="clockSub"></div>
+      <div class="hero" id="hero">
+        <p>Where would an attack hurt first, and how long would you have?</p>
+        <div class="row"><button class="btn primary" id="heroRun">Run the worst-case attack</button></div>
+        <small id="heroNote">Or pick an entry point on the right.</small>
+      </div>
+      <aside class="rail" id="rail" aria-label="Services and events"></aside>
+    </div>
+  </main>
+  <aside class="dossier sheet" id="panel" aria-live="polite"></aside>
+  <section class="card sheet" id="card" aria-label="Asset details"></section>
+
+  <footer class="ticker sheet">
+    <button class="play" id="play" aria-label="Play">&#9654;</button>
+    <div class="trackwrap">
+      <div class="track">
+        <div class="ticks" id="ticks"></div>
+        <input type="range" id="scrub" min="0" max="360" step="0.5" value="0" aria-label="Simulated time in minutes">
+      </div>
+      <div class="latest" id="latest">No attack running.</div>
+    </div>
+    <div class="rate" role="group" aria-label="Playback speed">
+      <button data-rate="2" aria-pressed="false">1x</button>
+      <button data-rate="6" aria-pressed="true">3x</button>
+      <button data-rate="20" aria-pressed="false">10x</button>
+    </div>
+  </footer>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/CSS2DRenderer.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+// ======================================================================
+// state and helpers
+// ======================================================================
+const S = {
+  graph: null, tab: 'replay', T: 0, playing: false, rate: 6,
+  entries: [], speed: 1, applied: new Set(), atk: null,   // atk: multi-attacker scenario (null = one attacker from S.entries at T+0)
+  sim: null, fixes: null, opt: null, split: null, selected: null, overview: null, plan: null, sens: null, hover: null,
+};
+const C = { white: 0xFFFFFF, win: 0xDDE6FF, pink: 0xFF6FB5, pinkDeep: 0xE43F8E, abyss: 0x050B24, deep: 0x0A1640, line: 0x2B3D86, warn: 0xF2B84B };
+// attacker palette (same as the platform's --atk-a..d; A keeps the twin's pink). Bloom colours go above 1 so they glow.
+const ATK_HEX = { A: C.pink, B: 0x2A8FD6, C: 0x9A74F0, D: 0x2BA58A };
+const ATK_CSS = { A: '#FF6FB5', B: '#2A8FD6', C: '#9A74F0', D: '#2BA58A' };
+const ATK_GLOW = { A: [1.7, .42, 1.0], B: [.08, .5, 1.25], C: [.62, .3, 1.3], D: [.05, 1.0, .6] };
+const atkHex = id => ATK_HEX[id] ?? ATK_HEX.A;
+// short label text: "Integrated Command & Control Centre (ICCC)" -> "ICCC"; long names cut at a word
+const shortName = n => { const ab = n.match(/\(([A-Z][A-Z0-9]{1,6})\)/); if (ab) return ab[1]; const s = n.replace(/\s*\(.*?\)\s*/g, ' ').trim(); if (s.length <= 22) return s; const w = s.slice(0, 22); return w.slice(0, w.lastIndexOf(' ') > 10 ? w.lastIndexOf(' ') : 22) + '…'; };
+const $ = s => document.querySelector(s);
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const H = () => S.graph?.horizon_min ?? 360;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const fmtT = m => { m = Math.max(0, Math.round(m)); return `T+${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; };
+const fmtMin = m => { m = Math.max(0, Math.round(m)); return m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m} min`; };   // round first: never "2h 60m"
+const fmtHarm = h => h >= 1e6 ? `${(h / 1e6).toFixed(2)}M` : h >= 1e3 ? `${(h / 1e3).toFixed(0)}k` : `${Math.round(h)}`;
+const firstFail = m => m >= H() ? 'None in 6h' : fmtT(m);
+const assetName = id => S.graph?.assets.find(a => a.id === id)?.name ?? id;
+const hash = s => { let h = 2166136261; for (const ch of String(s)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+
+async function api(path, body) {
+  try {
+    const res = await fetch(path, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {});
+    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || `Request failed (${res.status})`); }
+    hideBanner();
+    return await res.json();
+  } catch (err) {
+    showBanner(/fetch|Load failed|NetworkError/i.test(err.message)
+      ? 'The backend is not running. Start it with: python -m uvicorn api:app --app-dir backend --port 8000' : err.message, true);
+    throw err;
+  }
+}
+function showBanner(text, error = false) { const b = $('#banner'); b.textContent = text; b.className = 'banner show' + (error ? ' error' : ''); }
+function hideBanner() { $('#banner').className = 'banner'; }
+
+// ======================================================================
+// renderer, scene, camera
+// ======================================================================
+const stage = $('#stage');
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(C.abyss);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.3;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.info.autoReset = false;   // count the whole frame (scene + glow passes), reset once per frame
+stage.prepend(renderer.domElement);
+const labelRenderer = new CSS2DRenderer({ element: $('#labels') });
+const maxAniso = renderer.capabilities.getMaxAnisotropy();
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(C.abyss, 80, 220);   // re-tuned to the camera distance in fitCamera()
+const camera = new THREE.PerspectiveCamera(38, 1, 0.5, 1600);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.maxPolarAngle = Math.PI * 0.44; controls.minDistance = 20; controls.maxDistance = 220;
+
+scene.add(new THREE.HemisphereLight(0xA9BCFF, 0x0A1640, 1.25));
+const moon = new THREE.DirectionalLight(0xD6E0FF, 2.3);
+moon.position.set(-40, 70, 30); moon.castShadow = true;
+moon.shadow.mapSize.set(2048, 2048);
+Object.assign(moon.shadow.camera, { left: -90, right: 90, top: 90, bottom: -90, near: 1, far: 220 });
+moon.shadow.bias = -0.0006;
+scene.add(moon);
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(512, 512), 0.65, 0.5, 0.72);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+// ======================================================================
+// procedural textures
+// ======================================================================
+const texCache = new Map();
+const letterCache = {};
+function letterTex(id) {             // round badge with the attacker letter, used on beams and pulses
+  if (letterCache[id]) return letterCache[id];
+  const c = canvas(64, 64), g = c.getContext('2d');
+  g.fillStyle = ATK_CSS[id] ?? ATK_CSS.A; g.beginPath(); g.arc(32, 32, 29, 0, Math.PI * 2); g.fill();
+  g.lineWidth = 4; g.strokeStyle = '#FFFFFF'; g.stroke();
+  g.fillStyle = '#FFFFFF'; g.font = '700 36px Outfit, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(id, 32, 34);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return (letterCache[id] = t);
+}
+function canvas(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+function toTex(c, srgb = true, repeat) {
+  const t = new THREE.CanvasTexture(c);
+  if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = maxAniso;
+  if (repeat) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(repeat[0], repeat[1]); }
+  return t;
+}
+function grain(g, w, h, r, amount, strength) {
+  for (let i = 0; i < amount; i++) {
+    const v = r();
+    g.fillStyle = v > .5 ? `rgba(255,255,255,${strength * r()})` : `rgba(0,0,10,${strength * 1.6 * r()})`;
+    g.fillRect(r() * w, r() * h, 1 + r() * 2.5, 1 + r() * 2.5);
+  }
+}
+
+/** Building facade: returns { map, emi } where emi holds the lit windows. Styles: grid, glass, band, rack, corrugated, hut. */
+function facade(o) {
+  const key = 'f' + JSON.stringify(o);
+  if (texCache.has(key)) return texCache.get(key);
+  const W = 256, Hh = 512, r = rng(o.seed ?? 1);
+  const c1 = canvas(W, Hh), c2 = canvas(W, Hh), a = c1.getContext('2d'), e = c2.getContext('2d');
+  a.fillStyle = o.base ?? '#26356E'; a.fillRect(0, 0, W, Hh);
+  e.fillStyle = '#000'; e.fillRect(0, 0, W, Hh);
+  grain(a, W, Hh, r, 2600, .05);
+  const cols = o.cols ?? 6, rows = o.rows ?? 10, cw = W / cols, rh = Hh / rows, litP = o.lit ?? .6;
+  const light = (x, y, w, h, warm) => {
+    if (r() > litP) return;
+    const b = .4 + .6 * r();
+    e.fillStyle = warm && r() < .25 ? `rgba(255,236,250,${b})` : `rgba(255,255,255,${b})`;
+    e.fillRect(x, y, w, h);
+  };
+  const glassFill = (x, y, w, h) => {
+    const gr = a.createLinearGradient(x, y, x + w, y + h);
+    gr.addColorStop(0, '#0B1642'); gr.addColorStop(1, '#16246A');
+    a.fillStyle = gr; a.fillRect(x, y, w, h);
+  };
+  switch (o.style) {
+    case 'glass':
+      for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+        const px = x * cw + 2, py = y * rh + 2, w = cw - 4, h = rh - 3;
+        glassFill(px, py, w, h); light(px, py, w, h, true);
+      }
+      a.fillStyle = 'rgba(190,205,255,.18)';
+      for (let x = 0; x <= cols; x++) a.fillRect(x * cw - 1, 0, 2, Hh);
+      break;
+    case 'band':
+      for (let y = 0; y < rows; y++) {
+        if (y % 3 === 1) {
+          const py = y * rh + rh * .15, h = rh * .7;
+          glassFill(6, py, W - 12, h);
+          for (let s = 0; s < 8; s++) light(8 + s * (W - 16) / 8, py + 2, (W - 16) / 8 - 3, h - 4, false);
+        } else {
+          a.fillStyle = 'rgba(255,255,255,.05)'; a.fillRect(0, y * rh + rh - 2, W, 2);
+        }
+      }
+      break;
+    case 'rack':
+      for (let x = 0; x < cols; x++) {
+        a.fillStyle = 'rgba(5,11,36,.55)'; a.fillRect(x * cw + 6, 10, cw - 12, Hh - 20);
+        for (let y = 14; y < Hh - 14; y += 6) { a.fillStyle = 'rgba(255,255,255,.07)'; a.fillRect(x * cw + 8, y, cw - 16, 2); }
+        for (let k = 0; k < 14; k++) {
+          if (r() < .7) { const ly = 20 + r() * (Hh - 40); e.fillStyle = `rgba(255,255,255,${.5 + .5 * r()})`; e.fillRect(x * cw + 10 + r() * (cw - 24), ly, 4, 3); }
+        }
+      }
+      break;
+    case 'corrugated':
+      for (let x = 0; x < W; x += 8) { a.fillStyle = x % 16 ? 'rgba(255,255,255,.07)' : 'rgba(0,0,10,.18)'; a.fillRect(x, 0, 4, Hh); }
+      a.fillStyle = '#0B1642'; a.fillRect(W * .62, Hh * .55, W * .2, Hh * .45);
+      a.fillStyle = 'rgba(255,111,181,.0)';
+      for (let x = 0; x < W; x += 20) { a.fillStyle = (x / 20) % 2 ? '#E9EDFF' : '#12225E'; a.fillRect(x, Hh - 18, 20, 18); }
+      e.fillStyle = '#fff'; e.fillRect(W * .66, Hh * .48, W * .12, 8);
+      for (let k = 0; k < 6; k++) { e.fillStyle = `rgba(255,255,255,${.35 + .5 * r()})`; e.fillRect(16 + k * 22, Hh * .18, 12, 6); }
+      break;
+    case 'hut':
+      a.fillStyle = '#0B1642'; a.fillRect(W * .58, Hh * .42, W * .26, Hh * .58);
+      glassFill(W * .14, Hh * .3, W * .3, Hh * .2); light(W * .14, Hh * .3, W * .3, Hh * .2);
+      e.fillStyle = '#fff'; e.fillRect(W * .62, Hh * .36, W * .18, 8);
+      break;
+    default: // grid
+      for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+        const px = x * cw + cw * .18, py = y * rh + rh * .22, w = cw * .64, h = rh * .52;
+        glassFill(px, py, w, h);
+        a.fillStyle = 'rgba(255,255,255,.12)'; a.fillRect(px - 1, py + h, w + 2, 2);
+        light(px, py, w, h, true);
+      }
+      a.fillStyle = 'rgba(255,255,255,.05)';
+      for (let y = 0; y <= rows; y++) a.fillRect(0, y * rh - 1, W, 2);
+  }
+  const out = { map: toTex(c1), emi: toTex(c2) };
+  texCache.set(key, out);
+  return out;
+}
+
+function roofTex(seed, kind = 'gravel', base = '#34478F') {
+  const key = `roof-${seed}-${kind}-${base}`;
+  if (texCache.has(key)) return texCache.get(key);
+  const W = 256, c = canvas(W, W), g = c.getContext('2d'), r = rng(seed);
+  g.fillStyle = base; g.fillRect(0, 0, W, W);
+  grain(g, W, W, r, 5000, .09);
+  g.strokeStyle = 'rgba(255,255,255,.18)'; g.lineWidth = 4; g.strokeRect(4, 4, W - 8, W - 8);
+  if (kind === 'helipad') {
+    g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 10; g.beginPath(); g.arc(W / 2, W / 2, W * .36, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = '#fff'; g.font = `800 ${W * .42}px "Big Shoulders Display", sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('H', W / 2, W / 2 + 6);
+  } else {
+    for (let i = 0; i < 4; i++) { g.fillStyle = 'rgba(5,11,36,.6)'; const s = 20 + r() * 26; g.fillRect(20 + r() * (W - 70), 20 + r() * (W - 70), s, s * .7); }
+  }
+  const t = toTex(c); texCache.set(key, t); return t;
+}
+
+function groundTex() {
+  const W = 512, c = canvas(W, W), g = c.getContext('2d'), r = rng(7);
+  g.fillStyle = '#071030'; g.fillRect(0, 0, W, W);
+  grain(g, W, W, r, 14000, .06);
+  // faint parcels and lawns: texture for the land, no roads (roads are real meshes, laid out around the district)
+  for (let k = 0; k < 60; k++) { g.fillStyle = r() < .5 ? 'rgba(20,40,110,.18)' : 'rgba(10,30,70,.22)'; g.fillRect(r() * W, r() * W, 20 + r() * 60, 20 + r() * 60); }
+  return toTex(c, true, [40, 40]);
+}
+function zonePadTex(name, w, d) {
+  const scale = 22, W = Math.round(w * scale), Hh = Math.round(d * scale), c = canvas(W, Hh), g = c.getContext('2d'), r = rng(hash(name));
+  g.fillStyle = '#13235E'; g.fillRect(0, 0, W, Hh);
+  grain(g, W, Hh, r, W * Hh / 60, .05);
+  g.strokeStyle = 'rgba(255,255,255,.07)'; g.lineWidth = 2;
+  for (let x = 0; x <= W; x += 44) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, Hh); g.stroke(); }
+  for (let y = 0; y <= Hh; y += 44) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+  g.strokeStyle = 'rgba(255,255,255,.28)'; g.lineWidth = 4; g.strokeRect(2, 2, W - 4, Hh - 4);
+  g.fillStyle = 'rgba(232,238,255,.55)'; g.font = `700 ${Math.round(Hh * .2)}px "Big Shoulders Display", sans-serif`; g.textBaseline = 'bottom';
+  g.fillText(name, 26, Hh - 18);
+  return toTex(c);
+}
+function fenceTex() {
+  const W = 128, c = canvas(W, W), g = c.getContext('2d');
+  g.clearRect(0, 0, W, W); g.strokeStyle = 'rgba(220,230,255,.75)'; g.lineWidth = 2;
+  for (let i = -W; i < W * 2; i += 14) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i + W, W); g.stroke(); g.beginPath(); g.moveTo(i + W, 0); g.lineTo(i, W); g.stroke(); }
+  g.fillStyle = 'rgba(220,230,255,.9)'; g.fillRect(0, 0, W, 4);
+  return toTex(c, true, [4, 1]);
+}
+function stripeTex() {
+  const W = 128, c = canvas(W, W), g = c.getContext('2d');
+  g.fillStyle = '#C9D3F5'; g.fillRect(0, 0, W, W);
+  for (let y = 0; y < W; y += 32) { g.fillStyle = '#1A2C72'; g.fillRect(0, y, W, 6); }
+  return toTex(c, true, [1, 1]);
+}
+
+// ======================================================================
+// materials and geometry helpers
+// ======================================================================
+function vmsTex(lines, col) {          // LED dot-matrix board
+  const c = canvas(512, 140), g = c.getContext('2d');
+  g.fillStyle = '#05070F'; g.fillRect(0, 0, 512, 140);
+  g.fillStyle = col; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = '700 46px ui-monospace, Menlo, Consolas, monospace';
+  lines.forEach((t, k) => g.fillText(t, 256, 40 + k * 60, 480));
+  g.fillStyle = 'rgba(5,7,15,.55)';                       // the dot grid
+  for (let x = 0; x < 512; x += 6) g.fillRect(x, 0, 2, 140);
+  for (let y = 0; y < 140; y += 6) g.fillRect(0, y, 512, 2);
+  return toTex(c);
+}
+function facadeMat(o) {
+  const { map, emi } = facade(o);
+  const glass = o.style === 'glass';
+  return new THREE.MeshStandardMaterial({ map, emissiveMap: emi, emissive: new THREE.Color(C.win), emissiveIntensity: 1,
+    roughness: glass ? .32 : .86, metalness: glass ? .55 : .08 });
+}
+const steel = () => new THREE.MeshStandardMaterial({ color: 0xB4C3F2, roughness: .4, metalness: .6 });
+const darkMetal = () => new THREE.MeshStandardMaterial({ color: 0x3A4E9C, roughness: .55, metalness: .5 });
+const ceramic = () => new THREE.MeshStandardMaterial({ color: 0xEEF2FF, roughness: .35, metalness: .05 });
+const roofMat = (seed, kind, base) => new THREE.MeshStandardMaterial({ map: roofTex(seed, kind, base), roughness: .95 });
+const lamp = () => new THREE.MeshStandardMaterial({ color: 0x0A1640, emissive: new THREE.Color(C.win), emissiveIntensity: 2.2 });
+
+function shadowed(m) { m.castShadow = true; m.receiveShadow = true; return m; }
+function box(w, h, d, mat, x = 0, y = h / 2, z = 0) { const m = shadowed(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat)); m.position.set(x, y, z); return m; }
+function boxFacade(w, h, d, side, roof, x = 0, z = 0, y0 = 0) {
+  return box(w, h, d, [side, side, roof, side, side, side], x, y0 + h / 2, z);
+}
+function cyl(rt, rb, h, mat, seg = 20) { return shadowed(new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat)); }
+function beam(p1, p2, r, mat) {
+  const dir = new THREE.Vector3().subVectors(p2, p1), len = dir.length();
+  const m = cyl(r, r, len, mat, 6);
+  m.position.copy(p1).addScaledVector(dir, .5);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
+  return m;
+}
+
+// ======================================================================
+// building models, one per asset type
+// Each returns { group, glow: [materials that show state], top, radius }
+// ======================================================================
+const BUILD = {
+  hospital(a, seed) {
+    const g = new THREE.Group(), h = 6 + a.criticality * 1.4;
+    const side = facadeMat({ style: 'grid', cols: 9, rows: Math.round(h * 1.5), seed, base: '#4A5FB0', lit: .72 });
+    const wingSide = facadeMat({ style: 'grid', cols: 6, rows: Math.round(h * .9), seed: seed + 1, base: '#4054A2', lit: .62 });
+    g.add(boxFacade(6.4, h, 4.6, side, roofMat(seed, 'helipad'), 1.2, 0));
+    g.add(boxFacade(3.8, h * .58, 3.6, wingSide, roofMat(seed + 2), -3.9, .5));
+    const canopy = box(2.6, .25, 1.4, darkMetal(), 1.2, 1.8, 2.9); g.add(canopy);
+    for (const dx of [0.1, 2.3]) g.add(box(.14, 1.8, .14, steel(), dx, .9, 3.5));
+    const sign = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: new THREE.Color(C.win), emissiveIntensity: 2.4 });
+    const cross = new THREE.Group();
+    cross.add(box(1.5, .45, .12, sign, 0, 0, 0), box(.45, 1.5, .12, sign, 0, 0, 0));
+    cross.position.set(1.2, h * .8, 2.36); g.add(cross);
+    return { group: g, glow: [side, wingSide, sign], top: h, radius: 6.4 };
+  },
+  tower(a, seed) {
+    const g = new THREE.Group(), h = 9 + a.criticality * 1.6;
+    const side = facadeMat({ style: 'glass', cols: 7, rows: Math.round(h * 1.7), seed, base: '#33489A', lit: .6 });
+    const pod = facadeMat({ style: 'grid', cols: 10, rows: 3, seed: seed + 3, base: '#4458A8', lit: .85 });
+    g.add(boxFacade(6, 1.8, 5.2, pod, roofMat(seed + 4)));
+    g.add(boxFacade(3.8, h, 3.8, side, roofMat(seed), 0, 0, 1.8));
+    g.add(boxFacade(2.6, 1.6, 2.6, side, roofMat(seed + 5), 0, 0, 1.8 + h));
+    const mast = cyl(.07, .1, 3.2, steel(), 6); mast.position.set(.6, h + 3.4 + 1.6, .4); g.add(mast);
+    const tip = lamp(); const tipM = new THREE.Mesh(new THREE.SphereGeometry(.16, 12, 12), tip); tipM.position.set(.6, h + 6.6, .4); g.add(tipM);
+    return { group: g, glow: [side, pod, tip], top: h + 6.6, radius: 4.2 };
+  },
+  telecom(a, seed) {
+    const g = new THREE.Group(), H = 11 + a.criticality * 1.2, st = steel();
+    const base = 1.6, topW = .35;
+    const corners = (y, w) => [[-w, -w], [w, -w], [w, w], [-w, w]].map(([x, z]) => new THREE.Vector3(x, y, z));
+    const b0 = corners(0, base), b1 = corners(H, topW);
+    for (let i = 0; i < 4; i++) g.add(beam(b0[i], b1[i], .09, st));
+    const levels = 7;
+    for (let l = 0; l <= levels; l++) {
+      const y = H * l / levels, w = base + (topW - base) * l / levels, ring = corners(y, w);
+      for (let i = 0; i < 4; i++) g.add(beam(ring[i], ring[(i + 1) % 4], .04, st));
+      if (l < levels) {
+        const y2 = H * (l + 1) / levels, w2 = base + (topW - base) * (l + 1) / levels, up = corners(y2, w2);
+        for (let i = 0; i < 4; i++) g.add(beam(ring[i], up[(i + 1) % 4], .03, st));
+      }
+    }
+    const plat = box(1.8, .1, 1.8, darkMetal(), 0, H * .78, 0); g.add(plat);
+    for (const [x, z, ry] of [[.95, 0, Math.PI / 2], [-.95, 0, -Math.PI / 2], [0, .95, 0]]) {
+      const dish = cyl(.5, .5, .14, ceramic(), 24); dish.rotation.x = Math.PI / 2; dish.rotation.z = ry; dish.position.set(x, H * .84, z); g.add(dish);
+    }
+    const beaconMat = lamp(); const beacon = new THREE.Mesh(new THREE.SphereGeometry(.22, 14, 14), beaconMat); beacon.position.y = H + .3; g.add(beacon);
+    const hut = facadeMat({ style: 'hut', seed, base: '#4A5DAE', lit: .9 });
+    g.add(boxFacade(2.8, 2, 2, hut, roofMat(seed + 1), 3.2, .4));
+    return { group: g, glow: [beaconMat, hut], top: H + .5, radius: 4.6 };
+  },
+  control(a, seed) {
+    const g = new THREE.Group(), h = 3.6 + a.criticality * .45;
+    const side = facadeMat({ style: 'band', cols: 1, rows: 6, seed, base: '#4A5DAE', lit: .95 });
+    g.add(boxFacade(8, h, 4.6, side, roofMat(seed)));
+    const dishMat = ceramic();
+    const dish = shadowed(new THREE.Mesh(new THREE.SphereGeometry(1.3, 28, 12, 0, Math.PI * 2, 0, .95), dishMat));
+    dish.material.side = THREE.DoubleSide; dish.rotation.x = -1.05; dish.position.set(-2.4, h + 1.6, 0); g.add(dish);
+    const stand = cyl(.12, .18, 1.4, steel(), 8); stand.position.set(-2.4, h + .7, .2); g.add(stand);
+    const mast = cyl(.06, .09, 4.2, steel(), 6); mast.position.set(2.8, h + 2.1, -1.2); g.add(mast);
+    for (let i = 0; i < 3; i++) { const arm = box(1, .05, .05, steel(), 2.8, h + 2.6 + i * .6, -1.2); g.add(arm); }
+    const ac = facadeMat({ style: 'rack', cols: 2, seed: seed + 9, base: '#5266B4', lit: .8 });
+    for (let i = 0; i < 3; i++) g.add(boxFacade(.9, .7, .9, ac, roofMat(seed + 10 + i), .2 + i * 1.1, 1.1, h));
+    const tipMat = lamp(); const tip = new THREE.Mesh(new THREE.SphereGeometry(.14, 10, 10), tipMat); tip.position.set(2.8, h + 4.3, -1.2); g.add(tip);
+    return { group: g, glow: [side, ac, tipMat], top: h + 4.4, radius: 5 };
+  },
+  substation(a, seed) {
+    const g = new THREE.Group();
+    const pad = new THREE.Mesh(new THREE.PlaneGeometry(9, 7.4), new THREE.MeshStandardMaterial({ map: roofTex(seed + 20), roughness: 1 }));
+    pad.rotation.x = -Math.PI / 2; pad.position.y = .02; pad.receiveShadow = true; g.add(pad);
+    const fMat = new THREE.MeshStandardMaterial({ map: fenceTex(), transparent: true, alphaTest: .3, side: THREE.DoubleSide, roughness: .6, metalness: .5 });
+    for (const [w, x, z, ry] of [[9, 0, -3.7, 0], [9, 0, 3.7, 0], [7.4, -4.5, 0, Math.PI / 2], [7.4, 4.5, 0, Math.PI / 2]]) {
+      const f = new THREE.Mesh(new THREE.PlaneGeometry(w, 1.6), fMat); f.position.set(x, .8, z); f.rotation.y = ry; g.add(f);
+    }
+    const body = darkMetal(), ins = ceramic(), st = steel();
+    for (const tx of [-2, 1.4]) {
+      g.add(box(1.8, 1.6, 1.3, body, tx, .8, .6));
+      for (let i = 0; i < 6; i++) { g.add(box(.05, 1.2, .5, st, tx - .75 + i * .3, .7, 1.5)); g.add(box(.05, 1.2, .5, st, tx - .75 + i * .3, .7, -.3)); }
+      const cons = cyl(.28, .28, 1.4, body, 14); cons.rotation.z = Math.PI / 2; cons.position.set(tx, 1.9, .1); g.add(cons);
+      for (let i = 0; i < 3; i++) {
+        const bx = tx - .5 + i * .5;
+        const bush = cyl(.08, .1, 1, ins, 10); bush.position.set(bx, 2.1, .8); g.add(bush);
+        for (let k = 0; k < 3; k++) { const disc = cyl(.17, .17, .05, ins, 14); disc.position.set(bx, 1.8 + k * .25, .8); g.add(disc); }
+      }
+    }
+    for (const px of [-3.6, 3.6]) { const p = cyl(.13, .16, 5, st, 8); p.position.set(px, 2.5, -2.2); g.add(p); }
+    g.add(box(7.4, .18, .18, st, 0, 4.8, -2.2));
+    const wireMat = new THREE.LineBasicMaterial({ color: 0xC9D3F5, transparent: true, opacity: .6 });
+    for (const tx of [-2, 1.4]) for (let i = 0; i < 3; i++) {
+      const bx = tx - .5 + i * .5;
+      const curve = new THREE.QuadraticBezierCurve3(new THREE.Vector3(bx, 2.6, .8), new THREE.Vector3(bx, 3.6, -.7), new THREE.Vector3(bx, 4.7, -2.2));
+      g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(12)), wireMat));
+    }
+    const cab = facadeMat({ style: 'rack', cols: 2, seed, base: '#5064B2', lit: .9 });
+    g.add(boxFacade(1.2, 1.6, .7, cab, roofMat(seed + 21), 3.4, 2.4));
+    const tipMat = lamp(); const tip = new THREE.Mesh(new THREE.SphereGeometry(.16, 10, 10), tipMat); tip.position.set(3.6, 5.15, -2.2); g.add(tip);
+    return { group: g, glow: [cab, tipMat], top: 5.3, radius: 5.4 };
+  },
+  generator(a, seed) {
+    const g = new THREE.Group();
+    const side = facadeMat({ style: 'corrugated', seed, base: '#4C60AE', lit: .9 });
+    g.add(boxFacade(5, 2.5, 2.3, side, roofMat(seed), -.6, 0));
+    const st = steel(), stack = cyl(.22, .26, 2.4, darkMetal(), 12); stack.position.set(1.2, 3.6, -.5); g.add(stack);
+    const cap = cyl(.3, .22, .2, st, 12); cap.position.set(1.2, 4.9, -.5); g.add(cap);
+    const tankMat = new THREE.MeshStandardMaterial({ map: stripeTex(), roughness: .5, metalness: .3 });
+    const tank = cyl(.9, .9, 3.6, tankMat, 24); tank.rotation.z = Math.PI / 2; tank.position.set(-.6, 1.05, 2.4); g.add(tank);
+    for (const tx of [-2, .8]) g.add(box(.25, .5, 1.2, darkMetal(), tx, .25, 2.4));
+    const statusMat = lamp(); const status = new THREE.Mesh(new THREE.SphereGeometry(.15, 10, 10), statusMat); status.position.set(-2.9, 2.75, 0); g.add(status);
+    return { group: g, glow: [side, statusMat], top: 5, radius: 4 };
+  },
+  camera(a, seed) {
+    const g = new THREE.Group(), st = steel();
+    g.add(box(.8, .3, .8, darkMetal(), 0, .15, 0));
+    const pole = cyl(.1, .14, 5, st, 8); pole.position.y = 2.5; g.add(pole);
+    g.add(box(1.4, .1, .1, st, .7, 4.9, 0));
+    const housing = box(1, .45, .5, ceramic(), 1.4, 4.6, 0); g.add(housing);
+    const lens = cyl(.14, .14, .3, darkMetal(), 12); lens.rotation.z = Math.PI / 2; lens.position.set(2, 4.6, 0); g.add(lens);
+    const ledMat = lamp(); const led = new THREE.Mesh(new THREE.SphereGeometry(.08, 8, 8), ledMat); led.position.set(1.4, 4.9, .26); g.add(led);
+    return { group: g, glow: [ledMat], top: 5.2, radius: 2.4 };
+  },
+  datacenter(a, seed) {
+    const g = new THREE.Group(), h = 4 + a.criticality * .8;
+    const side = facadeMat({ style: 'rack', cols: 6, seed, base: '#475BAA', lit: .8 });
+    g.add(boxFacade(6.4, h, 4.6, side, roofMat(seed)));
+    const ac = facadeMat({ style: 'rack', cols: 2, seed: seed + 5, base: '#5266B4', lit: .6 });
+    for (let i = 0; i < 4; i++) g.add(boxFacade(1, .8, 1, ac, roofMat(seed + 6 + i), -2.2 + i * 1.45, -1, h));
+    return { group: g, glow: [side, ac], top: h + .8, radius: 4.6 };
+  },
+  water(a, seed) {
+    const g = new THREE.Group();
+    const tankMat = new THREE.MeshStandardMaterial({ map: stripeTex(), roughness: .55, metalness: .25 });
+    const tank = cyl(2.2, 2.2, 3.6, tankMat, 32); tank.position.set(-1.6, 1.8, 0); g.add(tank);
+    const roof = cyl(.2, 2.3, .6, darkMetal(), 32); roof.position.set(-1.6, 3.9, 0); g.add(roof);
+    const side = facadeMat({ style: 'hut', seed, base: '#4A5DAE', lit: .9 });
+    g.add(boxFacade(2.6, 2.2, 2.2, side, roofMat(seed + 1), 2.4, 0));
+    return { group: g, glow: [side], top: 4.2, radius: 4.2 };
+  },
+  cabinet(a, seed) {      // field RTU, IED, gateway, device platform: a roadside cabinet with a radio mast
+    const g = new THREE.Group();
+    g.add(box(2.4, .3, 1.6, new THREE.MeshStandardMaterial({ color: 0x3A4C95, roughness: .95 })));
+    const side = facadeMat({ style: 'rack', cols: 2, seed, base: '#4C60AE', lit: .9 });
+    g.add(boxFacade(1.7, 2, 1, side, roofMat(seed), 0, 0, .3));
+    const mast = cyl(.05, .07, 3, steel(), 6); mast.position.set(.65, 3.8, -.3); g.add(mast);
+    const panel = box(1.2, .06, .8, new THREE.MeshStandardMaterial({ color: 0x1B2A6B, roughness: .3, metalness: .6 }), -.3, 2.55, 0); panel.rotation.x = -.35; g.add(panel);
+    const ledMat = lamp(); const led = new THREE.Mesh(new THREE.SphereGeometry(.1, 8, 8), ledMat); led.position.set(.65, 5.35, -.3); g.add(led);
+    return { group: g, glow: [side, ledMat], top: 5.4, radius: 2.6 };
+  },
+  signals(a, seed) {      // junction signal controllers: a cabinet and two signal heads that follow the same cycle as the city's junctions
+    const g = new THREE.Group(), st = steel();
+    const side = facadeMat({ style: 'rack', cols: 2, seed, base: '#4C60AE', lit: .9 });
+    g.add(boxFacade(1.2, 1.6, .8, side, roofMat(seed), 0, 0));
+    const sig = [];
+    for (const [x, z, ry, axis] of [[-2.2, 1.4, 0, 'EW'], [2.2, -1.4, Math.PI, 'NS']]) {
+      const pole = cyl(.09, .12, 4.4, st, 8); pole.position.set(x, 2.2, z); g.add(pole);
+      const arm = box(2, .1, .1, st, x + (ry ? -1 : 1), 4.3, z); g.add(arm);
+      const head = new THREE.Group(); head.position.set(x + (ry ? -1.9 : 1.9), 3.6, z);
+      head.add(box(.45, 1.3, .35, darkMetal(), 0, 0, 0));
+      const m = [];
+      for (let i = 0; i < 3; i++) { const mat = new THREE.MeshStandardMaterial({ color: 0x0A1640, emissive: new THREE.Color(0), emissiveIntensity: 1, toneMapped: false }); const l = new THREE.Mesh(new THREE.SphereGeometry(.13, 10, 10), mat); l.position.set(0, .4 - i * .4, ry ? -.2 : .2); head.add(l); m.push(mat); }
+      g.add(head); sig.push({ axis, m });
+    }
+    return { group: g, glow: [side], top: 4.6, radius: 3.8, sig };
+  },
+  vms(a, seed) {          // variable message sign: a gantry with an LED board (its message is generic; it never shows data)
+    const g = new THREE.Group(), st = steel();
+    for (const x of [-3.1, 3.1]) { const p = cyl(.12, .15, 4.6, st, 8); p.position.set(x, 2.3, 0); g.add(p); }
+    g.add(box(6.6, .16, .16, st, 0, 4.55, 0));
+    g.add(box(5.6, 1.75, .36, darkMetal(), 0, 3.6, 0));
+    const ok = vmsTex(['KEEP LEFT', 'DRIVE SAFE'], '#FFB547'), bad = vmsTex(['SIGN CONTROLLER', 'REACHED IN SIM'], '#FF6FB5');
+    const face = new THREE.MeshBasicMaterial({ map: ok, toneMapped: false });
+    for (const z of [.19, -.19]) { const f = new THREE.Mesh(new THREE.PlaneGeometry(5.3, 1.45), face); f.position.set(0, 3.6, z); if (z < 0) f.rotation.y = Math.PI; g.add(f); }
+    const side = facadeMat({ style: 'rack', cols: 2, seed, base: '#4C60AE', lit: .9 });
+    g.add(boxFacade(1, 1.4, .8, side, roofMat(seed), -3.1, 1.1));
+    return { group: g, glow: [side], top: 5, radius: 4, vms: { face, ok, bad } };
+  },
+  command(a, seed) {      // command centre or dispatch centre: glass building with a lit video wall
+    const g = new THREE.Group(), h = 5 + a.criticality * .7;
+    const side = facadeMat({ style: 'glass', cols: 8, rows: Math.round(h * 1.4), seed, base: '#3A4FA2', lit: .7 });
+    g.add(boxFacade(7.5, h, 5, side, roofMat(seed)));
+    const wallMat = new THREE.MeshStandardMaterial({ map: facade({ style: 'band', cols: 1, rows: 3, seed: seed + 7, base: '#0B1642', lit: 1 }).emi, emissive: new THREE.Color(C.win), emissiveIntensity: 1, emissiveMap: facade({ style: 'band', cols: 1, rows: 3, seed: seed + 7, base: '#0B1642', lit: 1 }).emi });
+    const wall = new THREE.Mesh(new THREE.PlaneGeometry(5.5, 2.2), wallMat); wall.position.set(0, h * .55, 2.52); g.add(wall);
+    const mast = cyl(.07, .1, 5, steel(), 6); mast.position.set(2.8, h + 2.5, -1.5); g.add(mast);
+    const dish = cyl(.6, .6, .14, ceramic(), 24); dish.rotation.x = Math.PI / 2.4; dish.position.set(-2.2, h + .8, -1); g.add(dish);
+    const tipMat = lamp(); const tip = new THREE.Mesh(new THREE.SphereGeometry(.15, 10, 10), tipMat); tip.position.set(2.8, h + 5.1, -1.5); g.add(tip);
+    return { group: g, glow: [side, wallMat, tipMat], top: h + 5.2, radius: 5.4 };
+  },
+};
+/** Picks a 3D model for an asset. Unknown types fall back to a server building, so any dataset still renders. */
+function builderFor(type, name = '') {
+  if (/message sign|\bvms\b/i.test(name)) return BUILD.vms;
+  if (/signal/i.test(name) && ['plc', 'traffic_ctrl', 'iot_gateway'].includes(type) && !/centre|center|server/i.test(name)) return BUILD.signals;
+  if (type === 'hospital_network') return BUILD.hospital;
+  if (['vendor_portal', 'cloud'].includes(type)) return BUILD.tower;
+  if (['vpn_gateway', 'telecom_gateway'].includes(type)) return BUILD.telecom;
+  if (['iccc', 'emergency_comms'].includes(type)) return BUILD.command;
+  if (['scada', 'traffic_ctrl', 'workstation', 'hmi', 'pump_scada'].includes(type)) return BUILD.control;
+  if (['plc', 'substation'].includes(type)) return BUILD.substation;
+  if (type === 'generator') return BUILD.generator;
+  if (type === 'camera') return BUILD.camera;
+  if (['rtu', 'iot_gateway', 'medical_iot'].includes(type)) return BUILD.cabinet;
+  if (type === 'water_controller') return BUILD.water;
+  return BUILD.datacenter;     // ehr_server, pacs, ad_server, historian, web_server, mail_server, anything new
+}
+
+// ======================================================================
+// scene assembly
+// ======================================================================
+const nodes = {}, links = [], fillerMats = [];
+const ZONE_NAMES = { vendor: 'Vendors', cloud: 'Cloud', dmz: 'Internet edge', enterprise: 'Hospital and office IT', control: 'Control room', field: 'Field devices' };
+let busy = false, topRisk = new Set();
+const world = new THREE.Group(); scene.add(world);
+const sceneFit = { center: new THREE.Vector3(), radius: 30, dir: new THREE.Vector3(.52, .6, .82).normalize() };
+
+// ======================================================================
+// environment: sky, stars, moon, roads around (never under) the district, streetlights, traffic, skyline
+// purely decorative; nothing here carries data
+// ======================================================================
+// signal cycle shared by every junction and by the junction-controller model: 14 s, N-S then E-W
+const SIG = { P: 14, r: new THREE.Color(2.8, .22, .18), a: new THREE.Color(2.8, 1.55, .15), g: new THREE.Color(.25, 2.5, 1.1), off: new THREE.Color(0x141B3A) };
+function sigPhase(t, off, axis) { const p = ((((t + off) % SIG.P) + SIG.P) % SIG.P + (axis === 'NS' ? 0 : 7)) % SIG.P; return p < 5.5 ? 2 : p < 7 ? 1 : 0; }  // lamp index: 0 red, 1 amber, 2 green
+const HORIZON_COL = 0x091645, env = { sigMode: null, sigHex: 0, cars: null, carPaths: [], stars: null, blink: null, t0: performance.now() };
+scene.fog.color.setHex(HORIZON_COL); renderer.setClearColor(HORIZON_COL);
+const sky = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 24), new THREE.ShaderMaterial({
+  side: THREE.BackSide, depthWrite: false, fog: false,
+  uniforms: { top: { value: new THREE.Color(0x01030D) }, mid: { value: new THREE.Color(0x061238) }, hor: { value: new THREE.Color(HORIZON_COL) }, glow: { value: new THREE.Color(0x2F5BFF) } },
+  vertexShader: 'varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }',
+  fragmentShader: `uniform vec3 top, mid, hor, glow; varying vec3 vP;
+    void main(){ float h = vP.y; vec3 c = mix(hor, mid, smoothstep(0.0, 0.18, h)); c = mix(c, top, smoothstep(0.18, 0.75, h));
+      c += glow * 0.10 * exp(-abs(h) * 18.0); gl_FragColor = vec4(c, 1.0); }` }));
+sky.renderOrder = -10; sky.frustumCulled = false; scene.add(sky);
+(function stars() {
+  const N = 2600, pos = new Float32Array(N * 3), size = new Float32Array(N), ph = new Float32Array(N), r = rng(31);
+  for (let i = 0; i < N; i++) {
+    const az = r() * Math.PI * 2, el = Math.asin(.06 + .94 * Math.pow(r(), .8));     // above the horizon, denser towards it
+    pos.set([Math.cos(el) * Math.cos(az), Math.sin(el), Math.cos(el) * Math.sin(az)], i * 3);
+    size[i] = r() < .05 ? 5 + r() * 3 : 1.8 + r() * 2.4; ph[i] = r() * 6.28;
+  }
+  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('size', new THREE.BufferAttribute(size, 1)); geo.setAttribute('ph', new THREE.BufferAttribute(ph, 1));
+  env.stars = new THREE.Points(geo, new THREE.ShaderMaterial({ transparent: true, depthWrite: false, fog: false, blending: THREE.AdditiveBlending,
+    uniforms: { t: { value: 0 }, px: { value: renderer.getPixelRatio() } },
+    vertexShader: 'attribute float size; attribute float ph; uniform float t, px; varying float a; void main(){ a = 0.55 + 0.45 * sin(t * 1.7 + ph); vec4 mv = modelViewMatrix * vec4(position,1.); gl_PointSize = size * px; gl_Position = projectionMatrix * mv; }',
+    fragmentShader: 'varying float a; void main(){ float d = length(gl_PointCoord - .5); if (d > .5) discard; float k = smoothstep(.5, .0, d); gl_FragColor = vec4(vec3(1.0,1.0,1.15) * (0.6 + 1.2 * k * k), a * k); }' }));
+  env.stars.frustumCulled = false; env.stars.renderOrder = -9; scene.add(env.stars);
+  // the moon, where the moonlight comes from
+  const c = canvas(256, 256), g = c.getContext('2d'), gr = g.createRadialGradient(128, 128, 30, 128, 128, 128);
+  gr.addColorStop(0, 'rgba(235,240,255,1)'); gr.addColorStop(.32, 'rgba(220,230,255,.95)'); gr.addColorStop(.36, 'rgba(160,185,255,.35)'); gr.addColorStop(1, 'rgba(47,91,255,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
+  g.fillStyle = 'rgba(170,180,215,.35)'; [[110, 112, 9], [146, 138, 6], [124, 150, 5], [140, 106, 4]].forEach(([x, y, rr]) => { g.beginPath(); g.arc(x, y, rr, 0, 7); g.fill(); });
+  env.moon = new THREE.Sprite(new THREE.SpriteMaterial({ map: toTex(c), fog: false, depthWrite: false, transparent: true }));
+  env.moon.renderOrder = -8; scene.add(env.moon);
+})();
+function placeSky() {                        // the sky follows the camera, always inside the far plane
+  const R = camera.far * .82;
+  sky.position.copy(camera.position); sky.scale.setScalar(R);
+  env.stars.position.copy(camera.position); env.stars.scale.setScalar(R * .98);
+  const d = moon.position.clone().normalize(); d.y = Math.max(d.y, .35); d.normalize();
+  env.moon.position.copy(camera.position).addScaledVector(d, R * .9); env.moon.scale.setScalar(R * .09);
+}
+function buildEnvironment(minX, maxX, minZ, maxZ) {
+  const r = rng(404), roadMat = new THREE.MeshStandardMaterial({ color: 0x0A1236, roughness: .55, metalness: .25 });
+  const lineMat = new THREE.MeshBasicMaterial({ color: 0x8E9DE0, transparent: true, opacity: .55 });
+  const curbMat = new THREE.MeshStandardMaterial({ color: 0x1B2C6E, roughness: .8 });
+  const lamps = [], segs = [];
+  const x0 = minX - 11, x1 = maxX + 11, z0 = minZ - 11, z1 = maxZ + 11;                // outside the sector pads (they reach 8 past the buildings)
+  const roads = [], dashes = [];                                                      // collected, then drawn as 3 instanced meshes
+  const addRoad = (ax, az, bx, bz, w = 3.2) => {                                      // straight road with curbs and a dashed centre line
+    const len = Math.hypot(bx - ax, bz - az); if (len < 2) return;
+    const ang = Math.atan2(bz - az, bx - ax);
+    roads.push({ cx: (ax + bx) / 2, cz: (az + bz) / 2, len, ang, w });
+    const n = Math.floor(len / 2.4);
+    for (let k = 0; k < n; k++) {
+      const f = (k + .5) / n, x = ax + (bx - ax) * f, z = az + (bz - az) * f, along = Math.abs(Math.cos(ang)) > .5 ? x : z, m = ((along % 36) + 36) % 36;
+      if (Math.min(m, 36 - m) < 3.4) continue;                                          // no centre line through a junction or its crossings
+      dashes.push({ x, z, ang });
+    }
+    segs.push([ax, az, bx, bz]);
+    for (let d = 6; d < len; d += 12) { const f = d / len; lamps.push([ax + (bx - ax) * f - Math.sin(ang) * (w / 2 + .8), az + (bz - az) * f + Math.cos(ang) * (w / 2 + .8)]); }
+  };
+  // ring road around the district
+  addRoad(x0, z0, x1, z0); addRoad(x1, z0, x1, z1); addRoad(x1, z1, x0, z1); addRoad(x0, z1, x0, z0);
+  // the outer grid (same lines the filler city leaves free), cut where it would cross the district
+  for (let v = -144; v <= 144; v += 36) {
+    const hz = (a, b) => { if (b - a > 4) addRoad(a, v, b, v); }, vt = (a, b) => { if (b - a > 4) addRoad(v, a, v, b); };
+    const insideZ = v > z0 - 2 && v < z1 + 2, insideX = v > x0 - 2 && v < x1 + 2;
+    if (insideZ) { hz(-150, x0 - 1.8); hz(x1 + 1.8, 150); } else hz(-150, 150);
+    if (insideX) { vt(-150, z0 - 1.8); vt(z1 + 1.8, 150); } else vt(-150, 150);
+  }
+  // signalled junctions: every crossing of two grid roads outside the district (T-junctions on the ring road are left unsignalled)
+  env.junctions = [];
+  for (let X = -144; X <= 144; X += 36) for (let Z = -144; Z <= 144; Z += 36) {
+    if (X > x0 - 2 && X < x1 + 2 && Z > z0 - 2 && Z < z1 + 2) continue;
+    env.junctions.push({ X, Z, off: ((X + Z) / 36) * 2.2 });          // a gentle green wave along the diagonals
+  }
+  {
+    const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), V = new THREE.Vector3(), Sc = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
+    const rm = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), roadMat, roads.length); rm.receiveShadow = true;
+    const cm = new THREE.InstancedMesh(new THREE.BoxGeometry(1, .12, .35), curbMat, roads.length * 2);
+    roads.forEach((o, k) => {
+      Q.setFromAxisAngle(up, -o.ang);
+      rm.setMatrixAt(k, M.compose(V.set(o.cx, .04, o.cz), Q, Sc.set(o.len, 1, o.w)));
+      for (const sgn of [-1, 1]) cm.setMatrixAt(k * 2 + (sgn > 0), M.compose(V.set(o.cx - Math.sin(o.ang) * sgn * (o.w / 2 + .18), .06, o.cz + Math.cos(o.ang) * sgn * (o.w / 2 + .18)), Q, Sc.set(o.len, 1, 1)));
+    });
+    const dm = new THREE.InstancedMesh(new THREE.PlaneGeometry(1.1, .12).rotateX(-Math.PI / 2), lineMat, Math.max(1, dashes.length));
+    dashes.forEach((o, k) => dm.setMatrixAt(k, M.compose(V.set(o.x, .05, o.z), Q.setFromAxisAngle(up, -o.ang), Sc.set(1, 1, 1))));
+    world.add(rm, cm, dm);
+  }
+  // streetlights: posts + warm heads (instanced), with a soft pool of light on the road
+  const L = lamps.filter(([x, z]) => Math.hypot(x, z) < 158);
+  const post = new THREE.InstancedMesh(new THREE.CylinderGeometry(.06, .08, 2.6, 6), new THREE.MeshStandardMaterial({ color: 0x2B3D86 }), L.length);
+  const head = new THREE.InstancedMesh(new THREE.SphereGeometry(.22, 8, 6), new THREE.MeshBasicMaterial({ color: new THREE.Color(2.2, 1.7, 1.0) }), L.length);
+  const pool = new THREE.InstancedMesh(new THREE.CircleGeometry(1.8, 20), new THREE.MeshBasicMaterial({ color: 0xFFC98A, transparent: true, opacity: .07, depthWrite: false, blending: THREE.AdditiveBlending }), L.length);
+  const m4 = new THREE.Matrix4(), flat = new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0)), one = new THREE.Vector3(1, 1, 1), id = new THREE.Quaternion();
+  L.forEach(([x, z], k) => { m4.compose(new THREE.Vector3(x, 1.3, z), id, one); post.setMatrixAt(k, m4); m4.compose(new THREE.Vector3(x, 2.65, z), id, one); head.setMatrixAt(k, m4); m4.compose(new THREE.Vector3(x, .06, z), flat, one); pool.setMatrixAt(k, m4); });
+  world.add(post, head, pool);
+  // junctions: zebra crossings, stop lines and a signal head on each corner (instanced: 4 draw calls for the whole city)
+  {
+    const J = env.junctions, M = new THREE.Matrix4(), V = new THREE.Vector3(), Sc = new THREE.Vector3(1, 1, 1), Qn = new THREE.Quaternion();
+    const zebra = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xC9D3FF, transparent: true, opacity: .5 }), J.length * 4 * 5);
+    let zi = 0;
+    for (const { X, Z } of J) for (const [dx, dz] of [[2.6, 0], [-2.6, 0], [0, 2.6], [0, -2.6]]) for (let k = 0; k < 5; k++) {
+      const o = -1.2 + k * .6;                                       // stripes run with the traffic, spaced across the road
+      if (dz === 0) zebra.setMatrixAt(zi++, M.compose(V.set(X + dx, .055, Z + o), Qn, Sc.set(.9, 1, .3)));
+      else zebra.setMatrixAt(zi++, M.compose(V.set(X + o, .055, Z + dz), Qn, Sc.set(.3, 1, .9)));
+    }
+    const pole = new THREE.InstancedMesh(new THREE.CylinderGeometry(.06, .08, 3.2, 6), new THREE.MeshStandardMaterial({ color: 0x8E9DE0, roughness: .5, metalness: .5 }), J.length * 4);
+    const housing = new THREE.InstancedMesh(new THREE.BoxGeometry(.32, .95, .3), new THREE.MeshStandardMaterial({ color: 0x1B2A6B, roughness: .6 }), J.length * 4);
+    const bulb = new THREE.InstancedMesh(new THREE.SphereGeometry(.12, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false }), J.length * 4 * 3);
+    // corner k: which axis its head serves (opposite corners serve the same road)
+    const CORNERS = [[2.15, 2.15, 'EW'], [-2.15, 2.15, 'NS'], [-2.15, -2.15, 'EW'], [2.15, -2.15, 'NS']];
+    env.sigHeads = [];
+    J.forEach(({ X, Z, off }, j) => CORNERS.forEach(([cx, cz, axis], k) => {
+      const i = j * 4 + k, x = X + cx, z = Z + cz;
+      pole.setMatrixAt(i, M.compose(V.set(x, 1.6, z), Qn, Sc.set(1, 1, 1)));
+      housing.setMatrixAt(i, M.compose(V.set(x, 3.0, z), Qn, Sc.set(1, 1, 1)));
+      // the lamps sit on the face of the housing that looks at the traffic it controls
+      const fx = axis === 'EW' ? Math.sign(cx) * .2 : 0, fz = axis === 'NS' ? Math.sign(cz) * .2 : 0;
+      for (let L = 0; L < 3; L++) { bulb.setMatrixAt(i * 3 + L, M.compose(V.set(x + fx, 3.3 - L * .3, z + fz), Qn, Sc.set(1, 1, 1))); bulb.setColorAt(i * 3 + L, SIG.off); }
+      env.sigHeads.push({ off, axis, last: -1 });
+    }));
+    bulb.frustumCulled = false; env.bulbs = bulb;
+    world.add(zebra, pole, housing, bulb);
+  }
+  // traffic: headlights and tail lights, driving on the left; cars stop at red and queue behind each other
+  const N = Math.min(170, segs.length * 4);
+  // a car is four instanced parts: body, cabin, headlights, tail lights (4 draw calls for the whole fleet)
+  const carPaint = [0x2A3C8C, 0x4F5FA8, 0x8A93C4, 0x1C2660, 0x6B3F7A, 0x2F6E8C].map(c => new THREE.Color(c));
+  const part = (geo, mat) => { const m = new THREE.InstancedMesh(geo, mat, N); m.frustumCulled = false; world.add(m); return m; };
+  env.carParts = [
+    { mesh: part(new THREE.BoxGeometry(1.05, .3, .5), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .35, metalness: .6 })), off: new THREE.Matrix4().makeTranslation(0, .25, 0) },
+    { mesh: part(new THREE.BoxGeometry(.55, .22, .44), new THREE.MeshStandardMaterial({ color: 0x0B1238, roughness: .15, metalness: .8 })), off: new THREE.Matrix4().makeTranslation(-.05, .5, 0) },
+    { mesh: part(new THREE.BoxGeometry(.05, .08, .4), new THREE.MeshBasicMaterial({ color: new THREE.Color(2.6, 2.4, 2.0), toneMapped: false })), off: new THREE.Matrix4().makeTranslation(.53, .28, 0) },
+    { mesh: part(new THREE.BoxGeometry(.05, .08, .4), new THREE.MeshBasicMaterial({ color: new THREE.Color(2.4, .2, .25), toneMapped: false })), off: new THREE.Matrix4().makeTranslation(-.53, .28, 0) },
+  ];
+  env.carPaths = []; env.lanes = [];
+  const laneOf = {};
+  for (let k = 0; k < N; k++) {
+    const si = Math.floor(r() * segs.length), sg = segs[si], dir = r() < .5 ? 1 : -1, len = Math.hypot(sg[2] - sg[0], sg[3] - sg[1]);
+    const horiz = Math.abs(sg[3] - sg[1]) < .01, axis = horiz ? 'EW' : 'NS';
+    // the junctions this road crosses, as positions along it (0..1)
+    const cross = env.junctions.filter(j => horiz ? (Math.abs(j.Z - sg[1]) < .01 && j.X > Math.min(sg[0], sg[2]) + 1 && j.X < Math.max(sg[0], sg[2]) - 1)
+      : (Math.abs(j.X - sg[0]) < .01 && j.Z > Math.min(sg[1], sg[3]) + 1 && j.Z < Math.max(sg[1], sg[3]) - 1))
+      .map(j => ({ u: horiz ? (j.X - sg[0]) / (sg[2] - sg[0]) : (j.Z - sg[1]) / (sg[3] - sg[1]), off: j.off }));
+    const c = { sg, dir, u: r(), v: (.025 + r() * .04) * (24 / Math.max(8, len)), lane: -dir * .75, axis, cross, stopU: 3.5 / len, gapU: 1.45 / len };
+    env.carPaths.push(c);
+    const key = si * 2 + (dir > 0); (laneOf[key] ??= []).push(c);
+    env.carParts[0].mesh.setColorAt(k, carPaint[Math.floor(r() * carPaint.length)]);
+  }
+  env.lanes = Object.values(laneOf);
+  env.cars = env.carParts[0].mesh; env.carsPlaced = false;
+  // distant skyline: a ring of dark towers with a few lit windows, so zooming out never shows an empty world
+  const T = 420, tower = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), facadeMat({ style: 'grid', cols: 4, rows: 18, seed: 77, base: '#081236', lit: .1 }), T);
+  for (let k = 0; k < T; k++) {
+    const a = r() * Math.PI * 2;
+    const d = 190 + r() * 260, hgt = 4 + Math.pow(r(), 2.4) * (d < 280 ? 22 : 34), w = 4 + r() * 6;
+    m4.compose(new THREE.Vector3(Math.cos(a) * d, hgt / 2, Math.sin(a) * d), new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), r() * 3), new THREE.Vector3(w, hgt, w * (.7 + r() * .6)));
+    tower.setMatrixAt(k, m4);
+  }
+  world.add(tower);
+  // aviation lights on the tallest towers (blink)
+  const B = 40, blink = new THREE.InstancedMesh(new THREE.SphereGeometry(.5, 8, 6), new THREE.MeshBasicMaterial({ color: new THREE.Color(3, .25, .3), transparent: true }), B);
+  const v = new THREE.Vector3(), q = new THREE.Quaternion(), sc = new THREE.Vector3();
+  for (let k = 0; k < B; k++) { tower.getMatrixAt(Math.floor(r() * T), m4); m4.decompose(v, q, sc); v.y = sc.y + .6; m4.compose(v, id, one); blink.setMatrixAt(k, m4); }
+  env.blink = blink; world.add(blink);
+}
+const partM = new THREE.Matrix4(), carM = new THREE.Matrix4(), carQ = new THREE.Quaternion(), carP = new THREE.Vector3(), carS = new THREE.Vector3(1, 1, 1), yAxis = new THREE.Vector3(0, 1, 0);
+let lastNear = 0;
+function stepEnvironment(now, dt) {
+  const d = camera.position.distanceTo(controls.target);
+  const near = Math.min(25, Math.max(.5, d * .025)), far = Math.max(1600, d * 6);
+  if (Math.abs(near - lastNear) > .05 || camera.far < far * .9) { camera.near = near; camera.far = far; camera.updateProjectionMatrix(); lastNear = near; }
+  scene.fog.near = d * 1.15; scene.fog.far = d * 3.4;
+  placeSky();
+  const t = (now - env.t0) / 1000;
+  if (env.stars) env.stars.material.uniforms.t.value = reduceMotion ? 0 : t;
+  if (env.blink) env.blink.material.opacity = reduceMotion ? .8 : (Math.sin(t * 3) > .6 ? 1 : .15);
+  if (!env.cars) return;
+  const moving = !(reduceMotion || quality === 'low');
+  if (!moving && env.carsPlaced) return;                // still traffic is placed once (never left stacked at the origin)
+  env.carsPlaced = true;
+  if (moving) {
+  const lightsOn = env.sigMode !== 'attack';           // with the controllers reached in the simulation, the lights are not trusted, so they do not drive the cars either
+  for (const lane of env.lanes) {
+    lane.sort((p, q) => (q.u - p.u) * p.dir);            // the car furthest along goes first
+    for (let i = 0; i < lane.length; i++) {
+      const c = lane[i]; let step = c.v * dt;
+      if (i > 0) step = Math.min(step, (lane[i - 1].u - c.u) * c.dir - c.gapU);
+      if (lightsOn) for (const x of c.cross) {
+        const ahead = (x.u - c.dir * c.stopU - c.u) * c.dir;       // distance to this junction's stop line
+        if (ahead < -1e-4 || ahead > c.v * dt + 1e-4) continue;    // already past it, or not reached this frame
+        if (sigPhase(t, x.off, c.axis) !== 2) step = Math.min(step, ahead);
+      }
+      c.u += Math.max(0, step) * c.dir;
+      if (c.u > 1) c.u -= 1; else if (c.u < 0) c.u += 1;
+    }
+  }
+  }
+  env.carPaths.forEach((c, k) => {
+    const [ax, az, bx, bz] = c.sg, ang = Math.atan2(bz - az, bx - ax);
+    carP.set(ax + (bx - ax) * c.u - Math.sin(ang) * c.lane, .25, az + (bz - az) * c.u + Math.cos(ang) * c.lane);
+    carQ.setFromAxisAngle(yAxis, -ang + (c.dir < 0 ? Math.PI : 0)); carM.compose(carP.setY(0), carQ, carS);
+    for (const pt of env.carParts) pt.mesh.setMatrixAt(k, partM.multiplyMatrices(carM, pt.off));
+  });
+  for (const pt of env.carParts) pt.mesh.instanceMatrix.needsUpdate = true;
+}
+
+const edgeMat = new THREE.LineBasicMaterial({ color: 0x9DB4FF, transparent: true, opacity: .32 });
+function buildScene(g) {
+  world.clear();
+  for (const k of Object.keys(nodes)) delete nodes[k];
+  links.length = 0;
+
+  const xs = g.assets.map(a => a.x), zs = g.assets.map(a => a.z);
+  const minX = Math.min(...xs) - 10, maxX = Math.max(...xs) + 10, minZ = Math.min(...zs) - 8, maxZ = Math.max(...zs) + 8;
+
+  const ground = new THREE.Mesh(new THREE.CircleGeometry(5000, 96), new THREE.MeshStandardMaterial({ map: groundTex(), roughness: .95 }));
+  ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; world.add(ground);
+
+  // zone pads
+  const clusters = [...new Set(g.assets.map(a => a.cluster).filter(Boolean))];
+  if (clusters.length && g.assets.every(a => a.cluster)) {
+    for (const c of clusters) {
+      const members = g.assets.filter(a => a.cluster === c);
+      const cx0 = Math.min(...members.map(a => a.x)) - 8, cx1 = Math.max(...members.map(a => a.x)) + 8;
+      const cz0 = Math.min(...members.map(a => a.z)) - 8, cz1 = Math.max(...members.map(a => a.z)) + 8;
+      const label = members[0].sector || c;
+      const padMat = new THREE.MeshStandardMaterial({ map: zonePadTex(label, cx1 - cx0, cz1 - cz0), roughness: .9 });
+      const pad = new THREE.Mesh(new THREE.PlaneGeometry(cx1 - cx0, cz1 - cz0), padMat);
+      pad.rotation.x = -Math.PI / 2; pad.position.set((cx0 + cx1) / 2, .03, (cz0 + cz1) / 2); pad.receiveShadow = true; world.add(pad);
+    }
+  } else for (const z of g.zones) {
+    const zz = g.assets.filter(a => a.zone === z).map(a => a.z);
+    const cz = (Math.min(...zz) + Math.max(...zz)) / 2, depth = Math.max(...zz) - Math.min(...zz) + 11.5;
+    const padMat = new THREE.MeshStandardMaterial({ map: zonePadTex(ZONE_NAMES[z] ?? z, maxX - minX, depth), roughness: .9 });
+    const pad = new THREE.Mesh(new THREE.PlaneGeometry(maxX - minX, depth), padMat);
+    pad.rotation.x = -Math.PI / 2; pad.position.set((minX + maxX) / 2, .03, cz); pad.receiveShadow = true; world.add(pad);
+  }
+
+  // filler city around the district (not interactive)
+  const r = rng(99);
+  fillerMats.length = 0;
+  const fillers = [0, 1, 2, 3].map(i => facadeMat({ style: i % 2 ? 'glass' : 'grid', cols: 6, rows: 14, seed: 500 + i, base: '#0C1438', lit: .14 }));
+  fillers.forEach(m => { m.emissiveIntensity = .35; m.roughness = .95; m.metalness = 0; fillerMats.push(m); });
+  const fillerRoof = roofMat(77, 'gravel', '#111A44');
+  const treeMat = new THREE.MeshStandardMaterial({ color: 0x17306A, roughness: .9 });
+  for (let x = -150; x <= 150; x += 9) for (let z = -150; z <= 150; z += 9) {
+    if (x > minX - 17 && x < maxX + 17 && z > minZ - 17 && z < maxZ + 17) continue;   // keep the ring road clear
+    const d = Math.hypot(x, z); if (d > 155) continue;
+    // nothing may stand on a road: grid roads run along every multiple of 36 (see buildEnvironment)
+    const offRoad = (c, half) => { const m = ((c % 36) + 36) % 36; return Math.min(m, 36 - m) > half + 2.3; };
+    if (r() < .22) { const tx = x + r() * 3, tz = z + r() * 3; if (!offRoad(tx, 1) || !offRoad(tz, 1)) continue; const tree = cyl(0, 1, 2.6 + r() * 1.5, treeMat, 7); tree.position.set(tx, 1.5, tz); world.add(tree); continue; }
+    if (r() < .3) continue;
+    const h = 3 + r() * (d < 70 ? 16 : 9), w = 3.5 + r() * 3, dd = 3.5 + r() * 3, bx = x + r() * 2, bz = z + r() * 2;
+    if (!offRoad(bx, w / 2) || !offRoad(bz, dd / 2)) continue;
+    const b = boxFacade(w, h, dd, fillers[Math.floor(r() * 4)], fillerRoof, bx, bz);
+    if (d > 60) b.traverse(o => { o.castShadow = false; });     // far filler: no shadow pass (it is fogged anyway)
+    world.add(b);
+  }
+
+  buildEnvironment(minX, maxX, minZ, maxZ);
+
+  // assets
+  for (const a of g.assets) {
+    const seed = hash(a.id);
+    const built = builderFor(a.type, a.name)(a, seed);
+    const grp = built.group;
+    grp.position.set(a.x, 0, a.z);
+    grp.traverse(o => { o.userData.assetId = a.id; });
+    {   // glowing edges, merged into ONE line object per building (one draw call)
+      grp.updateMatrixWorld(true); const inv = grp.matrixWorld.clone().invert(), pts = [], v = new THREE.Vector3(), m = new THREE.Matrix4();
+      grp.traverse(o => { if (!o.isMesh || !o.geometry || o.material?.transparent || o.geometry.attributes.position.count > 2000) return;
+        m.multiplyMatrices(inv, o.matrixWorld); const p = new THREE.EdgesGeometry(o.geometry, 30).attributes.position;
+        for (let k = 0; k < p.count; k++) { v.fromBufferAttribute(p, k).applyMatrix4(m); pts.push(v.x, v.y, v.z); } });
+      if (pts.length) { const eg = new THREE.BufferGeometry(); eg.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3)); const e = new THREE.LineSegments(eg, edgeMat); e.raycast = () => {}; grp.add(e); }
+    }
+    const halo = new THREE.Mesh(new THREE.RingGeometry(built.radius, built.radius + .22, 64), new THREE.MeshBasicMaterial({ color: C.white, transparent: true, opacity: .3, side: THREE.DoubleSide }));
+    halo.rotation.x = -Math.PI / 2; halo.position.y = .07; grp.add(halo);
+    const dome = new THREE.Group();
+    dome.add(new THREE.Mesh(new THREE.SphereGeometry(built.radius + .6, 32, 14, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ color: C.white, wireframe: true, transparent: true, opacity: .22 })));
+    dome.add(new THREE.Mesh(new THREE.SphereGeometry(built.radius + .6, 32, 14, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ color: C.white, transparent: true, opacity: .05, depthWrite: false })));
+    dome.visible = false; grp.add(dome);
+    // already monitored in the dataset: a dashed ground ring (different from the dome, which means "you fixed it")
+    const eyePts = []; for (let i = 0; i <= 64; i++) { const q = i / 64 * Math.PI * 2; eyePts.push(new THREE.Vector3(Math.cos(q) * (built.radius + .75), .09, Math.sin(q) * (built.radius + .75))); }
+    const eye = new THREE.Line(new THREE.BufferGeometry().setFromPoints(eyePts), new THREE.LineDashedMaterial({ color: 0xBFE3FF, dashSize: .45, gapSize: .32, transparent: true, opacity: .8 }));
+    eye.computeLineDistances(); eye.visible = !!a.monitored; grp.add(eye);
+    // second attacker that also reached this building (contested)
+    const halo2 = new THREE.Mesh(new THREE.RingGeometry(built.radius + .45, built.radius + .75, 64), new THREE.MeshBasicMaterial({ color: C.white, transparent: true, opacity: .9, side: THREE.DoubleSide }));
+    halo2.rotation.x = -Math.PI / 2; halo2.position.y = .08; halo2.visible = false; grp.add(halo2);
+    const beamMat = new THREE.MeshBasicMaterial({ color: C.pink, transparent: true, opacity: .32, blending: THREE.AdditiveBlending, depthWrite: false });
+    const beamGeo = new THREE.CylinderGeometry(.5, .5, 60, 16, 1, true); beamGeo.translate(0, -30, 0);   // origin at the top
+    const entryBeam = new THREE.Mesh(beamGeo, beamMat);
+    entryBeam.position.y = built.top + 60; entryBeam.visible = false; grp.add(entryBeam);
+    const beamTag = new THREE.Sprite(new THREE.SpriteMaterial({ map: letterTex('A'), depthWrite: false, transparent: true }));
+    beamTag.scale.setScalar(2.4); beamTag.position.y = built.top + 7; beamTag.visible = false; grp.add(beamTag);
+    const el = document.createElement('div'); el.className = 'label';
+    el.tabIndex = 0; el.setAttribute('role', 'button'); el.setAttribute('aria-label', `${a.name}: open actions`);
+    el.addEventListener('click', ev => { ev.stopPropagation(); const r = stage.getBoundingClientRect(); openCtx(a.id, ev.clientX - r.left, ev.clientY - r.top); });
+    el.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); const r = stage.getBoundingClientRect(), b = el.getBoundingClientRect(); openCtx(a.id, b.left - r.left, b.bottom - r.top + 6); } });
+    el.innerHTML = `<span class="nm">${esc(shortName(a.name))}</span><small></small>`; el.title = a.name;
+    const label = new CSS2DObject(el); label.position.set(0, built.top + 1.4, 0); grp.add(label);
+    world.add(grp);
+    nodes[a.id] = { group: grp, glow: built.glow, sig: built.sig, vms: built.vms, halo, halo2, eye, dome, entryBeam, beamTag, el, small: el.querySelector('small'), nm: el.querySelector('.nm'), short: shortName(a.name), data: a, top: built.top,
+      delay: Math.max(0, g.zones.indexOf(a.zone)) * 230 + r() * 140, lift: 0 };
+  }
+
+  // links: cables that rise between buildings
+  for (const l of g.links) {
+    const A = nodes[l.src], B = nodes[l.dst];
+    if (!A || !B) continue;
+    const p1 = new THREE.Vector3(A.group.position.x, 1.2, A.group.position.z), p2 = new THREE.Vector3(B.group.position.x, 1.2, B.group.position.z);
+    const mid = p1.clone().lerp(p2, .5); mid.y = 5 + p1.distanceTo(p2) * .18;
+    const curve = new THREE.QuadraticBezierCurve3(p1, mid, p2);
+    let line;
+    if (l.attack_path) line = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, .09, 6), new THREE.MeshBasicMaterial({ color: 0xC9D3FF, transparent: true, opacity: .4 }));
+    else { line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(48)), new THREE.LineDashedMaterial({ color: 0x7F8FD0, dashSize: .7, gapSize: .5 })); line.computeLineDistances(); }
+    world.add(line);
+    // attack lines are drawn without tone mapping so each attacker keeps its own hue (tone mapping washes bright colours to white)
+    const hot = new THREE.MeshBasicMaterial({ color: ATK_HEX.A, toneMapped: false });
+    const mk = c => { const m = new THREE.Mesh(new THREE.TubeGeometry(c, 48, .21, 8), hot); m.visible = false; world.add(m); return m; };
+    const back = new THREE.QuadraticBezierCurve3(p2, mid, p1);
+    const pulse = new THREE.Mesh(new THREE.SphereGeometry(.45, 14, 14), new THREE.MeshBasicMaterial({ color: 0xFFD6EC, toneMapped: false }));
+    const pulseTag = new THREE.Sprite(new THREE.SpriteMaterial({ map: letterTex('A'), depthWrite: false, transparent: true }));
+    pulseTag.scale.setScalar(1.5); pulseTag.position.y = 1.2; pulseTag.visible = false; pulse.add(pulseTag);
+    pulse.visible = false; world.add(pulse);
+    const wall = new THREE.Mesh(new THREE.BoxGeometry(.3, 2.6, 2.6), new THREE.MeshBasicMaterial({ color: C.white, transparent: true, opacity: .75 }));
+    wall.position.copy(curve.getPoint(.5)); wall.lookAt(curve.getPoint(.55)); wall.visible = false; world.add(wall);
+    links.push({ data: l, curve, back, fwd: mk(curve), bwd: mk(back), pulse, pulseTag, hot, wall, atk: 'A' });
+  }
+
+  sceneFit.center.set((minX + maxX) / 2, 2, (minZ + maxZ) / 2);
+  sceneFit.radius = .5 * Math.hypot(maxX - minX, maxZ - minZ);
+  // wide, row-like districts read best from a corner; square ones (like a sector map) from the front
+  const wide = (maxX - minX) / Math.max(1, maxZ - minZ) > 1.6;
+  sceneFit.dir.set(...(wide ? [.52, .6, .82] : [.16, .78, .86])).normalize();
+  // the district's corners (ground and roof height): the camera is placed so all of them are in view
+  const roof = Math.max(...Object.values(nodes).map(n => n.top)) + 2;
+  sceneFit.corners = [];
+  for (const x of [minX + 4, maxX - 4]) for (const z of [minZ + 4, maxZ - 4]) for (const y of [0, roof]) sceneFit.corners.push(new THREE.Vector3(x, y, z));
+  fitCamera();
+}
+
+// visible part of the canvas: between the left rail and the dossier (desktop)
+function insets() {
+  const r = stage.getBoundingClientRect();
+  if (window.innerWidth <= 760) return { left: 0, right: 0, w: r.width, h: r.height };
+  const rail = $('#rail'), dos = $('#panel');
+  const left = rail.offsetParent ? rail.getBoundingClientRect().right - 40 - r.left : 0;   // the district may slide a little under the translucent column
+  const right = dos.offsetParent ? r.right - dos.getBoundingClientRect().left + 8 : 0;
+  return { left: Math.max(0, left), right: Math.max(0, right), w: r.width, h: r.height };
+}
+function fitCamera(animate = false) {
+  const ins = insets();
+  const visW = S.split ? (ins.w - ins.left - ins.right) / 2 : ins.w - ins.left - ins.right;
+  const aspect = Math.max(.3, visW / Math.max(1, ins.h));
+  const halfV = THREE.MathUtils.degToRad(camera.fov) / 2, halfH = Math.atan(Math.tan(halfV) * aspect);
+  let dist = sceneFit.radius / Math.sin(Math.min(halfV, halfH));
+  // refine: project the district's corners and zoom until the farthest one sits at 92% of the visible edge
+  if (sceneFit.corners?.length) {
+    const cam = new THREE.PerspectiveCamera(camera.fov, aspect, .5, 2000), v = new THREE.Vector3();
+    for (let i = 0; i < 6; i++) {
+      cam.position.copy(sceneFit.center).addScaledVector(sceneFit.dir, dist); cam.lookAt(sceneFit.center); cam.updateMatrixWorld();
+      let m = 0; for (const c of sceneFit.corners) { v.copy(c).project(cam); m = Math.max(m, Math.abs(v.x), Math.abs(v.y)); }
+      dist *= Math.min(2, Math.max(.5, m / (S.split ? .96 : .92)));
+    }
+  }
+  controls.maxDistance = Math.max(220, dist * 1.8); controls.minDistance = Math.min(20, dist * .15);   // never clamp the fitted view
+  camera.far = Math.max(1600, dist * 6); camera.updateProjectionMatrix();
+  const pos = sceneFit.center.clone().addScaledVector(sceneFit.dir, dist);
+  scene.fog.near = dist * 1.1; scene.fog.far = dist * 3.6;     // district stays clear, the city beyond fades into the horizon
+  if (animate) { flyTo(pos, sceneFit.center); return; }
+  tween = null;
+  camera.position.copy(pos); controls.target.copy(sceneFit.center); controls.update();
+}
+
+// ---------- motion: camera flights, bursts, intro ----------
+let tween = null;
+const ease = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+function flyTo(pos, look, dur = 950) {
+  if (reduceMotion) { camera.position.copy(pos); controls.target.copy(look); controls.update(); return; }
+  tween = { start: performance.now(), dur, fromP: camera.position.clone(), fromT: controls.target.clone(), toP: pos.clone(), toT: look.clone() };
+}
+function focusAsset(id) {
+  const n = nodes[id]; if (!n) return;
+  const look = n.group.position.clone(); look.y = n.top * .4;
+  const dist = Math.max(30, n.top * 2.4 + 22);
+  flyTo(look.clone().addScaledVector(sceneFit.dir, dist), look);
+}
+const effects = [];
+const ringGeo = new THREE.RingGeometry(1, 1.035, 96);   // thin: width grows with radius
+function burst(id, { r0 = 2, r1 = 10, dur = 900, delay = 0, strong = false, atk = 'A' } = {}) {
+  if (reduceMotion || S.split) return;
+  const n = nodes[id]; if (!n) return;
+  const gc = ATK_GLOW[atk] ?? ATK_GLOW.A, sk = strong ? 1.2 : 1;
+  const m = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: new THREE.Color().setRGB(gc[0] * sk, gc[1] * sk, gc[2] * sk), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
+  m.rotation.x = -Math.PI / 2; m.position.copy(n.group.position); m.position.y = .3;
+  world.add(m);
+  effects.push({ m, start: performance.now() + delay, dur, r0, r1 });
+}
+function stepEffects(now) {
+  for (let i = effects.length - 1; i >= 0; i--) {
+    const e = effects[i], k = (now - e.start) / e.dur;
+    if (k < 0) continue;
+    if (k >= 1) { world.remove(e.m); e.m.material.dispose(); effects.splice(i, 1); continue; }
+    const q = 1 - Math.pow(1 - k, 3);
+    e.m.scale.setScalar(e.r0 + (e.r1 - e.r0) * q);
+    e.m.material.opacity = .8 * (1 - k) * (1 - k);
+  }
+}
+let introStart = 0;
+const introK = (now, delay) => reduceMotion ? 1 : Math.min(1, Math.max(0, (now - introStart - delay) / 700));
+const beamStart = {};
+let prevT = 0;
+function fireEvents(sim, from, to) {
+  if (!sim || to <= from || to - from > 45) return;
+  for (const e of sim.events) {
+    if (e.t <= from || e.t > to) continue;
+    if (e.kind === 'compromise') burst(e.asset, { r0: 2.5, r1: 11, dur: 950, atk: e.attacker || 'A' });
+    if (e.kind === 'attacker_joins' && e.asset) burst(e.asset, { r0: 2, r1: 16, dur: 1200, atk: e.attacker });
+    if (e.kind === 'failsafe') { const c = $('#clock'); c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash'); }
+    if (e.kind === 'service_down') {
+      const ak = e.attacker && ATK_HEX[e.attacker] ? e.attacker : 'A';
+      if (e.asset_hint) { burst(e.asset_hint, { r0: 4, r1: 38, dur: 1700, strong: true, atk: ak }); burst(e.asset_hint, { r0: 3, r1: 26, dur: 1500, delay: 220, strong: true, atk: ak }); }
+      const c = $('#clock'); c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash');
+    }
+  }
+}
+/** For each lost service, find the building whose fall broke it (used to place the shock ring). */
+function annotateSim(sim) {
+  if (!sim) return sim;
+  for (const e of sim.events) {
+    if (e.kind !== 'service_down') continue;
+    const svc = S.graph.services.find(s => s.name === e.service);
+    const brokeAt = e.t - (svc?.buffer_min ?? 0);
+    let best = null, gap = Infinity;
+    for (const [a, t] of Object.entries(sim.compromised)) { const g = Math.abs(t - brokeAt); if (g < gap) { gap = g; best = a; } }
+    e.asset_hint = best;
+  }
+  return sim;
+}
+
+// ======================================================================
+// painting state onto the scene
+// ======================================================================
+const tmpA = new THREE.Color(), tmpB = new THREE.Color(), tmpC = new THREE.Color();
+function fixedAssets(ids) { return new Set(ids.filter(f => !f.startsWith('segment:')).map(f => f.split(':')[1])); }
+function segmentedLinks(ids) { return new Set(ids.filter(f => f.startsWith('segment:')).map(f => Number(f.split(':')[1]))); }
+
+// the attackers of a run: from /api/multi (sim.per) or, for a plain /api/simulate run, one attacker A from `entries`
+function attackersOf(sim, entries) {
+  if (sim?.per) return sim.per;
+  return [{ id: 'A', compromised: sim?.compromised ?? {}, parents: sim?.parents ?? {}, entries: entries.map(a => ({ asset: a, start: 0 })) }];
+}
+const sigT = now => (now - env.t0) / 1000;
+const blinkOn = now => reduceMotion || (sigT(now) * 1.6) % 1 < .55;
+/** City junction lights. Normal cycle, unless the dataset's junction-signal controller is reached in the simulation at this
+ *  moment: then every head blinks the attacker's colour, meaning "the twin can no longer vouch for these lights". */
+function paintCitySignals(st, now) {
+  env.sigMode = st.mode; if (!env.bulbs) return;
+  const t = sigT(now), b = env.bulbs, atk = st.mode === 'attack', on = blinkOn(now) ? 1 : 0; let dirty = false;
+  tmpC.setHex(st.hex || C.pink).multiplyScalar(2.2);
+  env.sigHeads.forEach((h, i) => {
+    const state = atk ? 10 + on + (st.hex % 997) * 2 : sigPhase(t, h.off, h.axis);
+    if (state === h.last) return;
+    h.last = state; dirty = true;
+    for (let L = 0; L < 3; L++) b.setColorAt(i * 3 + L, atk ? (L === 1 && on ? tmpC : SIG.off) : (L === state ? SIG[['r', 'a', 'g'][L]] : SIG.off));
+  });
+  if (dirty) b.instanceColor.needsUpdate = true;
+}
+function paint(sim, T, fixIds, entries, now, withLabels) {
+  const fixedA = fixedAssets(fixIds), segL = segmentedLinks(fixIds);
+  const comp = sim?.compromised ?? {}, par = sim?.parents ?? {}, owner = sim?.owner ?? {};
+  const per = attackersOf(sim, entries), multi = !!sim?.multi;
+  const entryAt = {};                       // asset -> first way in that uses it {start, atk}
+  const refused = {};                        // ways in the failsafe refused: no beam, just a note on the label
+  for (const a of per) for (const e of a.entries) {
+    if (a.status === 'blocked by failsafe') { refused[e.asset] = { start: e.start, atk: a.id }; continue; }
+    if (!entryAt[e.asset] || e.start < entryAt[e.asset].start) entryAt[e.asset] = { start: e.start, atk: a.id };
+  }
+  const maintNow = new Set((sim?.maintenance ?? []).filter(w => T >= w.start && T < w.start + 60 * w.hours).map(w => w.asset));
+  const throb = reduceMotion ? 1 : .8 + .2 * Math.sin(now * .006);
+  const sigState = { mode: 'normal', hex: 0 };
+  const fk = introK(now, 500);
+  for (const m of fillerMats) m.emissiveIntensity = .35 * fk;
+  for (const [id, n] of Object.entries(nodes)) {
+    const lit = introK(now, n.delay);
+    const t = comp[id], hit = t !== undefined && T >= t, who = owner[id] || 'A', hex = atkHex(who);
+    const p = par[id], tp = p != null ? comp[p] : undefined;
+    const incoming = t !== undefined && !hit && tp !== undefined && T >= tp;
+    let col, intensity;
+    if (hit) { col = tmpA.setHex(hex); intensity = 2.3 * throb; }
+    else if (incoming) { const k = (T - tp) / Math.max(.01, t - tp); col = tmpA.setHex(C.win).lerp(tmpB.setHex(hex), k); intensity = 1 + 1.1 * k; }
+    else { col = tmpA.setHex(C.win); intensity = 1; }
+    intensity *= Math.max(.04, lit);
+    for (const m of n.glow) { m.emissive.copy(col); m.emissiveIntensity = intensity; }
+    if (n.sig) for (const h of n.sig) {              // the controller's own heads: the normal cycle, or the attacker's colour blinking once reached
+      const on = hit ? (blinkOn(now) ? 1 : -1) : sigPhase(sigT(now), 0, h.axis);
+      h.m.forEach((m, L) => { if (hit) m.emissive.setHex(L === 1 && on > 0 ? hex : 0x000000); else m.emissive.copy(L === on ? SIG[['r', 'a', 'g'][L]] : SIG.off); m.emissiveIntensity = Math.max(.04, lit); });
+      if (hit) { sigState.mode = 'attack'; sigState.hex = hex; }
+    }
+    if (n.vms) { const want = hit ? n.vms.bad : n.vms.ok; if (n.vms.face.map !== want) { n.vms.face.map = want; n.vms.face.needsUpdate = true; } }
+    const hov = withLabels && S.hover === id;
+    const mHot = maintNow.has(id);
+    const wHot = !hit && (S.waterHot?.has(id) || mHot);
+    const wSeen = !hit && !wHot && !!S.waterSeen?.has(id);
+    if (S.heat && !hit && !wHot) {        // risk heatmap: blue (low) to amber (high), never an attacker colour
+      const k = Math.min(1, n.data.risk / 30);
+      n.halo.material.color.copy(tmpB.setHex(0x8E9DE0).lerp(tmpA.setHex(C.warn), k));
+      n.halo.material.opacity = (.6 + .4 * k) * lit; n.halo.scale.setScalar(1.15 + .35 * k);
+    } else {
+      n.halo.material.color.setHex(hit ? hex : wHot || wSeen ? C.warn : C.white); n.halo.material.opacity = (hit ? .85 : hov || wHot ? .9 : wSeen ? .45 : .3) * lit;
+      if (n.halo.scale.x !== 1) n.halo.scale.setScalar(1);
+    }
+    const cont = sim?.contestedBy?.[id];   // a second attacker also got here
+    n.halo2.visible = !!cont && T >= cont.t;
+    if (n.halo2.visible) n.halo2.material.color.setHex(atkHex(cont.atk));
+    n.lift += ((hov && !reduceMotion ? .45 : 0) - n.lift) * .2; n.group.position.y = n.lift;
+    n.dome.visible = fixedA.has(id);      // the dome means only "protected by a fix applied in this session"
+    const ent = entryAt[id], isEntry = !!ent, open = isEntry && (!sim || T >= ent.start);
+    if (open && beamStart[id] == null) beamStart[id] = now;
+    if (!open) delete beamStart[id];
+    n.entryBeam.visible = open;
+    if (open) {
+      n.entryBeam.material.color.setHex(atkHex(ent.atk));
+      const k = reduceMotion ? 1 : Math.min(1, (now - beamStart[id]) / 550); n.entryBeam.scale.y = Math.max(.001, 1 - Math.pow(1 - k, 3));
+    }
+    n.beamTag.visible = open && multi;
+    if (n.beamTag.visible && n.beamTag.material.map !== letterTex(ent.atk)) { n.beamTag.material.map = letterTex(ent.atk); n.beamTag.material.needsUpdate = true; }
+    if (withLabels) {
+      n.el.classList.toggle('breach', hit);
+      n.el.classList.toggle('selected', S.selected === id);
+      n.el.classList.toggle('hover', hov);
+      const focus = hov || S.selected === id || ctxFor === id;
+      n.el.classList.toggle('quiet', busy && !(hit || isEntry || focus || n.dome.visible || topRisk.has(id) || (wHot || wSeen)));
+      n.el.classList.toggle('anomaly', !!(wHot || wSeen));
+      n.el.classList.toggle('minor', !(hit || isEntry || focus || (wHot || wSeen)));
+      n.el._prio = focus ? 5 : hit ? 4 : (wHot || wSeen) ? 3.5 : isEntry ? 3 : n.dome.visible ? 2 : topRisk.has(id) ? 1 : 0;
+      const tag = multi && (hit || isEntry) ? (hit ? who : ent.atk) : '';
+      if (n.el.dataset.atk !== tag) { n.el.dataset.atk = tag; n.el.style.setProperty('--atk', tag ? ATK_CSS[tag] : ''); }
+      const want = (tag ? tag + ' · ' : '') + (focus ? n.data.name : n.short);
+      if (n.nm.textContent !== want) n.nm.textContent = want;
+      const prot = n.dome.visible ? 'protected' : focus && n.data.monitored ? 'monitored (dataset)' : '';
+      const sm = hit ? fmtT(t) + (n.halo2.visible ? ` · also ${cont.atk}` : '') : mHot ? 'offline for patching' : wSeen ? 'sees water anomaly' : wHot ? 'anomaly, advisory'
+        : isEntry && sim && T < ent.start ? `${ent.atk} comes in at ${fmtT(ent.start)}` : refused[id] && T >= refused[id].start ? `${refused[id].atk} refused: failsafe` : t !== undefined ? `at ${fmtT(t)}` : focus ? (prot || `risk ${n.data.risk.toFixed(0)}`) : (prot || '');
+      if (n.small.textContent !== sm) n.small.textContent = sm;
+    }
+  }
+  paintCitySignals(sigState, now);
+  for (const L of links) {
+    L.wall.visible = L.data.segmented || segL.has(L.data.id);
+    L.fwd.visible = L.bwd.visible = L.pulse.visible = false; L.pulseTag.visible = false;
+    for (const [from, to, mesh, curve] of [[L.data.src, L.data.dst, L.fwd, L.curve], [L.data.dst, L.data.src, L.bwd, L.back]]) {
+      // the first attacker that actually used this link in this direction (each keeps its own history)
+      const a = per.find(x => x.parents[to] === from && x.compromised[from] !== undefined && T >= x.compromised[from]);
+      if (!a) continue;
+      const t0 = a.compromised[from], t1 = a.compromised[to];
+      if (t1 === undefined) continue;
+      if (L.atk !== a.id) { L.atk = a.id; L.hot.color.setHex(atkHex(a.id)); L.pulse.material.color.setHex(atkHex(a.id)).lerp(tmpB.setHex(0xFFFFFF), .55); L.pulseTag.material.map = letterTex(a.id); L.pulseTag.material.needsUpdate = true; }
+      const k = Math.min(1, (T - t0) / Math.max(.01, t1 - t0));
+      const count = mesh.geometry.index.count;
+      mesh.geometry.setDrawRange(0, Math.max(6, Math.floor(count * k / 6) * 6));
+      mesh.visible = true;
+      if (k < 1) { L.pulse.position.copy(curve.getPoint(k)); L.pulse.visible = true; L.pulseTag.visible = multi; }
+    }
+  }
+}
+
+function resize() {
+  const r = stage.getBoundingClientRect();
+  renderer.setSize(r.width, r.height);
+  composer.setSize(r.width, r.height);
+  labelRenderer.setSize(r.width, r.height);
+  if (S.graph) fitCamera();
+  placeSplitChrome();
+}
+new ResizeObserver(resize).observe(stage);
+
+let last = performance.now();
+// labels never overlap: highest priority first (selected, breached, anomaly, entry, protected, riskiest), others hide
+let lastDeclutter = 0;
+function declutter(now) {
+  if (now - lastDeclutter < 140) return;
+  lastDeclutter = now;
+  const list = Object.values(nodes).map(n => n.el).filter(el => !el.classList.contains('quiet'));
+  list.sort((a, b) => (b._prio || 0) - (a._prio || 0));
+  // the on-screen panels count as already placed, so labels never sit on top of text
+  const placed = ['#clock', '#hero', '#rail', '#panel', '.ticker', '#card.open', '#nav', '#simnote', '.navtools', '#tabs']
+    .map(sel => document.querySelector(sel)).filter(el => el && el.offsetParent !== null)
+    .map(el => el.getBoundingClientRect()).filter(r => r.width && r.height);
+  for (const el of list) {
+    el.classList.remove('culled');
+    const r = el.getBoundingClientRect();
+    if (!r.width) continue;
+    const offEdge = r.left < 2 || r.right > innerWidth - 2;          // never a label cut by the screen edge
+    const hitBox = offEdge || placed.some(p => r.left < p.right + 4 && r.right > p.left - 4 && r.top < p.bottom + 2 && r.bottom > p.top - 2);
+    if (hitBox && (el._prio || 0) < 5) el.classList.add('culled'); else placed.push(r);
+  }
+}
+
+function frame(now) {
+  const dt = Math.min(.1, (now - last) / 1000); last = now;
+  tickPerf(now);
+  renderer.info.reset();
+  if (S.playing) {
+    S.T = Math.min(H(), S.T + dt * S.rate);
+    if (S.T >= H()) setPlaying(false);
+    $('#scrub').value = S.T;
+    updateTimeUI();
+  }
+  if (S.T !== prevT) { fireEvents(activeSim(), prevT, S.T); prevT = S.T; }
+  if (tween) {
+    const k = Math.min(1, (now - tween.start) / tween.dur), q = ease(k);
+    camera.position.lerpVectors(tween.fromP, tween.toP, q); controls.target.lerpVectors(tween.fromT, tween.toT, q);
+    if (k >= 1) tween = null;
+  }
+  stepEffects(now);
+  controls.update();
+  stepEnvironment(now, dt);
+  const ins = insets();
+  if (S.split) {
+    const w = (ins.w - ins.left - ins.right) / 2;
+    camera.clearViewOffset(); camera.aspect = w / ins.h; camera.updateProjectionMatrix();
+    renderer.setScissorTest(true);
+    renderer.setViewport(0, 0, ins.w, ins.h); renderer.setScissor(0, 0, ins.w, ins.h); renderer.setClearColor(C.abyss); renderer.clear();
+    paint(S.split.before, S.T, S.split.beforeFixes, S.split.beforeEntries, now, false);
+    renderer.setViewport(ins.left, 0, w, ins.h); renderer.setScissor(ins.left, 0, w, ins.h); renderer.render(scene, camera);
+    paint(S.split.after, S.T, S.split.afterFixes, S.split.afterEntries, now, false);
+    renderer.setViewport(ins.left + w, 0, w, ins.h); renderer.setScissor(ins.left + w, 0, w, ins.h); renderer.render(scene, camera);
+    renderer.setScissorTest(false);
+  } else {
+    camera.aspect = ins.w / ins.h;
+    const shift = (ins.right - ins.left) / 2 + ($('#card').classList.contains('open') && window.innerWidth > 760 ? 16 : 0);
+    if (Math.abs(shift) > 1) camera.setViewOffset(ins.w, ins.h, shift, 0, ins.w, ins.h); else camera.clearViewOffset();
+    camera.updateProjectionMatrix();
+    renderer.setViewport(0, 0, ins.w, ins.h);
+    paint(S.sim, S.T, [...S.applied], S.entries, now, true);
+    composer.render();
+    labelRenderer.render(scene, camera);
+    declutter(now);
+  }
+  requestAnimationFrame(frame);
+}
+
+// click a building to explain it; shift-click to attack from it
+const ray = new THREE.Raycaster(), mouse = new THREE.Vector2();
+let downAt = null;
+function pick(e) {
+  const r = renderer.domElement.getBoundingClientRect();
+  mouse.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(mouse, camera);
+  const hits = ray.intersectObjects(Object.values(nodes).map(n => n.group), true);
+  return hits.find(h => h.object.userData.assetId && h.object.visible && !h.object.material?.wireframe && h.object.material?.blending !== THREE.AdditiveBlending)?.object.userData.assetId ?? null;
+}
+renderer.domElement.addEventListener('pointerdown', e => { downAt = [e.clientX, e.clientY]; tween = null; });
+renderer.domElement.addEventListener('wheel', () => { tween = null; }, { passive: true });
+let hoverQueued = null;
+renderer.domElement.addEventListener('pointermove', e => {
+  if (S.split || e.pointerType === 'touch') return;
+  if (hoverQueued) { hoverQueued = e; return; }
+  hoverQueued = e;
+  requestAnimationFrame(() => { const ev = hoverQueued; hoverQueued = null; S.hover = pick(ev); renderer.domElement.style.cursor = S.hover ? 'pointer' : 'grab'; });
+});
+renderer.domElement.addEventListener('pointerleave', () => { S.hover = null; });
+renderer.domElement.addEventListener('pointerup', e => {
+  if (!downAt || Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 5 || S.split) return;
+  const id = pick(e);
+  if (!id) { closeCtx(); return; }
+  if (e.shiftKey) { closeCtx(); toggleEntry(id); return; }
+  const r = stage.getBoundingClientRect();
+  openCtx(id, e.clientX - r.left, e.clientY - r.top);
+});
+
+// ---------- building menu ----------
+let ctxFor = null;
+function openCtx(id, x, y) {
+  const a = S.graph.assets.find(z => z.id === id), sim = activeSim();
+  const t = sim?.compromised?.[id], attacking = S.entries.includes(id), who = sim?.owner?.[id] ? `Attacker ${sim.owner[id]}` : 'The attacker';
+  const status = t !== undefined && S.T >= t ? `<b>Reached by ${who.toLowerCase().replace('attacker ', 'attacker ')} at ${fmtT(t)}.</b>` : t !== undefined ? `${who} arrives at ${fmtT(t)}.` : `Risk score ${a.risk.toFixed(0)} of 100.`;
+  const atks = S.atk?.attackers ?? (S.entries.length ? [{ id: 'A' }] : []);
+  const nextId = 'ABCD'.split('').find(x => !atks.some(z => z.id === x));
+  const items = [
+    attacking
+      ? `<button role="menuitem" class="attack" data-act="stop">Stop attacking from here<small>Removes this way in</small></button>`
+      : `<button role="menuitem" class="attack" data-act="attack">Attack from here<small>${a.is_entry ? 'Starts a new attack at this building (clears the others)' : 'As if an insider or infected device starts here'}</small></button>`,
+    atks.length && !attacking ? atks.map(z => `<button role="menuitem" class="attack" data-act="more:${z.id}"><span class="atkdot" style="background:${ATK_CSS[z.id]}"></span>Add as another way in for attacker ${z.id}<small>Same attacker, a second place to start from</small></button>`).join('') : '',
+    atks.length && !attacking && nextId ? `<button role="menuitem" class="attack" data-act="new"><span class="atkdot" style="background:${ATK_CSS[nextId]}"></span>Add as a new attacker (${nextId})<small>A different crew, with its own colour</small></button>` : '',
+    atks.length && !attacking ? `<label class="ctxstart">Starts at T+ <input id="ctxStart" type="number" min="0" max="360" step="5" value="${Math.round(S.T / 5) * 5}" aria-label="Start minute for the new way in"> min</label>` : '',
+    `<button role="menuitem" data-act="why">Why is it at risk?<small>Score breakdown, vulnerabilities, services</small></button>`,
+    `<button role="menuitem" data-act="protect">Protect it<small>Applies this building's best fix and re-runs</small></button>`,
+  ].join('');
+  const box = $('#ctx');
+  box.innerHTML = `<h4>${esc(a.name)}</h4><p class="sub">${status}</p>${items}`;
+  box.hidden = false; box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop');
+  const r = stage.getBoundingClientRect(), w = box.offsetWidth, h = box.offsetHeight;
+  box.style.left = `${Math.min(Math.max(8, x + 10), r.width - w - 8)}px`;
+  box.style.top = `${Math.min(Math.max(8, y + 10), r.height - h - 8)}px`;
+  ctxFor = id;
+  box.querySelectorAll('[data-act]').forEach(b => b.onclick = () => ctxAction(b.dataset.act, id, Math.max(0, Math.min(360, +(box.querySelector('#ctxStart')?.value || 0)))));
+  box.querySelector('button')?.focus({ preventScroll: true });
+}
+function closeCtx() { $('#ctx').hidden = true; ctxFor = null; }
+async function ctxAction(act, id, start = 0) {
+  closeCtx();
+  if (act === 'attack') { if (S.tab !== 'replay' && S.tab !== 'respond') document.querySelector('[data-tab="replay"]').click(); setEntries([id]); }
+  if (act === 'stop') removeWayIn(id);
+  if (act.startsWith('more:')) addWayIn(id, act.slice(5), start);
+  if (act === 'new') addAttacker(id, start);
+  if (act === 'why') openCard(id);
+  if (act === 'protect') protectAsset(id);
+}
+async function protectAsset(id) {
+  const d = await api(`/api/asset/${id}`);
+  const ids = d.fixes.map(f => f.id).filter(f => !S.applied.has(f));
+  if (!ids.length) { flashNote(d.fixes.length ? `${d.name} already has every available fix.` : `There is no fix for ${d.name} in this model.`); return; }
+  S.fixes = S.fixes ?? await api('/api/fixes');
+  const score = Object.fromEntries(S.fixes.fixes.map(f => [f.id, f.net_benefit * 1e6 + f.worst_case_reduction_pct]));
+  const best = ids.sort((x, y) => (score[y] ?? 0) - (score[x] ?? 0))[0];
+  toggleFix(best);
+  flashNote(`Applied: ${fixLabel(best)}. The replay has been re-run.`);
+}
+let noteTimer = null;
+function flashNote(text) { showBanner(text); clearTimeout(noteTimer); noteTimer = setTimeout(hideBanner, 2800); }
+document.addEventListener('pointerdown', e => { if (!$('#ctx').hidden && !e.target.closest('#ctx') && !e.target.closest('.label') && e.target !== renderer.domElement) closeCtx(); });
+
+// ======================================================================
+// clock, ticker, rail
+// ======================================================================
+let clockText = '';
+function setClock(text) {
+  if (text === clockText) return; clockText = text;
+  $('#clock').innerHTML = [...text].map(ch => /\d/.test(ch) ? `<span class="d">${ch}</span>` : ch === ':' ? `<span class="sep">:</span>` : ch === '+' ? `<span class="plus">+</span>` : `<span class="tchar">${ch}</span>`).join('');
+  $('#clock').setAttribute('aria-label', `Simulated time ${text}`);
+}
+function setPlaying(on) {
+  if (on && S.T >= H()) S.T = 0;
+  S.playing = on;
+  $('#play').innerHTML = on ? '&#10074;&#10074;' : '&#9654;';
+  $('#play').setAttribute('aria-label', on ? 'Pause' : 'Play');
+}
+$('#play').onclick = () => { if (!activeSim()) { showBanner('Pick an entry point first.'); return; } setPlaying(!S.playing); };
+$('#scrub').oninput = e => { S.T = Number(e.target.value); updateTimeUI(); };
+document.querySelectorAll('.rate button').forEach(b => b.onclick = () => {
+  S.rate = Number(b.dataset.rate);
+  document.querySelectorAll('.rate button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+});
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input, select, textarea')) return;
+  if (e.code === 'Space' && !e.target.closest('button, [role=button]')) { e.preventDefault(); $('#play').click(); }
+  if (e.key === 'Escape' && !$('#present').hidden && $('#ctx').hidden && !$('#card').classList.contains('open')) { endDemo(); return; }
+  if (e.key === 'Escape') { if (!$('#ctx').hidden) { const id = ctxFor; closeCtx(); nodes[id]?.el.focus({ preventScroll: true }); } else closeCard(); }
+});
+$('#menu').onclick = () => { const n = $('#nav'); n.classList.toggle('open'); $('#menu').setAttribute('aria-expanded', String(n.classList.contains('open'))); };
+
+const activeSim = () => S.split ? S.split.after : S.sim;
+
+function updateTimeUI() {
+  const sim = activeSim(), T = S.T;
+  setClock(fmtT(T));
+  const lost = sim ? Object.entries(sim.failures).some(([n, t]) => t <= T && !(sim.restored?.[n] <= T)) : false;
+  $('#clock').classList.toggle('alarm', lost);
+  const heroD = sim || S.split ? 'none' : ''; if ($('#hero').style.display !== heroD) $('#hero').style.display = heroD;
+  const sub = $('#clockSub');
+  let subH = '';
+  if (sim) {
+    const next = Object.entries(sim.failures).filter(([, t]) => t > T).sort((a, b) => a[1] - b[1])[0];
+    subH = next ? `<b>${esc(next[0])}</b> lost in ${fmtMin(next[1] - T)}`
+      : lost ? `<b>${Object.keys(sim.failures).length} service${Object.keys(sim.failures).length > 1 ? 's' : ''} lost.</b> The attack has run its course.`
+      : 'No essential service is lost within 6 hours.';
+  }
+  if (sub._h !== subH) { sub._h = subH; sub.innerHTML = subH; }
+  const ev = (sim?.events ?? []).filter(e => e.t <= T);
+  const lastEv = ev[ev.length - 1];
+  const latest = lastEv ? `<b>${fmtT(lastEv.t)}</b>${lastEv.attacker && ATK_CSS[lastEv.attacker] ? `<span class="atkdot sm" style="background:${ATK_CSS[lastEv.attacker]}">${lastEv.attacker}</span>` : ''}${esc(lastEv.text)}` : sim ? 'Press play or drag the timeline.' : 'No attack running.';
+  if ($('#latest')._h !== latest) { $('#latest')._h = latest; $('#latest').innerHTML = latest; $('#latest').title = lastEv ? `${fmtT(lastEv.t)} ${lastEv.text}` : ''; }
+  renderRail(sim, T);
+  if (S.tab === 'respond') updatePlanStatus();
+}
+
+function serviceStatus(s, sim, T) {
+  const fail = sim?.failures?.[s.name];
+  if (fail === undefined) return { cls: '', state: sim ? 'Not reached in this attack' : 'Running', count: '' };
+  const brokeAt = fail - s.buffer_min;
+  const back = sim.restored?.[s.name];
+  if (back != null && T >= back) return { cls: '', state: `Restored at ${fmtT(back)} (was lost at ${fmtT(fail)})`, count: '' };
+  if (T >= fail) return { cls: 'lost', state: `Lost at ${fmtT(fail)}${back != null ? `, back at ${fmtT(back)}` : ''}`, count: '' };
+  if (T >= brokeAt) return { cls: 'backup', state: 'Running on backup', count: `${fmtMin(fail - T)} left` };
+  return { cls: '', state: `Will fail at ${fmtT(fail)}`, count: fmtMin(fail - T) };
+}
+function sigLegend(sim) {             // only when the dataset has a junction-signal controller
+  const id = Object.keys(nodes).find(k => nodes[k].sig); if (!id) return '';
+  return `<span><i style="background:linear-gradient(#ff4d3a,#ffb020,#3ddc84)"></i>City traffic and street signals are scenery, not data. One link to the data: when ${esc(nodes[id].short)} is reached in the simulation, every signal blinks the attacker's colour (the twin can no longer vouch for them)</span>`;
+}
+function railHTML(sim, T) {
+  const services = S.graph.services.map(s => {
+    if (S.split) {
+      const b = serviceStatus(s, S.split.before, T), a = serviceStatus(s, S.split.after, T);
+      return `<div class="service ${a.cls}"><div class="name">${esc(s.name)}</div><div class="state" style="color:var(--mute)">Before: ${b.state}</div><div class="state" style="color:var(--white)">After: ${a.state}</div></div>`;
+    }
+    const st = serviceStatus(s, sim, T);
+    return `<div class="service ${st.cls}"><div class="name">${esc(s.name)}</div><div class="state">${st.state}. ${s.population.toLocaleString()} people.</div>${st.count ? `<div class="count num">${st.count}</div>` : ''}</div>`;
+  }).join('');
+  let det = 'No attack running', on = false;
+  if (sim) {
+    if (sim.detected_at == null || sim.detected_at > H()) det = 'Not detected within 6 hours';
+    else if (T < sim.detected_at) det = `Undetected. The alarm goes off at ${fmtT(sim.detected_at)}.`;
+    else {
+      const isos = (sim.isolations ?? []).filter(i => i.at <= H());
+      const done = isos.filter(i => i.at <= T), next = isos.find(i => i.at > T);
+      const name = i => i.zone ? `${ZONE_NAMES[i.zone] ?? i.zone} zone` : 'the whole network';
+      det = `Detected at ${fmtT(sim.detected_at)}.` + (done.length ? ` Isolated: ${done.map(name).join(', ')}.` : '') + (next ? ` Next: ${name(next)} at ${fmtT(next.at)}.` : '');
+      on = true;
+    }
+  }
+  let atkBlock = '';
+  if (sim?.multi) {
+    atkBlock = '<h3>Attackers</h3>' + sim.per.map(a => {
+      const first = Math.min(...a.entries.map(e => e.start));
+      const st = a.status === 'blocked by failsafe' ? 'Blocked by the failsafe' : T < first ? `Waiting. Comes in at ${fmtT(first)}`
+        : a.contain_at != null && T >= a.contain_at ? `Contained at ${fmtT(a.contain_at)}${a.contained_by === 'failsafe' ? ' by the failsafe' : ''}`
+        : `Active. ${Object.values(a.compromised).filter(t => t <= T).length} systems so far`;
+      return `<div class="atkline"><span class="atkdot" style="background:${ATK_CSS[a.id]}">${a.id}</span><div><b>${a.entries.map(e => esc(assetName(e.asset)) + (e.start ? ` <span class="m">at ${fmtT(e.start)}</span>` : '')).join(', ')}</b>${a.adapted_from ? `<small class="adapt">adapted from ${esc(assetName(a.adapted_from))}</small>` : ''}<small>${st}</small></div></div>`;
+    }).join('');
+  }
+  const ev = (sim?.events ?? []).filter(e => e.t <= T);
+  const log = ev.length ? ev.slice().reverse().map(e => `<li class="${e.kind}"><span class="when">${fmtT(e.t)}</span><span class="what">${esc(e.text)}</span></li>`).join('')
+    : `<li><span></span><span>${sim ? 'Nothing has happened yet.' : 'Run an attack to see events.'}</span></li>`;
+  return `${atkBlock}<h3>Essential services</h3>${services}
+    <h3>Detection</h3><div class="detect ${on ? 'on' : ''}">${det}</div>
+    <h3>What happened</h3><ul class="log">${log}</ul>
+    <div class="legend"><span><i style="background:#DDE6FF"></i>Lit windows: running</span>${sim?.multi ? sim.per.map(a => `<span><i style="background:${ATK_CSS[a.id]}"></i>Attacker ${a.id}: reached, and its beam and line</span>`).join('') + '<span><i style="border:2px solid #fff;border-radius:50%"></i>Outer ring: a second attacker also got there</span>' : '<span><i style="background:var(--pink)"></i>Pink: reached by the attacker</span><span><i style="background:var(--pink);opacity:.5;width:3px"></i>Pink beam: entry point</span>'}<span><i style="border:1px solid #fff"></i>White dome: protected by a fix you applied</span><span><i style="border:1px dashed #BFE3FF;border-radius:50%"></i>Dashed ground ring: already monitored in the dataset</span>${sigLegend(sim)}${sim?.maintenance?.length ? '<span><i style="background:#F2B84B"></i>Amber: offline for patching</span>' : ''}</div>`;
+}
+let railCache = '';
+function renderRail(sim, T) {
+  const html = railHTML(sim, T);
+  if (html === railCache) return;          // no DOM write unless something visible changed
+  railCache = html;
+  $('#rail').innerHTML = html;
+  const copy = document.querySelector('.dossier .railcopy'); if (copy) copy.innerHTML = html;
+}
+function renderTicks(sim) {
+  $('#ticks').innerHTML = (sim?.events ?? []).filter(e => e.t <= H()).map(e =>
+    `<div class="tick ${e.kind}" style="left:${(e.t / H()) * 100}%${sim?.multi && e.kind === 'compromise' && ATK_CSS[e.attacker] ? `;background:${ATK_CSS[e.attacker]}` : ''}" title="${fmtT(e.t)} ${esc(e.text)}"></div>`).join('');
+}
+function placeSplitChrome() {
+  if (!S.split) return;
+  const ins = insets(), w = (ins.w - ins.left - ins.right) / 2;
+  $('#divider').style.left = `${ins.left + w}px`;
+  $('#capL').style.left = `${ins.left + 16}px`;
+  $('#capR').style.left = `${ins.left + w + 16}px`;
+  $('#capL').style.maxWidth = $('#capR').style.maxWidth = `${w - 32}px`;
+}
+
+// ======================================================================
+// replay
+// ======================================================================
+let simToken = 0;
+// A run needs /api/multi when there is more than one attacker or anything beyond "one attacker, every way in at T+0".
+function needsMulti(atk) {
+  if (!atk) return false;
+  return atk.attackers.length > 1 || (atk.maintenance?.length ?? 0) > 0 || atk.island_at != null || atk.detection === false ||
+    atk.attackers.some(a => (a.speed ?? 1) !== 1 || a.contain_at != null || a.adaptive || a.entries.some(e => e.start > 0));
+}
+// /api/multi answer -> the shape the twin paints (first attacker owns each building; every attacker keeps its history)
+function fromMulti(r) {
+  const compromised = {}, parents = {}, owner = {}, failures = {}, restored = {}, contestedBy = {};
+  for (const [n, v] of Object.entries(r.combined.first_by)) { compromised[n] = v.t; owner[n] = v.attacker; }
+  const byId = Object.fromEntries(r.attackers.map(a => [a.id, a]));
+  for (const n of Object.keys(owner)) parents[n] = byId[owner[n]].parents[n];
+  for (const c of r.combined.contested) {
+    const [atk, t] = Object.entries(c.times).filter(([id]) => id !== c.winner).sort((x, y) => x[1] - y[1])[0];
+    contestedBy[c.asset] = { atk, t, times: c.times };
+  }
+  for (const sv of r.combined.services) { failures[sv.service] = sv.fail_at; if (sv.restored_at != null) restored[sv.service] = sv.restored_at; }
+  const per = r.attackers.map(a => ({ id: a.id, compromised: a.compromised || {}, parents: a.parents || {}, status: a.status,
+    entries: a.entries?.length ? a.entries : [{ asset: a.entry, start: a.start }], contain_at: a.contain_at, contained_by: a.contained_by,
+    adapted_from: a.adapted_from, reached: a.reached, owned: a.owned }));
+  return { multi: true, compromised, parents, owner, per, failures, restored, contestedBy, events: r.events, detected_at: r.detected_at,
+    isolations: r.isolations, harm: r.combined.harm, maintenance: r.maintenance || [], failsafe: r.failsafe, horizon_min: r.horizon_min };
+}
+async function runSim(autoplay = false) {
+  if (!S.entries.length && !(S.atk?.maintenance?.length)) { S.sim = null; renderTicks(null); updateTimeUI(); renderPanel(); return; }
+  const my = ++simToken;
+  let sim;
+  try {
+    if (needsMulti(S.atk)) {
+      const r = await api('/api/multi', { attackers: S.atk.attackers.map(a => ({ id: a.id, entries: a.entries, speed: a.speed ?? 1, contain_at: a.contain_at ?? null, adaptive: !!a.adaptive })),
+        fixes: [...S.applied], maintenance: S.atk.maintenance || [], detection: S.atk.detection !== false, speed: S.speed,
+        island_at: S.atk.island_at ?? null, c2: S.atk.c2 !== false });
+      sim = fromMulti(r);
+    } else sim = await api('/api/simulate', { entry_points: S.entries, speed: S.speed, fixes: [...S.applied] });
+  } catch { return; }                     // api() already shows the reason in the banner
+  if (my !== simToken) return;
+  S.sim = annotateSim(sim); S.plan = null; renderTicks(sim); railCache = ''; updateTimeUI(); renderPanel();
+  if (S.tab === 'respond') loadPlan();
+  if (autoplay) setPlaying(true);
+}
+const entriesFromAtk = atk => [...new Set(atk.attackers.flatMap(a => a.entries.map(e => e.asset)))];
+function setEntries(list, autoplay = true) {          // one attacker (A), every way in at T+0
+  exitSplit();
+  S.atk = null;
+  S.entries = [...new Set(list)];
+  S.T = 0; prevT = 0; $('#scrub').value = 0; setPlaying(false);
+  return runSim(autoplay && S.entries.length > 0);
+}
+// a full scenario: [{id, entries:[{asset,start}] | entry+start, speed, contain_at, adaptive}], maintenance, island_at, detection
+function setScenario(sc, autoplay = true) {
+  exitSplit();
+  if (Array.isArray(sc.fixes)) S.applied = new Set(sc.fixes);
+  const attackers = (sc.attackers || []).filter(a => a.active !== false).map((a, i) => ({ id: a.id || 'ABCD'[i], speed: a.speed ?? 1, contain_at: a.contain_at ?? null, adaptive: !!a.adaptive,
+    entries: (a.entries?.length ? a.entries : [{ asset: a.entry, start: a.start || 0 }]).map(e => ({ asset: e.asset, start: +e.start || 0 })) }));
+  S.atk = { attackers, maintenance: (sc.maintenance || []).map(w => ({ ...w })), island_at: sc.island_at ?? null, c2: sc.c2 !== false, detection: sc.detection !== false, title: sc.title || '' };
+  S.entries = entriesFromAtk(S.atk);
+  if (!needsMulti(S.atk) && attackers.length === 1) S.atk = null;   // plain case: identical to /api/simulate
+  S.T = 0; prevT = 0; $('#scrub').value = 0; setPlaying(false);
+  return runSim(autoplay);
+}
+// called by the platform's "Replay in 3D twin": the exact scenario, fixes included
+function playScenario(request, title) {
+  if (request.speed) S.speed = request.speed;
+  document.querySelector('[data-tab="replay"]')?.click();
+  flashNote(`Replaying: ${title || 'scenario from the platform'}`);
+  return setScenario({ ...request, title });
+}
+const curAtk = () => S.atk ? structuredClone(S.atk) : { attackers: S.entries.length ? [{ id: 'A', speed: 1, contain_at: null, adaptive: false, entries: S.entries.map(a => ({ asset: a, start: 0 })) }] : [], maintenance: [], island_at: null, detection: true };
+function addWayIn(id, atkId = 'A', start = 0) {
+  const sc = curAtk();
+  let a = sc.attackers.find(x => x.id === atkId);
+  if (!a) { a = { id: atkId, speed: 1, contain_at: null, adaptive: false, entries: [] }; sc.attackers.push(a); }
+  if (!a.entries.some(e => e.asset === id)) a.entries.push({ asset: id, start });
+  return setScenario(sc);
+}
+function addAttacker(id, start = 0) {
+  const sc = curAtk();
+  if (sc.attackers.length >= 4) { flashNote('Up to four attackers.'); return; }
+  const nid = 'ABCD'.split('').find(x => !sc.attackers.some(a => a.id === x));
+  sc.attackers.push({ id: nid, speed: 1, contain_at: null, adaptive: false, entries: [{ asset: id, start }] });
+  flashNote(`Attacker ${nid} ${start ? `comes in at ${fmtT(start)}` : 'starts now'} from ${assetName(id)}.`);
+  return setScenario(sc);
+}
+function removeWayIn(id) {
+  if (!S.atk) return setEntries(S.entries.filter(x => x !== id));
+  const sc = curAtk();
+  sc.attackers.forEach(a => a.entries = a.entries.filter(e => e.asset !== id));
+  sc.attackers = sc.attackers.filter(a => a.entries.length);
+  return setScenario(sc);
+}
+function toggleEntry(id) { if (S.entries.includes(id)) removeWayIn(id); else if (S.atk) addWayIn(id, 'A', 0); else setEntries([...S.entries, id]); }
+function toggleFix(id) {
+  exitSplit();
+  S.applied.has(id) ? S.applied.delete(id) : S.applied.add(id);
+  runSim();
+  if (S.selected) openCard(S.selected, true);
+}
+$('#heroRun').onclick = async () => {
+  const btn = $('#heroRun'); btn.disabled = true; btn.textContent = 'Finding the worst entry point…';
+  try {
+    S.overview = S.overview ?? await api('/api/overview');
+    setEntries([S.overview.worst_entry]);
+  } finally { btn.disabled = false; btn.textContent = 'Run the worst-case attack'; }
+};
+
+// ======================================================================
+// dossier views
+// ======================================================================
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+  S.tab = b.dataset.tab;
+  document.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+  $('#nav').classList.remove('open'); $('#menu').setAttribute('aria-expanded', 'false'); closeCtx();
+  if (S.tab !== 'optimize') exitSplit();
+  renderPanel();
+  if (S.tab === 'fixes' && !S.fixes) loadFixes();
+  if (S.tab === 'respond' && !S.plan && S.sim) loadPlan();
+  if (S.tab === 'water' && !S.w) loadWater();
+});
+
+// ---------------- water anomaly monitoring (SENTINEL Model C, historical BATADAL replay) ----------------
+// Advisory only: an anomaly never turns a building pink and never marks a service lost. Amber ring = "look here".
+const WZ = [['zone_T1', 'T1'], ['zone_T2', 'T2'], ['zone_T3', 'T3'], ['zone_T4', 'T4'], ['zone_T5', 'T5'], ['zone_T6', 'T6'], ['zone_T7', 'T7'], ['station_PU9', 'PU9']];
+async function loadWater() {
+  try {
+    const [sum, hrs] = await Promise.all([api('/api/water/summary'), api('/api/water/hourly?start=2016-12-05%2019:00&end=2016-12-10%2016:00')]);
+    if (!sum.available) { S.w = { off: true }; return renderPanel(); }
+    S.w = { sum, H: hrs, i: 0, playing: false, timer: 0 };
+  } catch { S.w = { off: true }; }
+  if (S.tab === 'water') renderPanel();
+}
+function waterHot() {
+  const w = S.w; if (!w?.H) return new Set();
+  const out = new Set();
+  for (const s of w.H.top[w.i] || []) if (s.z >= w.H.threshold) for (const a of s.assets) if (S.graph.assets.find(x => x.id === a)) out.add(a);
+  for (const r of w.H.rules[w.i] || []) { const m = w.sum.mapping.find(x => x.signal_id === r.signal); if (m?.mapped_city_asset_ids) m.mapped_city_asset_ids.split(';').forEach(a => out.add(a)); }
+  return out;
+}
+// the city systems that carry the anomalous signals to operators (SCADA, HMI): they "see" the anomaly, they are not its cause
+function waterSeen() {
+  const w = S.w; if (!w?.H || w.H.level[w.i] === 'normal') return new Set();
+  const out = new Set(), sig = new Set([...(w.H.top[w.i] || []).filter(s => s.z >= w.H.threshold).map(s => s.signal), ...(w.H.rules[w.i] || []).map(r => r.signal)]);
+  for (const m of w.sum.mapping) if (sig.has(m.signal_id) && m.observed_via_city_assets) m.observed_via_city_assets.split(';').forEach(a => { if (S.graph.assets.find(x => x.id === a)) out.add(a); });
+  return out;
+}
+function stopWater() { if (S.w?.timer) { clearInterval(S.w.timer); S.w.timer = 0; S.w.playing = false; } S.waterHot = null; S.waterSeen = null; }
+function waterPanel() {
+  const w = S.w;
+  if (!w) return '<h2>Water anomalies</h2><p class="hint">Loading the historical replay…</p>';
+  if (w.off) return '<h2>Water anomalies</h2><p class="hint">The SENTINEL water package is not installed (ml_water/ folder).</p>';
+  const H = w.H, i = w.i, lv = H.level[i];
+  S.waterHot = waterHot(); S.waterSeen = waterSeen();
+  const zones = new Set((H.top[i] || []).filter(s => s.z >= H.threshold).map(s => s.zone));
+  for (const r of H.rules[i] || []) { const m = w.sum.mapping.find(x => x.signal_id === r.signal); if (m) zones.add(m.hydraulic_zone); }
+  const names = { normal: 'Normal', watch: 'Watch', advisory: 'Advisory', alarm: 'Alarm' };
+  const hot = [...S.waterHot];
+  return `<h2>Water anomalies</h2>
+    <div class="wbanner"><b>Historical replay</b> of BATADAL dataset04 (C-Town simulation, 2016), around documented attack 6. Not live telemetry. Advisory only: nothing here marks a system compromised or a service lost.</div>
+    <div class="wplay"><button class="btn" id="wPlay">${w.playing ? 'Pause' : 'Play'}</button><input type="range" id="wScrub" min="0" max="${H.t.length - 1}" value="${i}" aria-label="Replay hour"></div>
+    <p class="hint" style="margin:0">${esc(H.t[i])}</p>
+    <div class="wlvl ${lv}">${names[lv]}</div>
+    <div class="wgauge"><span style="width:${H.score[i]}%;background:${H.score[i] >= 50 ? '#F2B84B' : '#8E9DE0'}"></span><i></i></div>
+    <p class="wsig">ML score <b>${H.score[i].toFixed(0)}</b> of 100 (alert at 50)${H.alert[i] ? `, alert, ${esc(H.severity[i])} deviation` : ''}. Rules: ${H.rule_alert[i] ? '<b>alert</b>' : (H.rules[i] || []).length ? 'outside normal, 1st hour' : 'normal'}.</p>
+    ${(H.top[i] || []).slice(0, 2).map(s => `<p class="wsig"><b>${esc(s.signal)}</b> ${s.observed} seen, ${s.predicted} expected, ${esc(s.zone.replace('_', ' '))}</p>`).join('')}
+    ${(H.rules[i] || []).slice(0, 2).map(r => `<p class="wsig"><b>${esc(r.rule)}</b> ${esc(r.detail)}</p>`).join('')}
+    <h3>C-Town zones</h3>
+    <div class="wzones">${WZ.map(([id, nm]) => `<div class="${zones.has(id) ? 'hot' : ''}"><b>${nm}</b>${id === 'zone_T1' ? 'WA04, WA01' : 'zone only'}</div>`).join('')}</div>
+    <p class="hint">${hot.length ? `Amber ring in the city: ${hot.map(id => esc(assetName(id))).join(', ')} (mapped to C-Town T1 / PU1-PU2).` : 'No anomaly on a mapped city asset this hour; shown at zone level only.'} ${S.waterSeen?.size ? `Faint amber: ${[...S.waterSeen].map(id => esc(assetName(id))).join(', ')}, the systems that carry these signals to operators (they see the anomaly; nothing says they caused it).` : 'Telemetry path: Water Telecontrol SCADA and HMI.'}</p>
+    ${lv !== 'normal' ? `<p class="hint"><a href="/app#/novel?hour=${encodeURIComponent(H.t[i])}" target="_top" style="color:#fff">What if this is an attacker? Simulate the consequence and the response</a></p>` : ''}
+    <p class="hint"><a href="/app#/water" target="_top" style="color:#fff">Open full water monitoring and operator console</a></p>`;
+}
+function bindWater() {
+  const w = S.w; if (!w?.H) return;
+  const sc = $('#wScrub'), pb = $('#wPlay');
+  if (sc) { sc.oninput = e => { w.i = Number(e.target.value); S.waterHot = waterHot(); S.waterSeen = waterSeen(); }; sc.onchange = () => renderPanel(); }
+  if (pb) pb.onclick = () => {
+    if (w.playing) { clearInterval(w.timer); w.playing = false; renderPanel(); return; }
+    w.playing = true;
+    w.timer = setInterval(() => { if (w.i >= w.H.t.length - 1) { clearInterval(w.timer); w.playing = false; } else w.i++; if (S.tab === 'water') renderPanel(); }, 450);
+    renderPanel();
+  };
+}
+
+function renderPanel() {
+  const p = $('#panel');
+  if (S.tab !== 'water') stopWater();
+  const body = { replay: replayPanel, fixes: fixesPanel, optimize: optimizePanel, respond: respondPanel, water: waterPanel }[S.tab]();
+  p.innerHTML = body + '<div class="railcopy"></div>';
+  bindPanel();
+  renderRail(activeSim(), S.T);
+  if (S.tab === 'respond') updatePlanStatus();
+}
+
+function fixLabel(id) {
+  const [kind, target] = id.split(':');
+  if (kind === 'segment') { const l = S.graph.links.find(x => x.id === Number(target)); return l ? `Segment ${assetName(l.src)} to ${assetName(l.dst)}` : id; }
+  if (kind === 'restrict_exposure') return `Remove internet access to ${assetName(target)}`;
+  return `${{ patch: 'Patch', harden: 'Harden', monitor: 'Monitor' }[kind] ?? kind} ${assetName(target)}`;
+}
+
+const PROFILES = [{ name: 'Opportunistic', speed: .5 }, { name: 'Organised crew', speed: 1 }, { name: 'State-backed', speed: 2 }];
+const sameSet = (a, b) => a.length === b.length && a.every(x => b.includes(x));
+function scenarios() {
+  const A = S.graph.assets, entries = A.filter(a => a.is_entry).sort((a, b) => b.entry_prob - a.entry_prob);
+  const out = [];
+  const worst = S.overview?.worst_entry;
+  if (worst) out.push({ title: `Worst case: through ${assetName(worst)}`, note: 'The single way in that does the most harm', entries: [worst] });
+  let breakIns = 0;
+  for (const a of entries) {
+    if (a.id === worst) continue;
+    const isSupplier = ['vendor_portal', 'cloud'].includes(a.type);
+    if (!isSupplier && ++breakIns > 4) continue;     // keep the list short on big datasets; the rest are below
+    const supplier = ['vendor_portal', 'cloud'].includes(a.type);
+    out.push({ title: supplier ? `Through a supplier: ${a.name}` : `Break in through ${a.name}`, note: `${Math.round(a.entry_prob * 100)}% likely way in`, entries: [a.id] });
+  }
+  if (entries.length >= 2) out.push({ title: `Two at once: ${entries[0].name} and ${entries[1].name}`, note: 'Both entry points hit at the same moment', entries: [entries[0].id, entries[1].id] });
+  const inside = A.filter(a => !a.is_entry).sort((a, b) => b.criticality - a.criticality || b.risk - a.risk)[0];
+  if (inside) out.push({ title: `Inside job at ${inside.name}`, note: 'An insider or infected laptop starts the attack here', entries: [inside.id] });
+  return out;
+}
+function replayPanel() {
+  const entries = S.graph.assets.filter(a => a.is_entry).sort((a, b) => b.entry_prob - a.entry_prob);
+  const extra = S.entries.filter(id => !entries.find(a => a.id === id));
+  const sim = S.sim;
+  const firstLost = sim ? Object.values(sim.failures) : [];
+  return `
+    <h2>Attack replay</h2>
+    <p class="hint">Pick an attack below, or click any building in the city to attack from it, protect it, or see why it is at risk.</p>
+    ${S.atk ? `<div class="scnbox"><b>${esc(S.atk.title || 'Multi-attacker scenario')}</b><span>${S.atk.attackers.map(a => `<span class="atkdot sm" style="background:${ATK_CSS[a.id]}">${a.id}</span>`).join('')}${S.atk.attackers.length} attacker${S.atk.attackers.length > 1 ? 's' : ''}${S.atk.maintenance?.length ? ', maintenance window' : ''}${S.atk.island_at != null ? `, failsafe at ${fmtT(S.atk.island_at)}` : ''}</span><button class="linkbtn" id="scnClear">Back to a single attacker</button></div>` : ''}
+    <h3>Try an attack</h3>
+    <div class="scenarios">${scenarios().map((sc, i) => `<button class="scenario" data-scn="${i}" aria-pressed="${sameSet(sc.entries, S.entries)}">${esc(sc.title)}<small>${esc(sc.note)}</small></button>`).join('')}</div>
+    <h3>Type of attacker</h3>
+    <div class="chips">${PROFILES.map(pr => `<button class="chip" data-speed="${pr.speed}" aria-pressed="${S.speed === pr.speed}">${pr.name}<small>${pr.speed}x</small></button>`).join('')}</div>
+    <p class="hint">Each type only changes how fast the attacker moves in the model.</p>
+    <h3>Or pick entry points yourself</h3>
+    <div class="chips">${entries.map(a => `<button class="chip" data-entry="${a.id}" aria-pressed="${S.entries.includes(a.id)}">${esc(a.name)}<small>${Math.round(a.entry_prob * 100)}% likely</small></button>`).join('')}
+      ${extra.map(id => `<button class="chip" data-entry="${id}" aria-pressed="true">${esc(assetName(id))}</button>`).join('')}</div>
+    <div class="field" style="margin-top:var(--s4)"><label for="speed">Fine-tune speed, times our estimate <b>${S.speed.toFixed(1)}x</b></label>
+      <input class="plain" type="range" id="speed" min="0.5" max="3" step="0.5" value="${S.speed}"></div>
+    <p class="hint">Spread times are modelling assumptions. Move this to see how much the outcome depends on them.</p>
+    ${sim ? `<h3>This attack</h3>
+      <dl class="figures">
+        <div><dt>Harm in 6 hours</dt><dd class="${sim.harm ? 'bad' : ''}">${fmtHarm(sim.harm)}</dd></div>
+        <div><dt>First service lost</dt><dd>${firstLost.length ? fmtT(Math.min(...firstLost)) : 'None'}</dd></div>
+        <div><dt>Assets reached</dt><dd>${Object.keys(sim.compromised).length}<span style="font-size:18px;color:var(--mute)"> of ${S.graph.assets.length}</span></dd></div>
+        <div><dt>Detected</dt><dd>${sim.detected_at != null && sim.detected_at <= H() ? fmtT(sim.detected_at) : 'No'}</dd></div>
+      </dl>
+      <p class="hint">Harm is counted in people-minutes: people affected times minutes without the service.</p>` : ''}
+    <h3>Applied fixes</h3>
+    ${S.applied.size ? `<div class="chips">${[...S.applied].map(f => `<button class="chip" data-unfix="${f}" title="Remove this fix">${esc(fixLabel(f))}<small>remove</small></button>`).join('')}</div>`
+      : '<p class="hint">None yet. Apply fixes from Fix ranking or the Optimizer and this replay updates.</p>'}`;
+}
+
+async function loadFixes() {
+  $('#panel').innerHTML = '<h2>Which fix first</h2><p class="hint">Testing every fix against every way in…</p>';
+  S.fixes = await api('/api/fixes');
+  if (S.tab === 'fixes') renderPanel();
+}
+
+let fixSort = 'net_benefit', fixKind = 'all';
+function fixesPanel() {
+  if (!S.fixes) return '<h2>Which fix first</h2><p class="hint">Loading…</p>';
+  const b = S.fixes.base;
+  const kinds = ['all', ...new Set(S.fixes.fixes.map(f => f.type))];
+  const kindName = { all: 'All', patch: 'Patch', harden: 'Harden', monitor: 'Monitor', segment: 'Segment', restrict_exposure: 'Remove exposure' };
+  const rows = S.fixes.fixes.slice().filter(f => fixKind === 'all' || f.type === fixKind)
+    .sort((x, y) => (y[fixSort] - x[fixSort]) || (y.minutes_bought - x.minutes_bought));
+  return `
+    <h2>Which fix first</h2>
+    <p class="hint">Every fix is tested against every way in. Likely harm adds up every way in, weighted by how likely each is, so it can be larger than the single worst attack. Worst case is what one determined attacker would do.</p>
+    <dl class="figures">
+      <div><dt>Likely harm, all ways in</dt><dd class="bad">${fmtHarm(b.expected_harm)}</dd></div>
+      <div><dt>Worst case now</dt><dd class="bad">${fmtHarm(b.worst_harm)}</dd></div>
+      <div><dt>First service lost</dt><dd>${firstFail(b.first_failure_min)}</dd></div>
+      <div><dt>Worst entry point</dt><dd class="small">${esc(assetName(b.worst_entry))}</dd></div>
+    </dl>
+    <div class="field"><label for="fixSort">Sort by</label>
+      <select id="fixSort">
+        <option value="net_benefit" ${fixSort === 'net_benefit' ? 'selected' : ''}>Net benefit, after patch downtime</option>
+        <option value="worst_case_reduction_pct" ${fixSort === 'worst_case_reduction_pct' ? 'selected' : ''}>Worst-case reduction</option>
+        <option value="minutes_bought" ${fixSort === 'minutes_bought' ? 'selected' : ''}>Minutes bought</option>
+      </select></div>
+    <div class="filters" role="group" aria-label="Show fix type">${kinds.map(k => `<button class="chip" data-kind="${k}" aria-pressed="${fixKind === k}">${kindName[k] ?? k}</button>`).join('')}</div>
+    ${rows.map((f, i) => `
+      <div class="fix ${i === 0 ? 'first' : ''}">
+        <div class="rank">${i + 1}</div><div>
+        <div class="head"><input type="checkbox" id="fx-${f.id}" data-fix="${f.id}" ${S.applied.has(f.id) ? 'checked' : ''}><label for="fx-${f.id}">${esc(f.fix)}</label><span class="kind">${f.type}</span></div>
+        <div class="bars">
+          <span>Likely harm</span><div class="bar"><span style="width:${Math.max(0, f.risk_reduction_pct)}%"></span></div><span class="v">−${f.risk_reduction_pct}%</span>
+          <span>Worst case</span><div class="bar worst"><span style="width:${Math.max(0, f.worst_case_reduction_pct)}%"></span></div><span class="v">−${f.worst_case_reduction_pct}%</span>
+        </div>
+        <div class="meta">${f.minutes_bought > 0 ? `Buys ${fmtMin(f.minutes_bought)} before the first service fails. ` : ''}${f.staff_hours} staff hours${f.needs_window ? ', needs a maintenance window' : ''}.</div>
+        ${f.note ? `<div class="note">${esc(f.note)}</div>` : ''}
+      </div></div>`).join('')}
+    ${sensitivityBlock()}`;
+}
+
+function sensitivityBlock() {
+  const s = S.sens;
+  if (!s) return `
+    <h3>Can you trust this order?</h3>
+    <p class="hint">Every timing and weight in the model is an estimate. This test moves each one ${30}% down and up and checks whether the order holds.</p>
+    <button class="btn" id="sensRun">Test the assumptions</button>`;
+  const changed = s.runs.filter(r => !r.same_top1);
+  return `
+    <h3>Can you trust this order?</h3>
+    <div class="stability num">${s.top1_stable} of ${s.total}<small>tests keep ${esc(s.base_top3[0])} first</small></div>
+    <p class="hint">The same top three in ${s.top3_stable} of ${s.total} tests. Each test moves one estimate ${s.change_pct}% down or up.${changed.length ? ' The order depends most on the estimates marked below.' : ' No single estimate changes the first choice.'}</p>
+    ${s.runs.map(r => `<div class="run ${r.same_top1 ? '' : 'changed'}"><span class="what">${esc(r.label)}</span><span class="change">${r.change_pct > 0 ? '+' : '−'}${Math.abs(r.change_pct)}%</span>
+      <span class="result">${r.same_top1 ? 'Same first fix' : `First fix becomes ${esc(r.top3[0])}`}</span></div>`).join('')}`;
+}
+
+// ---------- response plan ----------
+async function loadPlan() {
+  if (!S.sim) return;
+  const my = simToken;
+  const plan = await api('/api/containment', { entry_points: S.entries, speed: S.speed, fixes: [...S.applied] });
+  if (my !== simToken) return;
+  S.plan = plan;
+  if (S.tab === 'respond') renderPanel();
+}
+
+function respondPanel() {
+  if (!S.sim) return `
+    <h2>Response plan</h2>
+    <p class="hint">Start an attack first. The plan lists what to do and by when, worked out from when the attacker reaches each system.</p>
+    <button class="btn primary" id="planStart">Run the worst-case attack</button>`;
+  if (!S.plan) return '<h2>Response plan</h2><p class="hint">Working out the deadlines…</p>';
+  const p = S.plan, n = p.items.length;
+  const det = p.detected_at != null && p.detected_at <= H();
+  const entry = S.entries[0];
+  const monitorFix = entry && !S.applied.has(`monitor:${entry}`) && !S.graph.assets.find(a => a.id === entry)?.monitored ? `monitor:${entry}` : null;
+  return `
+    <h2>Response plan</h2>
+    <p class="hint">Do these in order. Each deadline is the last moment the action still stops the attacker or saves the service.</p>
+    <div class="callout ${p.deadlines_before_detection ? 'bad' : ''}">
+      <b class="num">${p.deadlines_before_detection} of ${n}</b>
+      deadlines pass before anyone would notice the attack${det ? `, at ${fmtT(p.detected_at)}` : ''}.
+    </div>
+    ${p.deadlines_before_detection && monitorFix ? `<p class="hint">Monitoring the entry point raises the alarm minutes after the attacker gets in.</p>
+      <div class="row" style="margin-bottom:var(--s3)"><button class="btn primary" data-fix-btn="${monitorFix}">Monitor ${esc(assetName(entry))} and recalculate</button></div>` : ''}
+    <ol class="steps">${p.items.map((it, i) => `
+      <li class="step ${it.kind === 'asset' ? '' : 'svc'}" data-step="${i}">
+        <div class="by num">${it.deadline <= 0 ? 'Now' : fmtT(it.deadline)}<small>${it.duration_min ? `takes ${it.duration_min} min` : 'deadline'}</small></div>
+        <div class="act">${esc(it.action)}</div>
+        <div class="reason">${esc(it.why)}</div>
+        <div class="status"><span class="left"></span>${it.before_detection ? '<span class="tag kev">Before you would notice</span>' : ''}</div>
+      </li>`).join('')}</ol>`;
+}
+
+function updatePlanStatus() {
+  if (!S.plan) return;
+  document.querySelectorAll('.step').forEach(el => {
+    const it = S.plan.items[Number(el.dataset.step)];
+    const missed = S.T > it.deadline;
+    el.classList.toggle('missed', missed);
+    const txt = missed ? `Missed by ${fmtMin(S.T - it.deadline)}` : it.deadline <= S.T + 0.5 ? 'Due now' : `Due in ${fmtMin(it.deadline - S.T)}`;
+    const left = el.querySelector('.left'); if (left.textContent !== txt) left.textContent = txt;   // write only on change
+  });
+}
+
+function optimizePanel() {
+  const o = S.opt;
+  const form = `
+    <h2>Best fixes for your budget</h2>
+    <p class="hint">Set what you can afford. The optimizer tries every combination and assumes the attacker switches to the best way in that is left.</p>
+    <div class="grid2">
+      <div class="field"><label for="oFixes">Fixes</label><input type="number" id="oFixes" min="1" max="4" value="${o?.budget.max_fixes ?? 3}"></div>
+      <div class="field"><label for="oWin">Maintenance windows</label><input type="number" id="oWin" min="0" max="5" value="${o?.budget.windows ?? 2}"></div>
+      <div class="field"><label for="oStaff">Staff hours</label><input type="number" id="oStaff" min="1" max="100" placeholder="No limit" value="${o?.budget.staff_budget ?? ''}"></div>
+      <div class="field"><label for="oSim">Attack</label><select id="oSim">
+        <option value="1" ${(o?.budget.simultaneous ?? 1) == 1 ? 'selected' : ''}>One entry point</option>
+        <option value="2" ${(o?.budget.simultaneous ?? 1) == 2 ? 'selected' : ''}>Two at once</option></select></div>
+    </div>
+    <button class="btn primary" id="oRun">Find the best fixes</button>`;
+  if (!o) return form;
+  const pct = (a, b) => a ? Math.round(100 * (a - b) / a) : 0;
+  const bef = o.before, aft = o.best, names = ids => ids.map(assetName).join(' and ') || 'none';
+  const moved = names(bef.attacker_entry) !== names(aft.attacker_entry);
+  return form + `
+    <h3>Recommended fixes</h3>
+    ${aft.labels.length ? `<ol class="bundle">${aft.labels.map(l => `<li>${esc(l)}</li>`).join('')}</ol>` : '<p class="hint">No fix within this budget improves the outcome.</p>'}
+    <dl class="figures">
+      <div><dt>Worst case</dt><dd>−${pct(bef.worst_harm, aft.worst_harm)}%</dd></div>
+      <div><dt>Likely harm</dt><dd>−${pct(bef.expected_harm, aft.expected_harm)}%</dd></div>
+      <div><dt>First service lost</dt><dd>${firstFail(aft.earliest_failure_min)}</dd></div>
+      <div><dt>Cost</dt><dd class="small">${aft.staff_hours} h, ${aft.windows_used} window${aft.windows_used === 1 ? '' : 's'}</dd></div>
+    </dl>
+    <div class="moved">Before, the worst attack came through <b>${esc(names(bef.attacker_entry))}</b> and the first service fell at ${firstFail(bef.earliest_failure_min)}.
+      ${moved ? `After these fixes, the attacker's best option moves to <b>${esc(names(aft.attacker_entry))}</b>.` : `After these fixes, it is still the attacker's best option.`}</div>
+    <div class="row"><button class="btn primary" id="oCompare">Compare before and after</button><button class="btn" id="oApply">Apply to the replay</button></div>
+    ${o.runners_up.length ? `<h3>Close alternatives</h3>${o.runners_up.slice(0, 4).map(r => `<div class="runner">${esc(r.labels.join(', ') || 'Do nothing')}: worst case ${fmtHarm(r.worst_harm)}, ${r.staff_hours} h</div>`).join('')}` : ''}`;
+}
+
+function bindPanel() {
+  if (S.tab === 'water') bindWater();
+  document.querySelectorAll('[data-entry]').forEach(b => b.onclick = () => toggleEntry(b.dataset.entry));
+  document.querySelectorAll('[data-scn]').forEach(b => b.onclick = () => setEntries(scenarios()[Number(b.dataset.scn)].entries));
+  $('#scnClear')?.addEventListener('click', () => setEntries(S.entries.slice(0, 1)));
+  document.querySelectorAll('[data-speed]').forEach(b => b.onclick = () => { S.speed = Number(b.dataset.speed); if (S.entries.length) { S.T = 0; runSim(true); } else renderPanel(); });
+  document.querySelectorAll('[data-unfix]').forEach(b => b.onclick = () => toggleFix(b.dataset.unfix));
+  document.querySelectorAll('[data-fix]').forEach(c => c.onchange = () => toggleFix(c.dataset.fix));
+  const sp = $('#speed'); if (sp) sp.oninput = e => { S.speed = Number(e.target.value); sp.previousElementSibling.querySelector('b').textContent = `${S.speed.toFixed(1)}x`; clearTimeout(sp._t); sp._t = setTimeout(() => runSim(), 160); };
+  const fs = $('#fixSort'); if (fs) fs.onchange = e => { fixSort = e.target.value; renderPanel(); };
+  document.querySelectorAll('[data-kind]').forEach(b => b.onclick = () => { fixKind = b.dataset.kind; renderPanel(); });
+  const sr = $('#sensRun');
+  if (sr) sr.onclick = async () => {
+    sr.disabled = true; sr.textContent = 'Re-ranking every fix 18 times…';
+    try { S.sens = await api('/api/sensitivity'); } finally { renderPanel(); }
+  };
+  const ps = $('#planStart'); if (ps) ps.onclick = () => $('#heroRun').click();
+  document.querySelectorAll('[data-fix-btn]').forEach(b => b.onclick = () => toggleFix(b.dataset.fixBtn));
+  const run = $('#oRun');
+  if (run) run.onclick = async () => {
+    run.disabled = true; run.textContent = 'Trying every combination…';
+    const staff = $('#oStaff').value;
+    try {
+      S.opt = await api('/api/optimize', { max_fixes: Number($('#oFixes').value), windows: Number($('#oWin').value),
+        staff_budget: staff ? Number(staff) : null, simultaneous: Number($('#oSim').value), speed: S.speed });
+    } finally { renderPanel(); }
+  };
+  const cmp = $('#oCompare'); if (cmp) cmp.onclick = compareSplit;
+  const ap = $('#oApply'); if (ap) ap.onclick = () => {
+    exitSplit(); S.applied = new Set(S.opt.best.fixes);
+    S.atk = null; S.entries = [...S.opt.before.attacker_entry]; S.T = 0; $('#scrub').value = 0;
+    document.querySelector('[data-tab="replay"]').click(); runSim(true);
+  };
+}
+
+async function compareSplit() {
+  const o = S.opt;
+  const [before, after] = await Promise.all([
+    api('/api/simulate', { entry_points: o.before.attacker_entry, speed: S.speed, fixes: [] }),
+    api('/api/simulate', { entry_points: o.best.attacker_entry, speed: S.speed, fixes: o.best.fixes }),
+  ]);
+  S.split = { before, after, beforeFixes: [], afterFixes: o.best.fixes, beforeEntries: o.before.attacker_entry, afterEntries: o.best.attacker_entry };
+  $('#capL').textContent = `Before. Attack through ${o.before.attacker_entry.map(assetName).join(' and ')}.`;
+  $('#capR').textContent = `After the fixes. The attacker's best option: ${o.best.attacker_entry.map(assetName).join(' and ')}.`;
+  stage.classList.add('split'); $('#labels').style.display = 'none'; closeCard();
+  fitCamera(); placeSplitChrome();
+  renderTicks(before); S.T = 0; $('#scrub').value = 0; updateTimeUI(); setPlaying(true);
+}
+function exitSplit() {
+  if (!S.split) return;
+  S.split = null; stage.classList.remove('split'); $('#labels').style.display = '';
+  fitCamera(); renderTicks(S.sim); updateTimeUI();
+}
+
+// ======================================================================
+// asset card
+// ======================================================================
+async function openCard(id, quiet) {
+  S.selected = id;
+  if (!quiet) focusAsset(id);
+  const d = await api(`/api/asset/${id}`);
+  const bar = (label, v) => `<span>${label}</span><div class="bar worst"><span style="width:${Math.round(v * 100)}%"></span></div><span class="v">${v.toFixed(2)}</span>`;
+  const t = S.sim?.compromised?.[id];
+  $('#card').innerHTML = `
+    <button class="btn close" id="cClose">Close</button>
+    <h2>${esc(d.name)}</h2>
+    <div class="sw">${esc(d.software)} ${esc(d.version)}. ${esc(d.zone)} zone. Criticality ${d.criticality} of 5.</div>
+    <div class="score num">${d.score.risk.toFixed(0)}<small>asset risk score, out of 100</small></div>
+    ${t !== undefined ? `<p class="falls">In this replay it falls at ${fmtT(t)}.</p>` : ''}
+    <div class="why">${esc(d.summary)}</div>
+    <div class="bars">${bar('Vulnerability', d.score.V)}${bar('Likelihood', d.score.L)}${bar('Impact', d.score.impact)}${bar('Consequence', d.score.consequence)}</div>
+    <h3>Known vulnerabilities</h3>
+    ${d.cves.length ? d.cves.map(c => `<div class="cve"><span class="id">${esc(c.id)}</span>${c.kev ? '<span class="tag kev">Known exploited</span>' : ''}${c.ics ? '<span class="tag">Industrial</span>' : ''}
+      <div style="color:var(--mute);margin-top:3px">CVSS ${c.cvss}. ${Math.round(c.exploit_prob * 100)}% chance of exploitation.${c.patch_available ? ' Patch available.' : ' No patch yet.'}</div></div>`).join('') : '<p class="hint">None recorded.</p>'}
+    ${d.config_flags.length ? `<h3>Weak configuration</h3><p class="hint">${d.config_flags.map(f => esc(f.replace(/_/g, ' '))).join(', ')}</p>` : ''}
+    <h3>Services it supports</h3>
+    <p class="hint">${d.breaks_alone.length ? `Losing it alone takes down ${esc(d.breaks_alone.join(', '))}.` : d.part_of.length ? `Part of ${esc(d.part_of.join(', '))}, with a backup.` : 'No essential service depends on it directly.'}</p>
+    <h3>Patching</h3>
+    <p class="hint">${d.patchable_without_downtime ? 'Can be patched while it runs.' : `Needs ${d.downtime_hours_to_patch} hours offline to patch.${d.patch_outage_harm > 0 ? ` That outage alone costs ${fmtHarm(d.patch_outage_harm)} people-minutes, so use a maintenance window or segment it instead.` : ' Its services have backup cover during that time.'}`}</p>
+    ${d.fixes.length ? `<h3>Fixes for this asset</h3><div class="row">${d.fixes.map(f => `<button class="btn ${S.applied.has(f.id) ? 'primary' : ''}" data-cfix="${f.id}">${S.applied.has(f.id) ? 'Remove: ' : ''}${esc(f.label)}</button>`).join('')}</div>` : ''}
+    <div class="row" style="margin-top:var(--s4)"><button class="btn" id="cEntry">${S.entries.includes(id) ? 'Stop attacking from here' : 'Attack from here'}</button></div>`;
+  $('#card').classList.add('open');
+  $('#cClose').onclick = closeCard;
+  $('#cEntry').onclick = () => { toggleEntry(id); openCard(id, true); };
+  document.querySelectorAll('[data-cfix]').forEach(b => b.onclick = () => toggleFix(b.dataset.cfix));
+  if (!quiet) $('#cClose').focus({ preventScroll: true });
+}
+function closeCard() { const was = $('#card').classList.contains('open'); S.selected = null; $('#card').classList.remove('open'); if (was && !S.split) fitCamera(true); }
+
+// ======================================================================
+// performance meter and graphics quality
+// ======================================================================
+const QUALITY = {
+  high: { ratio: Math.min(window.devicePixelRatio, 2), shadows: true, bloom: true },
+  balanced: { ratio: 1, shadows: false, bloom: true },
+  low: { ratio: 1, shadows: false, bloom: false },
+};
+let quality = 'high';
+try { quality = localStorage.getItem('cascade.quality') || 'high'; } catch { }
+if (!QUALITY[quality]) quality = 'high';
+function setQuality(q) {
+  quality = q; const Q = QUALITY[q];
+  renderer.setPixelRatio(Q.ratio); composer.setPixelRatio(Q.ratio);
+  renderer.shadowMap.enabled = Q.shadows; moon.castShadow = Q.shadows;
+  bloom.enabled = Q.bloom;
+  scene.traverse(o => { const ms = Array.isArray(o.material) ? o.material : o.material ? [o.material] : []; ms.forEach(m => { m.needsUpdate = true; }); });
+  try { localStorage.setItem('cascade.quality', q); } catch { }
+  document.querySelectorAll('[data-q]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.q === q)));
+  resize();
+}
+document.querySelectorAll('[data-q]').forEach(b => b.onclick = () => setQuality(b.dataset.q));
+const perfStats = { frames: 0, since: performance.now(), worst: 0, last: performance.now() };
+function tickPerf(now) {
+  const dt = now - perfStats.last; perfStats.last = now;
+  perfStats.frames++; perfStats.worst = Math.max(perfStats.worst, dt);
+  if (now - perfStats.since < 500) return;
+  const fps = perfStats.frames * 1000 / (now - perfStats.since);
+  if (!$('#perf').hidden) {
+    $('#fps').innerHTML = `${Math.round(fps)}<small>fps</small>`;
+    const info = renderer.info.render;
+    $('#fpsDetail').innerHTML = `${(1000 / fps).toFixed(1)} ms per frame, slowest ${perfStats.worst.toFixed(0)} ms<br>${info.calls} draw calls, ${(info.triangles / 1000).toFixed(0)}k triangles<br>${S.graph?.assets.length ?? 0} buildings`;
+  }
+  window.cascadeFps = fps;
+  perfStats.frames = 0; perfStats.since = now; perfStats.worst = 0;
+}
+function toggleHeat() { S.heat = !S.heat; $('#heatBtn').setAttribute('aria-pressed', String(S.heat)); }
+$('#heatBtn').onclick = toggleHeat;
+document.addEventListener('keydown', e => { if (!e.target.matches('input, select, textarea') && (e.key === 'h' || e.key === 'H')) toggleHeat(); });
+function togglePerf() { const p = $('#perf'); p.hidden = !p.hidden; $('#perfBtn').setAttribute('aria-pressed', String(!p.hidden)); }
+$('#perfBtn').onclick = togglePerf;
+
+// ======================================================================
+// presenter mode: a guided demo that uses live numbers
+// ======================================================================
+const tab = name => document.querySelector(`[data-tab="${name}"]`).click();
+const firstLostOf = sim => { const f = Object.entries(sim?.failures ?? {}).sort((a, b) => a[1] - b[1])[0]; return f ? { name: f[0], t: f[1] } : null; };
+const DEMO = [
+  { title: 'A district that runs on software', async run() {
+      S.applied.clear(); S.opt = null; S.plan = null; closeCard(); closeCtx(); tab('replay');
+      await setEntries([], false); fitCamera(true);
+      const names = S.graph.services.map(s => s.name), list = names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names.at(-1)}` : names[0];
+      return `${S.graph.assets.length} systems keep these services running: ${list}. Lit windows mean a system is working. Pink will mean the attacker got there.`;
+  } },
+  { title: 'The worst attack we could find', async run() {
+      tab('replay'); S.rate = 6;
+      await setEntries([S.overview.worst_entry]);
+      const f = firstLostOf(S.sim);
+      return `The attacker gets in through ${assetName(S.overview.worst_entry)}. ${f ? `${f.name} is lost at ${fmtT(f.t)}.` : 'No service is lost within 6 hours.'} Static scores cannot tell you that.`;
+  } },
+  { title: 'How fast you would have to act', async run() {
+      tab('respond'); await loadPlan(); const p = S.plan;
+      return `${p.deadlines_before_detection} of ${p.items.length} deadlines pass before anyone would notice the attack${p.detected_at != null ? `, at ${fmtT(p.detected_at)}` : ''}. The plan lists each action and its last useful minute.`;
+  } },
+  { title: 'One change you could make today', async run() {
+      const before = S.plan?.deadlines_before_detection ?? 0, entry = S.entries[0];
+      const fix = `monitor:${entry}`;
+      if (!S.applied.has(fix) && !S.graph.assets.find(a => a.id === entry)?.monitored) { S.applied.add(fix); await runSim(true); }
+      await loadPlan();
+      return `Monitoring ${assetName(entry)} raises the alarm at ${fmtT(S.plan.detected_at)}. Deadlines that pass before anyone notices drop from ${before} to ${S.plan.deadlines_before_detection}.`;
+  } },
+  { title: 'The best fixes for a real budget', async run() {
+      S.applied.clear(); tab('optimize');
+      S.opt = await api('/api/optimize', { max_fixes: 3, windows: 2, staff_budget: null, simultaneous: 1, speed: S.speed });
+      renderPanel(); await compareSplit();
+      const pct = Math.round(100 * (S.opt.before.worst_harm - S.opt.best.worst_harm) / Math.max(1, S.opt.before.worst_harm));
+      const from = S.opt.before.attacker_entry.map(assetName).join(' and '), to = S.opt.best.attacker_entry.map(assetName).join(' and ');
+      return from === to
+        ? `Three fixes, two maintenance windows: worst-case harm falls ${pct}%. ${from} is still the attacker's best way in, but it now does far less damage. The optimizer assumed the attacker would re-plan.`
+        : `Three fixes, two maintenance windows: worst-case harm falls ${pct}%. The attacker re-plans, so its best way in moves from ${from} to ${to}, and the plan already accounts for that.`;
+  } },
+  { title: 'Can you trust the order?', async run() {
+      exitSplit(); tab('fixes'); S.fixes = S.fixes ?? await api('/api/fixes'); S.sens = S.sens ?? await api('/api/sensitivity'); renderPanel();
+      document.querySelector('.stability')?.scrollIntoView({ block: 'center' });
+      return `Every estimate in the model was moved 30% down and up. The first fix stays first in ${S.sens.top1_stable} of ${S.sens.total} tests. Where it changes, the panel shows which estimate it depends on.`;
+  } },
+];
+let step = -1, stepBusy = false;
+async function goStep(i) {
+  if (stepBusy || i < 0 || i >= DEMO.length) return;
+  stepBusy = true; step = i;
+  $('#pCount').textContent = `Step ${i + 1} of ${DEMO.length}`; $('#pTitle').textContent = DEMO[i].title; $('#pText').textContent = 'Working…';
+  $('#pNext').disabled = $('#pBack').disabled = true;
+  try { $('#pText').textContent = await DEMO[i].run(); }
+  catch (e) { $('#pText').textContent = `This step could not run: ${e.message}`; }
+  finally {
+    stepBusy = false; $('#pBack').disabled = i === 0; $('#pNext').disabled = false;
+    $('#pNext').textContent = i === DEMO.length - 1 ? 'Finish' : 'Next';
+  }
+}
+function startDemo() { document.body.classList.add('presenting'); $('#present').hidden = false; $('#demoBtn').setAttribute('aria-pressed', 'true'); goStep(0); }
+function endDemo() { document.body.classList.remove('presenting'); $('#present').hidden = true; $('#demoBtn').setAttribute('aria-pressed', 'false'); step = -1; exitSplit(); }
+$('#demoBtn').onclick = () => $('#present').hidden ? startDemo() : endDemo();
+$('#pNext').onclick = () => step === DEMO.length - 1 ? endDemo() : goStep(step + 1);
+$('#pBack').onclick = () => goStep(step - 1);
+$('#pExit').onclick = endDemo;
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input, select, textarea')) return;
+  if (e.key === 'p' || e.key === 'P') togglePerf();
+  if ($('#present').hidden) return;
+  if (e.key === 'ArrowRight') $('#pNext').click();
+  if (e.key === 'ArrowLeft') $('#pBack').click();
+});
+
+// debugging and tests: cascade.S, cascade.openCard('A02')
+const waterView = () => document.querySelector('[data-tab="water"]').click();
+window.cascade = { S, env, SIG, sigPhase, controls, waterView, openCard, toggleEntry, toggleFix, setEntries, setScenario, playScenario, addAttacker, addWayIn, removeWayIn, fromMulti, openCtx, scenarios, nodes, effects, setQuality, goStep, camera, sceneFit, fitCamera, insets };
+
+// ======================================================================
+// boot
+// ======================================================================
+(async function boot() {
+  setClock('T+00:00');
+  try { [S.graph, S.overview] = await Promise.all([api('/api/graph'), api('/api/overview')]); } catch { return; }
+  $('#scrub').max = H();
+  await document.fonts.ready.catch(() => {});
+  busy = S.graph.assets.length > 14;
+  topRisk = new Set(S.graph.assets.slice().sort((a, b) => b.risk - a.risk).slice(0, 5).map(a => a.id));
+  api('/api/dataset').then(d => { const n = $('#simnote'); n.textContent = `Simulated, ${d.assets} systems`; n.title = `Simulated district of ${d.assets} systems (${d.folder}). All infrastructure data is modelled; CVEs, KEV and EPSS are real.`; }).catch(() => {});
+  buildScene(S.graph);
+  setQuality(quality);
+  introStart = performance.now();
+  resize();
+  renderPanel(); updateTimeUI();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

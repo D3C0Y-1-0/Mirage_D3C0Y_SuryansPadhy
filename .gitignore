@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+# Cascade accounts and keys: never commit
+.cascade/
+.env
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cascade platform</title>
+<script>try { document.documentElement.dataset.theme = localStorage.getItem("cascade.theme") || "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+<link rel="stylesheet" href="/static/cascade.css">
+<link rel="stylesheet" href="/static/app.css">
+<script src="/static/site-config.js"></script>
+<script src="/vendor/qrcode/qrcode.js"></script>
+</head>
+<body>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Platform navigation">
+    <div class="brandrow"><a href="/" title="Back to the project site">Cascade<i>.</i></a></div>
+    <nav id="nav"></nav>
+    <div class="foot">Simulated data only. <a href="/">Project site</a></div>
+  </aside>
+  <header class="top">
+    <button class="btn small menuToggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">Menu</button>
+    <h1 id="title">Overview</h1>
+    <span class="spacer"></span>
+    <a class="pill keep" id="simPill" href="#/simulate" title="Current simulated scenario"><span class="d"></span><span>No simulation</span></a>
+    <span class="pill hide-s" id="dataPill" title="Dataset loaded by the backend"><span class="d"></span><span>Dataset</span></span>
+    <a class="pill hide-s" id="evPill" href="#/timeline" title="Events in the current simulation"><span>Events</span> <b>0</b></a>
+    <a class="pill hide-s" id="secPill" href="#/security" title="Account security"><span class="d"></span><span>Security</span></a>
+    <button class="pill keep" id="paletteBtn" title="Search pages and systems (Ctrl+K)">Search <span class="kbd">Ctrl K</span></button>
+    <button class="pill keep themebtn" id="themeBtn" aria-label="Switch light or dark theme" title="Light or dark"></button>
+    <div class="usermenu" id="userMenu">
+      <button class="pill keep" id="userBtn" aria-haspopup="true" aria-expanded="false">Account</button>
+      <div class="menu" role="menu">
+        <p class="who" id="whoLine"></p>
+        <a href="#/security" role="menuitem">Security and 2FA</a>
+        <a href="/" role="menuitem">Project site</a>
+        <button id="signOut" role="menuitem">Sign out</button>
+      </div>
+    </div>
+  </header>
+  <main id="main">
+    <div id="page" class="page"></div>
+    <div class="twinhost" id="twinhost"></div>
+  </main>
+</div>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Details" tabindex="-1"></aside>
+<div class="toast" id="toast" role="status"></div>
+<div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="Search"><div class="box"><input id="palIn" placeholder="Jump to a page, a system, or an action" autocomplete="off" aria-label="Search"><ul id="palList" role="listbox"></ul></div></div>
+<script type="module" src="/static/core.js"></script>
+</body>
+</html>

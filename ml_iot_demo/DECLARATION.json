@@ -1,0 +1,35 @@
+{
+ "title": "IoT demonstration benchmark on the CICIoT2023 curated derivative (audit option 3)",
+ "status_before_running": "Declared before any model was trained or any split scored. Not modified afterwards.",
+ "authorised_by": "Team lead (Dhruv Salunkhe), 2026-11-01, as option 3 of 12_ML_IOT/CICIOT2023_AUDIT.md",
+ "label": "Random-split, in-distribution benchmark demonstration. NOT an independent evaluation. The IoT gates of EVALUATION_PROTOCOL.md remain UNMET.",
+ "data": {
+  "train": {"file": "train-00000-of-00001.parquet", "sha256": "4a9c585c6c1c7ef4cbaea624e71d0d960736ed8ed40006dc4bd918abfa09cc1d"},
+  "validation": {"file": "validation-00000-of-00001.parquet", "sha256": "28177d7376cee31c5e1be5922ef6ea332c142d9b04385653ad219f923ba9146e"},
+  "test": {"file": "test-00000-of-00001-2.parquet", "sha256": "5296fb16bd40f3ce2135372355c2df56e59258805622cae2b2b77f956c342292"},
+  "never_used": "test-00000-of-00001.parquet (half of it is the validation set)"
+ },
+ "task": "binary: benign (label 0) vs attack (label 1)",
+ "excluded_features": {
+  "capture_artefact": ["Number"],
+  "window_dependent_aggregates": ["Tot sum", "Std", "Variance", "IAT", "Rate", "ack_count", "syn_count", "fin_count", "rst_count"],
+  "labels": ["Label", "attack_class", "label"],
+  "reason": "Number is the packet-window size chosen per capture (10 for benign, 100 for floods) and the listed aggregates scale with it (audit section 4)."
+ },
+ "preprocessing": "Exact duplicate feature vectors (after exclusion) removed from train before training. Stratified random subsample of 300,000 deduplicated train rows, seed 20261101, to fit two CPUs. Validation and test are not deduplicated (reported on all rows and on rows whose vector never occurs in train).",
+ "models": {
+  "baseline": "LogisticRegression, standardised, class_weight balanced, max_iter 2000",
+  "candidate": "HistGradientBoostingClassifier, max_iter 300, learning_rate 0.1, class_weight balanced, random_state 20261101",
+  "selection": "candidate is used only if it passes G1 and G2 on validation; otherwise the result is reported as failed"
+ },
+ "threshold": "lowest threshold whose benign false-positive rate is <= 5% on 3-fold out-of-fold predictions inside the training subsample",
+ "gates": {
+  "G1": "benign false-positive rate <= 5% on validation",
+  "G2": "attack recall above the baseline at its own threshold, on validation and in every training fold",
+  "G3": "session-confound check: IMPOSSIBLE on this data (no session, capture, IP, port or time fields) -> declared UNMET in advance",
+  "G4": "on validation rows whose feature vector never occurs in train, attack recall within 0.10 of all-row recall",
+  "G5": "no training fold more than 0.10 macro-F1 below the validation macro-F1"
+ },
+ "final_test": "test-00000-of-00001-2 scored exactly once by run_iot_demo.py after validation; a lock file prevents a second run",
+ "also_reported": "the shortcut the audit found: the rule 'Number == 100 -> attack' on the same splits, to show why Number is excluded"
+}

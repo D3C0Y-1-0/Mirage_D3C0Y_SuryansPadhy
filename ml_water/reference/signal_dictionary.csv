@@ -1,0 +1,44 @@
+signal_id,kind,component,unit,dtype,constant_in_dataset03,hydraulic_relation,ctown_control_rule,plc_reference,observed_via_city_assets,mapped_city_asset_ids,mapping_basis
+L_T1,tank_level,T1,m,continuous,0,,PU1 OPEN; PU1 CLOSED; PU2 OPEN; PU2 CLOSED,PLC2 sends L_T1 to PLC1 (attack table #3),WA02;WA03,WA04,design mapping: master-city WA04 measures C-Town tank T1 level
+L_T2,tank_level,T2,m,continuous,0,,V2 OPEN; V2 CLOSED,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+L_T3,tank_level,T3,m,continuous,0,,PU4 OPEN; PU4 CLOSED; PU5 OPEN; PU5 CLOSED,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+L_T4,tank_level,T4,m,continuous,0,,PU6 OPEN; PU6 CLOSED; PU7 OPEN; PU7 CLOSED,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+L_T5,tank_level,T5,m,continuous,0,,PU8 OPEN; PU8 CLOSED,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+L_T6,tank_level,T6,m,continuous,0,,controls nothing,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+L_T7,tank_level,T7,m,continuous,0,,PU10 OPEN; PU10 CLOSED; PU11 OPEN; PU11 CLOSED,PLC9 receives L_T7 (attack table #1),WA02;WA03,,unmapped: C-Town signal with no master-city asset
+F_PU1,pump_flow,PU1,L/s,continuous,0,,OPEN if T1 below 4; CLOSED if T1 above 6.3,PLC1 (attack table #3),WA02;WA03,WA01,design mapping: master-city WA01 runs C-Town PU1/PU2
+S_PU1,pump_status,PU1,0/1,binary (constant 1 in both datasets),1,,OPEN if T1 below 4; CLOSED if T1 above 6.3,PLC1 (attack table #3),WA02;WA03,WA01,design mapping: master-city WA01 runs C-Town PU1/PU2
+F_PU2,pump_flow,PU2,L/s,continuous,0,,OPEN if T1 below 1; CLOSED if T1 above 4.5,PLC1 (attack table #3),WA02;WA03,WA01,design mapping: master-city WA01 runs C-Town PU1/PU2
+S_PU2,pump_status,PU2,0/1,binary,0,,OPEN if T1 below 1; CLOSED if T1 above 4.5,PLC1 (attack table #3),WA02;WA03,WA01,design mapping: master-city WA01 runs C-Town PU1/PU2
+F_PU3,pump_flow,PU3,L/s,continuous (constant 0 in both datasets),1,,no rule in [CONTROLS],,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+S_PU3,pump_status,PU3,0/1,binary (constant 0 in both datasets),1,,no rule in [CONTROLS],,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+F_PU4,pump_flow,PU4,L/s,continuous,0,,OPEN if T3 below 3; CLOSED if T3 above 5.3,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+S_PU4,pump_status,PU4,0/1,binary,0,,OPEN if T3 below 3; CLOSED if T3 above 5.3,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+F_PU5,pump_flow,PU5,L/s,continuous (constant 0 in both datasets),1,,OPEN if T3 below 1; CLOSED if T3 above 3.5,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+S_PU5,pump_status,PU5,0/1,binary (constant 0 in both datasets),1,,OPEN if T3 below 1; CLOSED if T3 above 3.5,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+F_PU6,pump_flow,PU6,L/s,continuous,0,,OPEN if T4 below 2; CLOSED if T4 above 3.5,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+S_PU6,pump_status,PU6,0/1,binary,0,,OPEN if T4 below 2; CLOSED if T4 above 3.5,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+F_PU7,pump_flow,PU7,L/s,continuous,0,,OPEN if T4 below 3; CLOSED if T4 above 4.5,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+S_PU7,pump_status,PU7,0/1,binary,0,,OPEN if T4 below 3; CLOSED if T4 above 4.5,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+F_PU8,pump_flow,PU8,L/s,continuous,0,,OPEN if T5 below 1.5; CLOSED if T5 above 4,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+S_PU8,pump_status,PU8,0/1,binary,0,,OPEN if T5 below 1.5; CLOSED if T5 above 4,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+F_PU9,pump_flow,PU9,L/s,continuous (constant 0 in both datasets),1,,no rule in [CONTROLS],,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+S_PU9,pump_status,PU9,0/1,binary (constant 0 in both datasets),1,,no rule in [CONTROLS],,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+F_PU10,pump_flow,PU10,L/s,continuous,0,,OPEN if T7 below 2.5; CLOSED if T7 above 4.8,PLC9 (attack table #1),WA02;WA03,,unmapped: C-Town signal with no master-city asset
+S_PU10,pump_status,PU10,0/1,binary,0,,OPEN if T7 below 2.5; CLOSED if T7 above 4.8,PLC9 (attack table #1),WA02;WA03,,unmapped: C-Town signal with no master-city asset
+F_PU11,pump_flow,PU11,L/s,continuous,0,,OPEN if T7 below 1; CLOSED if T7 above 3,PLC9 (attack table #1),WA02;WA03,,unmapped: C-Town signal with no master-city asset
+S_PU11,pump_status,PU11,0/1,binary,0,,OPEN if T7 below 1; CLOSED if T7 above 3,PLC9 (attack table #1),WA02;WA03,,unmapped: C-Town signal with no master-city asset
+F_V2,valve_flow,V2,L/s,continuous,0,,OPEN if T2 below .5; CLOSED if T2 above 5.5,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+S_V2,valve_status,V2,0/1,binary,0,,OPEN if T2 below .5; CLOSED if T2 above 5.5,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+P_J280,junction_pressure,J280,m (EPANET SI pressure head),continuous,0,inlet of PU2,,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+P_J269,junction_pressure,J269,m (EPANET SI pressure head),continuous,0,outlet of PU2,,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+P_J300,junction_pressure,J300,m (EPANET SI pressure head),continuous,0,inlet of PU5,,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+P_J256,junction_pressure,J256,m (EPANET SI pressure head),continuous,0,outlet of PU5,,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+P_J289,junction_pressure,J289,m (EPANET SI pressure head),continuous,0,inlet of PU6,,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+P_J415,junction_pressure,J415,m (EPANET SI pressure head),continuous,0,outlet of PU6,,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+P_J302,junction_pressure,J302,m (EPANET SI pressure head),continuous,0,inlet of PU9,,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+P_J306,junction_pressure,J306,m (EPANET SI pressure head),continuous,0,outlet of PU9,,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+P_J307,junction_pressure,J307,m (EPANET SI pressure head),continuous,0,inlet of PU10,,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+P_J317,junction_pressure,J317,m (EPANET SI pressure head),continuous,0,outlet of PU10,,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+P_J14,junction_pressure,J14,m (EPANET SI pressure head),continuous,0,inlet of V2,,,WA02;WA03,,unmapped: C-Town signal with no master-city asset
+P_J422,junction_pressure,J422,m (EPANET SI pressure head),continuous,0,outlet of V2,,,WA02;WA03,,unmapped: C-Town signal with no master-city asset

@@ -1,0 +1,34 @@
+asset_id,name,type,zone,criticality,exposure,internet_facing,vendor_access,software,version,cve_ids,patchable_without_downtime,downtime_hours_to_patch,config_flags,monitored,layout_x,layout_y
+EL01,Utility Remote Access VPN,vpn_gateway,dmz,4,0.9,1,1,Ivanti Connect Secure,22.7R2.4,CVE-2025-0282;CVE-2025-22457;CVE-2025-22467,0,1,no_mfa,0,260,250
+EL02,Utility Enterprise AD Server,ad_server,enterprise,3,0.3,0,0,Microsoft Windows Server 2019,10.0.17763.6659,CVE-2025-33073;CVE-2025-29824,1,1,no_mfa,1,218.6,336
+EL03,Grid Engineering Workstation,workstation,control,4,0.2,0,0,Microsoft Windows 10 22H2,10.0.19045.5247,CVE-2025-33053;CVE-2025-33073;CVE-2025-29824,1,1,open_mgmt_port,0,125.5,357.2
+EL04,Distribution SCADA Server,scada,control,5,0.2,0,0,Hitachi Energy MicroSCADA X SYS600,10.5,CVE-2025-39202;CVE-2025-39204;CVE-2025-39203,0,4,unencrypted_protocol,0,50.9,297.7
+EL05,Feeder Substation RTU,rtu,field,5,0.1,0,0,Hitachi Energy RTU540,13.7.1,CVE-2026-1773;CVE-2026-1772,0,2,unencrypted_protocol,0,50.9,202.3
+EL06,Substation Protection IEDs,substation,field,5,0.05,0,0,Hitachi Energy REB500,8.3.3.0,CVE-2026-2459;CVE-2026-2460,0,4,unencrypted_protocol,0,125.5,142.8
+EL07,AMI Smart-Meter Head-End (vendor hosted),cloud,cloud,3,0.6,0,1,Hypothetical AMI head-end SaaS (no product specified),,,1,0,no_mfa;open_mgmt_port,0,218.6,164
+WA01,Pumping Station PLC (C-Town PU1/PU2),water_controller,field,5,0.1,0,0,Rockwell Automation ControlLogix 5580,35.013,CVE-2025-9166,0,3,unencrypted_protocol,0,260,750
+WA02,Water Telecontrol SCADA Server,pump_scada,control,5,0.3,0,0,Siemens TeleControl Server Basic,3.1.2.2,CVE-2025-40765;CVE-2025-40942,0,2,open_mgmt_port,0,184,854.6
+WA03,Water SCADA HMI / Historian,hmi,control,4,0.2,0,0,Siemens SIMATIC WinCC Unified PC Runtime,V19,CVE-2026-24349,0,1,unencrypted_protocol,0,61,814.7
+WA04,Tank T1 Remote Station RTU (cellular),rtu,field,4,0.8,1,0,Schneider Electric Saitel DP,11.06.35,,0,2,default_creds;open_mgmt_port;unencrypted_protocol,0,61,685.3
+WA05,Water Engineering Workstation,workstation,control,4,0.2,0,0,Microsoft Windows 10 22H2,10.0.19045.5247,CVE-2025-33053;CVE-2025-33073;CVE-2025-29824,1,1,open_mgmt_port,0,184,645.4
+HC01,Hospital Remote Access Gateway,vpn_gateway,dmz,4,0.9,1,1,Citrix NetScaler Gateway,14.1-47.48,CVE-2026-88771;CVE-2026-88772;CVE-2026-19490,0,1,no_mfa,0,610,150
+HC02,Hospital AD Server,ad_server,enterprise,4,0.3,0,0,Microsoft Windows Server 2022,10.0.20348.2966,CVE-2025-33073;CVE-2025-29824,1,1,no_mfa,1,568.6,236
+HC03,Hospital Core Switch,hospital_network,enterprise,5,0.3,0,0,Cisco IOS XE,17.12.1,CVE-2025-20352;CVE-2025-20169,0,1,flat_network,0,475.5,257.2
+HC04,EHR Server,ehr_server,enterprise,5,0.2,0,0,OpenEMR,7.0.3,CVE-2026-24848;CVE-2026-25746;CVE-2025-43860,0,2,,0,400.9,197.7
+HC05,PACS Imaging Server,pacs,enterprise,4,0.2,0,0,Orthanc DICOM Server,1.12.10,CVE-2026-5442;CVE-2026-5443;CVE-2026-5445,0,1,unencrypted_protocol,0,400.9,102.3
+HC06,Clinical Device Integration Platform,medical_iot,enterprise,5,0.2,0,0,Philips Clinical Collaboration Platform,12.2.1.5,CVE-2025-27953;CVE-2025-27954;CVE-2025-27955,0,1,,0,475.5,42.8
+HC07,Backup Generator / ATS Controller,generator,field,5,0.1,0,0,Hypothetical genset / automatic transfer switch controller (no product specified),,,0,2,default_creds;open_mgmt_port;flat_network,0,568.6,64
+TR01,Traffic Control Centre Server,traffic_ctrl,control,4,0.2,0,0,Microsoft Windows Server 2019,10.0.17763.6659,CVE-2025-33073;CVE-2025-29824,1,1,no_mfa,0,960,750
+TR02,Junction Signal Controllers,plc,field,4,0.2,0,0,Hypothetical NTCIP junction signal controller (no product specified),,,0,2,default_creds;unencrypted_protocol,0,850,860
+TR03,Bus ITMS / AVL Server,cloud,enterprise,2,0.3,0,0,Microsoft Windows Server 2022,10.0.20348.2966,CVE-2025-33073;CVE-2025-29824,1,1,no_mfa,0,740,750
+TR04,Variable Message Sign Controller,iot_gateway,field,2,0.2,0,0,Hypothetical variable message sign controller (no product specified),,,1,0.5,default_creds,0,850,640
+TC01,City Fibre Core Router,telecom_gateway,dmz,5,0.3,0,0,Cisco IOS XE,17.12.1,CVE-2025-20352;CVE-2025-20169,0,1,,0,610,500
+TC02,ICCC Segmentation Firewall,telecom_gateway,dmz,4,0.3,0,0,Cisco Secure Firewall ASA Software,9.20.2,,0,1,,1,500,610
+TC03,Field Cellular WAN Router,telecom_gateway,field,4,0.4,0,0,InHand Networks IR615,1.0.118,CVE-2026-38702;CVE-2026-38703;CVE-2026-38704,1,0.5,default_creds,0,390,500
+TC04,112 Emergency Call Centre CAD,emergency_comms,enterprise,5,0.2,0,0,Mitel MiContact Center Business,10.2.0.10,,0,1,no_mfa,0,500,390
+IO01,Integrated Command & Control Centre (ICCC),iccc,enterprise,5,0.3,0,0,Microsoft Windows Server 2022,10.0.20348.2966,CVE-2025-33073;CVE-2025-29824,1,1,,1,960,250
+IO02,Junction CCTV Cameras,camera,field,2,0.8,1,0,Axis network cameras (AXIS OS 11.11 LTS),11.11 LTS,,1,0.5,default_creds;flat_network,0,905,345.3
+IO03,Standalone Enforcement Camera,camera,field,1,0.9,1,0,Tattile Smart+,1.181.5,CVE-2026-26341;CVE-2026-26342;CVE-2026-26340,1,0.5,,0,795,345.3
+IO04,LoRaWAN Gateway (smart streetlights),iot_gateway,field,2,0.3,0,0,Milesight UG65-868M-EA,60.0.0.42-r5,CVE-2025-4043,1,0.5,default_creds,0,740,250
+IO05,Integrator Remote Support Portal,vendor_portal,vendor,4,0.9,1,1,BeyondTrust Remote Support,25.1.1,CVE-2026-1731;CVE-2026-102764;CVE-2026-40139,1,1,no_mfa,0,795,154.7
+IO06,Smart-City Virtualisation Host,cloud,enterprise,4,0.1,0,0,VMware ESXi,8.0 Update 3,CVE-2025-22224;CVE-2025-22225;CVE-2025-22226,0,2,open_mgmt_port,0,905,154.7

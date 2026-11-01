@@ -1,0 +1,52 @@
+{
+ "note": "Every number below is copied from the module's own report files (ml_water/, ml_electricity/, ml_sectors/, ml_iot_demo/). Criteria were written down before training; each final test was run once, or never.",
+ "models": [
+  {"sector": "Water", "decision": "approved", "stage": "Final test passed", "model": "Model C: predictive residual (HistGradientBoostingRegressor), trained on normal operation only",
+   "data": "BATADAL dataset03 (normal) / dataset04 (attacks 1-3 validation) / attacks 4-7 held out", "final_test": "run once, 2026-10-31 19:36",
+   "gates": [
+    {"name": "Documented attacks 4-7 detected", "need": "all four", "got": "4/4", "pass": true},
+    {"name": "False alarms", "need": "reported per 7 days", "got": "1.37 per 7 days", "pass": null},
+    {"name": "Precision / recall on attack windows", "need": "reported", "got": "0.953 / 0.679 (PR-AUC 0.868)", "pass": null}],
+   "why": "Learns how the plant normally behaves and flags large prediction misses, so it can flag attacks with no signature. Used as advisory evidence only, on historical replay."},
+  {"sector": "Electricity", "decision": "approved", "stage": "Final test passed (as a screening signal)", "model": "Random Forest, 100 trees, load-invariant features, attack threshold 0.655",
+   "data": "MSU-ORNL three-class release: data1-9 train, data10-12 validation, data13-15 held out", "final_test": "run once, 2026-11-01 00:09",
+   "gates": [
+    {"name": "Natural disturbance called attack", "need": "<= 10%", "got": "7.17%", "pass": true},
+    {"name": "Normal operation called attack", "need": "reported", "got": "0%", "pass": null},
+    {"name": "Attack precision / recall", "need": "reported", "got": "0.946 / 0.396", "pass": null}],
+   "why": "Right 95% of the time when it flags, but flags only about 40% of attacks. Approved as an investigate signal, never as a detector or an all-clear."},
+  {"sector": "Healthcare", "decision": "no_go", "stage": "Failed the final test", "model": "Random Forest on network + biometric features (data-alteration advisory)",
+   "data": "WUSTL-EHMS-2020, one recording; held-out rows 13,054-16,317", "final_test": "run once, 2026-11-01 01:17",
+   "gates": [
+    {"name": "Normal false-positive rate", "need": "<= 1%", "got": "7.07%", "pass": false},
+    {"name": "Data-alteration recall", "need": ">= 90%", "got": "100%", "pass": true},
+    {"name": "All 7 attack bursts detected", "need": "7/7", "got": "7/7, each from its first row", "pass": true},
+    {"name": "Data-alteration precision", "need": ">= 80%", "got": "46.4%", "pass": false}],
+   "why": "The attack signature (extra network delay) is real and was caught every time. But the held-out period had more normal latency spikes than training (11.3% of normal flows against 3.2%), and the model read them as attacks: about 1 normal flow in 14 raised an alarm. Retuning after seeing the test would be fitting to the test, so it stays a negative result."},
+  {"sector": "Telecom", "decision": "no_go", "stage": "Failed validation (final test never run)", "model": "Best of LR / Random Forest / HistGradientBoosting: HGB",
+   "data": "UNSW-NB15 research benchmark (lab traffic, not operator or 5G); 42% duplicate training rows handled by grouping", "final_test": "never run (test file never parsed)",
+   "gates": [
+    {"name": "Normal false-positive rate", "need": "<= 1.5%", "got": "1.03%", "pass": true},
+    {"name": "Attack recall", "need": ">= 0.90", "got": "0.882", "pass": false},
+    {"name": "Precision", "need": ">= 0.97", "got": "0.995", "pass": true},
+    {"name": "Recall on unique (de-duplicated) vectors", "need": ">= 0.85", "got": "0.745", "pass": false},
+    {"name": "Recall for every attack family", "need": ">= 0.50 each", "got": "Fuzzers 0.36", "pass": false},
+    {"name": "Fold stability", "need": "min recall >= 0.85", "got": "0.883", "pass": true},
+    {"name": "Shuffled-label control", "need": "ROC-AUC <= 0.55", "got": "0.452", "pass": true}],
+   "why": "Strong headline numbers (ROC-AUC 0.993) hid a weakness: on attack records it had not effectively seen before, recall fell to 0.745, and it caught only 36% of fuzzing attacks."},
+  {"sector": "Transportation", "decision": "no_go", "stage": "Failed validation (final test never run)", "model": "Best of LR / Random Forest / HistGradientBoosting: HGB",
+   "data": "Synthetic traffic-control simulator v2 (passed its own 8 shortcut audits); v1 rejected earlier", "final_test": "never run",
+   "gates": [
+    {"name": "Normal false-positive rate", "need": "<= 1%", "got": "0.65%", "pass": true},
+    {"name": "False alarms during real detector faults", "need": "<= 5%", "got": "11.3%", "pass": false},
+    {"name": "Precision", "need": ">= 0.50", "got": "0.549", "pass": true},
+    {"name": "Harmful-event coverage", "need": ">= 0.80", "got": "0.70", "pass": false},
+    {"name": "Median detection latency", "need": "<= 10 min", "got": "8.5 min", "pass": true},
+    {"name": "Worst single-run false-positive rate", "need": "<= 3%", "got": "10.5%", "pass": false},
+    {"name": "Time-shifted-label control", "need": "ROC-AUC <= 0.60", "got": "0.352", "pass": true}],
+   "why": "It could not tell attacks from ordinary sensor faults: during natural detector faults 11% of normal intervals raised an alarm, and it covered only 70% of harmful attack events."},
+  {"sector": "IoT", "decision": "demo_only", "stage": "Not trained under the protocol; demonstration benchmark added", "model": "see ml_iot_demo/results.json",
+   "data": "TON_IoT (one normal session) and CICIoT2023 curated derivative (no session fields; capture artefact 'Number')", "final_test": "protocol test impossible; demonstration test run once",
+   "gates": [], "why": "The protocol needs splits grouped by capture session so a model is tested on traffic it has not seen. Neither dataset allows that. The demonstration below follows the audit's option 3 and is labelled as an in-distribution benchmark."}
+ ]
+}

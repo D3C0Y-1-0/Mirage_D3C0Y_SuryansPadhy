@@ -1,0 +1,20 @@
+cve_id,cvss,vector,cwe,vendor,product,kev,epss,ics_flag,patch_available,patch_type
+DEMO-001,9.8,AV:N/AC:L/PR:N/UI:N,CWE-287,Demo,VPN appliance,1,0.9,0,1,patch
+DEMO-002,6.5,AV:N/AC:L/PR:L/UI:N,CWE-306,Demo,Vendor portal,0,0.05,0,1,patch
+DEMO-003,8.8,AV:N/AC:L/PR:L/UI:N,CWE-287,Demo,Vendor VPN,1,0.6,0,1,patch
+DEMO-004,7.5,AV:N/AC:L/PR:N/UI:N,CWE-522,Demo,Billing SaaS,0,0.1,0,1,patch
+DEMO-005,9.8,AV:N/AC:L/PR:N/UI:N,CWE-94,Demo,CMS,1,0.8,0,1,patch
+DEMO-006,8.1,AV:N/AC:H/PR:N/UI:N,CWE-20,Demo,Edge router,0,0.2,0,1,patch
+DEMO-007,9.0,AV:N/AC:L/PR:N/UI:N,CWE-502,Demo,Mail server,1,0.7,0,1,patch
+DEMO-008,7.8,AV:L/AC:L/PR:L/UI:N,CWE-269,Demo,Windows,1,0.5,0,1,patch
+DEMO-009,8.6,AV:N/AC:L/PR:L/UI:N,CWE-89,Demo,EHR web app,0,0.15,0,1,patch
+DEMO-010,8.8,AV:N/AC:L/PR:L/UI:N,CWE-287,Demo,Directory service,1,0.4,0,1,patch
+DEMO-011,7.3,AV:A/AC:L/PR:N/UI:N,CWE-319,Demo,Infusion pump,0,0.02,1,0,none
+DEMO-012,9.1,AV:N/AC:L/PR:N/UI:N,CWE-798,Demo,IP camera,1,0.7,0,1,patch
+DEMO-013,8.2,AV:N/AC:L/PR:L/UI:N,CWE-284,Demo,SCADA HMI,0,0.1,1,1,patch
+DEMO-014,5.3,AV:A/AC:L/PR:N/UI:N,CWE-306,Demo,PLC Modbus,0,0.03,1,0,none
+DEMO-015,7.5,AV:N/AC:L/PR:N/UI:N,CWE-22,Demo,Historian,0,0.08,1,1,patch
+DEMO-016,6.8,AV:N/AC:L/PR:L/UI:N,CWE-284,Demo,Traffic controller,0,0.05,1,1,workaround
+DEMO-017,8.0,AV:N/AC:L/PR:N/UI:N,CWE-78,Demo,Meter gateway,0,0.1,0,1,patch
+DEMO-018,5.9,AV:A/AC:H/PR:N/UI:N,CWE-306,Demo,Generator controller,0,0.02,1,1,patch
+DEMO-019,7.2,AV:N/AC:L/PR:N/UI:N,CWE-798,Demo,Building management,0,0.12,1,1,patch

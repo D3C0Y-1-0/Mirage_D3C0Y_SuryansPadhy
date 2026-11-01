@@ -1,0 +1,62 @@
+{
+ "status": "illustrative_role_analogy",
+ "disclaimer": "The MSU-ORNL benchmark is a different physical system from the SENTINEL master city. These links express analogous roles only; no benchmark sample is a measurement of a SENTINEL asset.",
+ "benchmark_components": [
+  {
+   "benchmark": "R1-R4 (IED: distance-protection relay + PMU, each controlling one breaker)",
+   "feature_prefixes": [
+    "R1",
+    "R2",
+    "R3",
+    "R4"
+   ],
+   "sentinel_asset": "EL06",
+   "sentinel_name": "Substation Protection IEDs",
+   "relation": "illustrative_role_analogy",
+   "basis": "both are substation protection IEDs that trip breakers"
+  },
+  {
+   "benchmark": "BR1-BR4 (breakers)",
+   "feature_prefixes": [],
+   "sentinel_asset": "EL06",
+   "sentinel_name": "Substation Protection IEDs",
+   "relation": "illustrative_role_analogy",
+   "basis": "EL06 covers busbar protection and breaker control"
+  },
+  {
+   "benchmark": "relay logs / control panel logs (commands to relays)",
+   "feature_prefixes": [
+    "relay",
+    "control_panel"
+   ],
+   "sentinel_asset": "EL05",
+   "sentinel_name": "Feeder Substation RTU",
+   "relation": "illustrative_role_analogy",
+   "basis": "EL05 RTU carries supervisory commands and relay status to SCADA (EL04)"
+  },
+  {
+   "benchmark": "control room (control panel, OpenPDC)",
+   "feature_prefixes": [],
+   "sentinel_asset": "EL04",
+   "sentinel_name": "Distribution SCADA Server",
+   "relation": "illustrative_role_analogy",
+   "basis": "supervisory control server"
+  },
+  {
+   "benchmark": "Snort IDS",
+   "feature_prefixes": [
+    "snort"
+   ],
+   "sentinel_asset": null,
+   "relation": "unresolved",
+   "basis": "no IDS asset in the master city"
+  },
+  {
+   "benchmark": "G1, G2, lines L1/L2",
+   "feature_prefixes": [],
+   "sentinel_asset": null,
+   "relation": "unresolved",
+   "basis": "master city models one feeder substation, not this two-line system"
+  }
+ ]
+}
