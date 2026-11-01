@@ -5,7 +5,7 @@ const { chromium } = require('playwright');
 const BASE = process.env.CASCADE_URL || 'http://localhost:8000';
 const widths = (process.argv[2] && !process.argv[2].startsWith('--') ? process.argv[2] : '1440,1280,1024,768,390').split(',').map(Number);
 const withTwin = process.argv.includes('--twin');
-const ROUTES = (process.env.ROUTES || 'overview,inventory,services,vulns,water,electricity,novel,evaluation,simulate,paths,incidents,timeline,drill,risk,exposure,graphs,ml,optimizer,response,failsafe,report,compliance,project,architecture,security').split(',');
+const ROUTES = (process.env.ROUTES || 'overview,inventory,services,vulns,live,water,electricity,novel,evaluation,recovery,assumptions,simulate,paths,incidents,timeline,drill,risk,exposure,graphs,ml,optimizer,response,failsafe,report,compliance,project,architecture,security').split(',');
 
 const CHECK = () => {
   const out = [];

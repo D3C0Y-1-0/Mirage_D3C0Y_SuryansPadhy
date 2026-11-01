@@ -17,6 +17,13 @@ def call(method, path, body=None):
 
 
 CASES = [
+    ("GET", "/api/recovery?crews=0", None),
+    ("GET", "/api/recovery?crews=abc", None),
+    ("GET", "/api/recovery?entry=NOPE", None),
+    ("GET", "/api/recovery?backups=maybe", None),
+    ("POST", "/api/live/decide", {"decision": "nuke"}),
+    ("POST", "/api/live/decide", "not json"),
+    ("POST", "/api/live/sis", {"on": "x"}),
     ("POST", "/api/simulate", {"entry_points": ["NOPE"]}),
     ("POST", "/api/simulate", {"entry_points": []}),
     ("POST", "/api/simulate", {"entry_points": ["EL01"], "speed": BIG}),

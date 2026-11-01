@@ -4,7 +4,7 @@
 const { chromium } = require('playwright');
 const BASE = process.env.CASCADE_URL || 'http://localhost:8000';
 const ONLY = process.env.ONLY || 'landing,app,twin';
-const ROUTES = (process.argv[2] || 'overview,inventory,services,vulns,water,simulate,paths,incidents,timeline,drill,risk,exposure,graphs,ml,optimizer,response,failsafe,report,compliance,project,architecture,security').split(',');
+const ROUTES = (process.argv[2] || 'overview,inventory,services,vulns,live,water,electricity,novel,evaluation,recovery,assumptions,simulate,paths,incidents,timeline,drill,risk,exposure,graphs,ml,optimizer,response,failsafe,report,compliance,project,architecture,security').split(',');
 const SKIP = /print|sign out|log out|disable|delete|remove two|download|export|copy/i;
 (async () => {
   const b = await chromium.launch({ args: ['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist'] });

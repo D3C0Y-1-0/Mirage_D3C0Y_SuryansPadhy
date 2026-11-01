@@ -113,6 +113,9 @@ const I = {
   project: '<circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/>',
   architecture: '<rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="9" y="15" width="6" height="6" rx="1"/><path d="M6 9v3h12V9M12 12v3"/>',
   water: '<path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/><path d="M8 14h2l1.5-3 2 5 1.5-2h1"/>',
+  live: '<circle cx="12" cy="12" r="2"/><path d="M16.2 7.8a6 6 0 0 1 0 8.4M7.8 16.2a6 6 0 0 1 0-8.4M19 5a10 10 0 0 1 0 14M5 19A10 10 0 0 1 5 5"/>',
+  recovery: '<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/>',
+  assumptions: '<path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/>',
   evaluation: '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
   electricity: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
   novel: '<path d="M12 2 2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/><circle cx="18" cy="5" r="3" fill="currentColor" stroke="none"/>',
@@ -127,11 +130,11 @@ const I = {
 export const ROUTES = [
   ['Command centre', [['overview', 'Overview', 'ops']]],
   ['Infrastructure', [['twin', 'Digital twin', null], ['inventory', 'Asset inventory', 'ops'], ['services', 'Services and dependencies', 'ops'], ['vulns', 'Vulnerability intelligence', 'ops']]],
-  ['Monitoring', [['water', 'Water anomaly monitoring', 'water'], ['electricity', 'Electricity attack screening', 'elec'], ['novel', 'Unknown-attack response', 'water']]],
+  ['Monitoring', [['live', 'Live attack testbed', 'live'], ['water', 'Water anomaly monitoring', 'water'], ['electricity', 'Electricity attack screening', 'elec'], ['novel', 'Unknown-attack response', 'water']]],
   ['Threat simulation', [['simulate', 'Attack simulation', 'sim'], ['paths', 'Attack paths', 'plus'], ['incidents', 'Active incidents', 'sim'], ['timeline', 'Attack timeline', 'sim'], ['drill', 'Drill mode', 'plus']]],
   ['Risk intelligence', [['risk', 'Risk register', 'ops'], ['exposure', 'Exposure and roadmap', 'plus'], ['graphs', 'Graphs and analytics', 'intel'], ['ml', 'ML insights', 'intel'], ['evaluation', 'Model evaluation', 'elec']]],
-  ['Defence', [['optimizer', 'Fix optimiser', 'intel'], ['response', 'Containment and response', 'sim'], ['failsafe', 'Failsafe and operator', 'water']]],
-  ['Governance', [['report', 'Incident report', 'plus'], ['compliance', 'Compliance mapping', 'plus'], ['project', 'Project information', 'gov'], ['architecture', 'Architecture and methodology', 'gov'], ['security', 'Security and 2FA', 'gov']]],
+  ['Defence', [['optimizer', 'Fix optimiser', 'intel'], ['response', 'Containment and response', 'sim'], ['failsafe', 'Failsafe and operator', 'water'], ['recovery', 'Recovery', 'recover']]],
+  ['Governance', [['report', 'Incident report', 'plus'], ['compliance', 'Compliance mapping', 'plus'], ['assumptions', 'Assumptions register', 'recover'], ['project', 'Project information', 'gov'], ['architecture', 'Architecture and methodology', 'gov'], ['security', 'Security and 2FA', 'gov']]],
 ];
 const LABEL = Object.fromEntries(ROUTES.flatMap(([, items]) => items.map(([k, l]) => [k, l])));
 const MODULE = Object.fromEntries(ROUTES.flatMap(([, items]) => items.map(([k, , m]) => [k, m])));
@@ -166,11 +169,15 @@ async function route() {
   th.classList.remove('on'); page.style.display = '';
   page.className = 'page'; page.innerHTML = ''; void page.offsetWidth; page.classList.add('enter');
   document.getElementById('main').scrollTop = 0;
+  let box = null;
   try {
     const m = modules[MODULE[k]] ||= await import(`./pages-${MODULE[k]}.js`);
+    // each visit renders into its own box: if the user leaves before a slow page finishes, that page's late
+    // writes land in a detached box instead of on top of the next page (was: "Cannot set properties of null")
+    box = document.createElement('div'); box.className = 'pagebox'; page.replaceChildren(box);
     const ctx = { onLeave: f => route.cleanup = f };
-    await m[k](page, ctx);
-  } catch (e) { console.error(e); errorBox(page, e); }
+    await m[k](box, ctx);
+  } catch (e) { console.error(e); if (!box || box.isConnected) errorBox(box || page, e); }   // a page the user already left stays quiet
 }
 
 // ---------- top bar ----------
@@ -187,6 +194,23 @@ function refreshPills() {
     ev.querySelector('b').textContent = 0; if (badge) badge.hidden = true;
   }
 }
+// live testbed: a small poll so every page shows a live alarm (the Live page itself streams)
+let liveSeen = null;
+async function pollLive() {
+  try {
+    const s = await api('/api/live/status');   // live: never the cached get()
+    const p = document.getElementById('livePill'); if (!p) return;
+    const inc = s.running && s.incident;
+    p.hidden = !inc;
+    if (inc) {
+      const st = inc.state;
+      p.className = 'pill keep livepill ' + (st === 'awaiting_operator' ? 'alarm' : st === 'isolated' ? 'iso' : 'ok');
+      p.querySelector('span:last-child').innerHTML = st === 'awaiting_operator' ? `<b>LIVE ALARM</b> ${h(s.asset)}` : st === 'isolated' ? `Live: ${h(s.asset)} isolated` : st === 'recovered' ? 'Live: recovered' : 'Live: dismissed';
+      if (liveSeen !== inc.id && st === 'awaiting_operator') { liveSeen = inc.id; if (!location.hash.startsWith('#/live')) toast(`LIVE alarm on ${s.asset_name}: ${inc.first || 'unauthorised command'}. Open the Live page.`); }
+    }
+  } catch { /* backend restarting */ }
+}
+setInterval(pollLive, 2500); pollLive();
 async function refreshTop() {
   try {
     const d = await get('/api/dataset');
