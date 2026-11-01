@@ -2383,6 +2383,26 @@ window.cascade = { S, env, SIG, sigPhase, controls, waterView, openCard, toggleE
 // ======================================================================
 // boot
 // ======================================================================
+// live testbed: when the emulated controller raises a real alarm, the twin shows that system as the way in and replays
+// the simulated spread from it. The banner says plainly which part is live and which is simulated.
+const LIVE = { seen: null, on: false };
+async function pollLive() {
+  try {
+    const r = await fetch('/api/live/status'); if (!r.ok) return;
+    const s = await r.json(); const inc = s.running && s.incident;
+    if (inc && inc.state === 'awaiting_operator' && LIVE.seen !== inc.id && S.graph && nodes[s.asset]) {
+      LIVE.seen = inc.id; LIVE.on = true;
+      document.querySelector('[data-tab="replay"]')?.click();
+      setEntries([s.asset], true);
+      focusAsset(s.asset);
+    }
+    if (LIVE.on && inc) showBanner(inc.state === 'awaiting_operator' ? `LIVE ALARM ${inc.opened_at}: real Modbus attack on the emulated ${s.asset}. Spread from it is simulated.`
+      : inc.state === 'isolated' ? `LIVE: ${s.asset} isolated, attacker cut off. Spread shown is simulated.`
+      : inc.state === 'recovered' ? `LIVE: ${s.asset} recovered, known-good settings restored.` : `LIVE: alarm dismissed by the operator.`, inc.state === 'awaiting_operator');
+    else if (LIVE.on && !inc) { LIVE.on = false; hideBanner(); }
+  } catch { /* backend restarting */ }
+}
+setInterval(pollLive, 2500);
 (async function boot() {
   setClock('T+00:00');
   try { [S.graph, S.overview] = await Promise.all([api('/api/graph'), api('/api/overview')]); } catch { return; }

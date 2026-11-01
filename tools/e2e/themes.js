@@ -2,7 +2,7 @@
 // (nearly) invisible against its own background (contrast < 2.2). Usage: node tools/e2e/themes.js
 const { chromium } = require('playwright');
 const BASE = process.env.CASCADE_URL || 'http://localhost:8000';
-const ROUTES = (process.env.ROUTES || 'overview,inventory,services,vulns,water,simulate,paths,incidents,timeline,drill,risk,exposure,graphs,ml,optimizer,response,failsafe,report,compliance,project,architecture,security').split(',');
+const ROUTES = (process.env.ROUTES || 'overview,inventory,services,vulns,live,water,electricity,novel,evaluation,recovery,assumptions,simulate,paths,incidents,timeline,drill,risk,exposure,graphs,ml,optimizer,response,failsafe,report,compliance,project,architecture,security').split(',');
 const CONTRAST = () => {
   const parse = c => { const m = c.match(/rgba?\(([^)]+)\)/); if (!m) return null; const v = m[1].split(',').map(Number); return { r: v[0], g: v[1], b: v[2], a: v[3] ?? 1 }; };
   const lum = ({ r, g, b }) => { const f = x => { x /= 255; return x <= .03928 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4; }; return .2126 * f(r) + .7152 * f(g) + .0722 * f(b); };

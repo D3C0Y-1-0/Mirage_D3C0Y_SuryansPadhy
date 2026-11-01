@@ -1089,6 +1089,43 @@ def insights_compliance():
     return {"mapping": insights.COMPLIANCE, "note": insights.COMPLIANCE_NOTE, "optimiser_bundle": rows(best), "plan": rows(plan)}
 
 
+# ---------- recovery: after containment, how long until each service is back ----------
+import recovery as _recovery
+
+
+@lru_cache(maxsize=64)
+def _recovery_cached(entry, crews, backups):
+    t = base_tables()
+    if crews == 2 and backups:
+        return _recovery.summary(t, entry)
+    return _recovery.plan(t, entry, crews, backups)
+
+
+@app.get("/api/recovery")
+def get_recovery(entry: Optional[str] = Query(None, max_length=40), crews: int = Query(2, ge=1, le=8),
+                 backups: bool = True):
+    """Restoration schedule after the attacker is cut off. Default: the worst single way in, 2 crews, with backups."""
+    t = base_tables()
+    entry = entry or _overview_worst_entry()
+    if entry not in set(t["assets.csv"]["asset_id"]):
+        raise HTTPException(404, f"Unknown asset '{entry}'")
+    return _recovery_cached(entry, int(crews), bool(backups))
+
+
+@lru_cache(maxsize=1)
+def _overview_worst_entry():
+    return evaluate(base_tables())["worst_entry"]
+
+
+import assumptions as _assumptions
+
+
+@app.get("/api/assumptions")
+def get_assumptions():
+    """Every modelled number in one place, with its basis and how it was tested."""
+    return _assumptions.register()
+
+
 # ---------- water anomaly monitoring (SENTINEL Model C, historical replay) + rule layer ----------
 import water
 
@@ -1157,12 +1194,9 @@ import threading as _threading
 _AUDIT_LOCK = _threading.Lock()
 
 
-@app.post("/api/ops/log")
-def ops_log(d: Decision, request: Request):
-    import time as _t
-    s = auth.read_session(request.cookies.get(COOKIE, ""))
+def _audit_append(rec):
+    """Append one record to the hash-chained audit log (shared by operator decisions and the live testbed)."""
     import hashlib
-    rec = {**d.model_dump(), "by": s["u"] if s else "operator (sign-in off)", "at": _t.strftime("%Y-%m-%d %H:%M:%S")}
     auth.STORE_DIR.mkdir(exist_ok=True)
     p = auth.STORE_DIR / "audit.jsonl"
     with _AUDIT_LOCK:
@@ -1176,6 +1210,14 @@ def ops_log(d: Decision, request: Request):
         with open(p, "a") as f:
             f.write(json.dumps(rec) + "\n")
     return rec
+
+
+@app.post("/api/ops/log")
+def ops_log(d: Decision, request: Request):
+    import time as _t
+    s = auth.read_session(request.cookies.get(COOKIE, ""))
+    rec = {**d.model_dump(), "by": s["u"] if s else "operator (sign-in off)", "at": _t.strftime("%Y-%m-%d %H:%M:%S")}
+    return _audit_append(rec)
 
 
 def verify_audit_chain(lines):
@@ -1458,3 +1500,163 @@ def twin():
 @app.get("/login")
 def login_page():
     return FileResponse(FRONTEND / "login.html")
+
+
+# ---------- live attack testbed: emulated controller over real Modbus/TCP ----------
+import asyncio as _asyncio
+import live as _live
+from fastapi.responses import StreamingResponse
+
+_LIVE = {"dev": None}
+
+
+def _live_asset():
+    a = base_tables()["assets.csv"]
+    for typ in ("water_controller", "plc"):
+        m = a[a["type"] == typ]
+        if len(m):
+            return str(m.iloc[0]["asset_id"]), str(m.iloc[0]["name"])
+    return str(a.iloc[0]["asset_id"]), str(a.iloc[0]["name"])
+
+
+def _live_audit(**k):
+    import time as _t
+    try:
+        _audit_append({**k, "by": "live testbed", "at": _t.strftime("%Y-%m-%d %H:%M:%S"), "sim_time": None})
+    except Exception:
+        pass
+
+
+@app.on_event("startup")
+def _start_live():
+    aid, name = _live_asset()
+    _LIVE["dev"] = _live.from_env(aid, name, _live_audit, config.FAILSAFE_AUTO)
+
+
+def _dev():
+    d = _LIVE["dev"]
+    if d is None:
+        raise HTTPException(503, "The live testbed is " + _live.enabled_reason()[1])
+    return d
+
+
+def _live_guard(request: Request):
+    """Every state-changing live endpoint: same-origin only, and either a direct loopback request (the presenter's own
+    laptop) or a signed-in session. Behind a proxy (X-Forwarded-For) a request is never treated as local."""
+    origin = request.headers.get("origin")
+    if origin:
+        from urllib.parse import urlparse
+        if urlparse(origin).netloc != request.headers.get("host", ""):
+            raise HTTPException(403, "Cross-site request refused.")
+    client = request.client.host if request.client else ""
+    forwarded = any(request.headers.get(h) for h in ("x-forwarded-for", "x-real-ip", "forwarded"))
+    if client in _live.LOOPBACK and not forwarded:
+        return None
+    s = auth.read_session(request.cookies.get(COOKIE, ""))
+    if not s:
+        raise HTTPException(401, "Sign in to control the live testbed from another machine.")
+    return s
+
+
+@lru_cache(maxsize=8)
+def _live_spread(asset):
+    t = base_tables()
+    r = simulate_full(t, {asset: 0})
+    names = _names(t)
+    return {"asset": asset, "compromised": r["compromised"], "parents": r["parents"], "failures": r["failures"],
+            "detected_at": r["detected_at"], "names": {k: names[k] for k in r["compromised"]},
+            "note": "SIMULATED: what happens if the attacker on this controller keeps going. The controller attack itself is live; "
+                    "everything beyond it is the model."}
+
+
+@app.get("/api/live/state")
+def live_state(all_packets: bool = False):
+    d = _LIVE["dev"]
+    if d is None:
+        return {"running": False, "error": _live.enabled_reason()[1] or "not started"}
+    return d.snapshot(packets=120, hide_hmi_reads=not all_packets)
+
+
+@app.get("/api/live/status")
+def live_status():
+    """Small, for the site-wide pill and the twin: is there a live alarm right now?"""
+    d = _LIVE["dev"]
+    if d is None:
+        return {"running": False}
+    with d.lock:
+        inc = d.incident
+        return {"running": d.server is not None, "status": d.status, "asset": d.asset, "asset_name": d.asset_name,
+                "level_cm": round(d.level, 1), "isolated": d.isolated,
+                "incident": None if not inc else {"id": inc["id"], "state": inc["state"], "opened_at": inc["opened_at"],
+                                                   "first": next((a["technique"] for a in d.alerts if a["id"] == inc["first_alert"]), None)}}
+
+
+@app.get("/api/live/stream")
+async def live_stream(request: Request):
+    """Server-sent events: one state snapshot every half second while the page is open."""
+    d = _dev()
+
+    async def gen():
+        last = None
+        n = 0
+        while not await request.is_disconnected():
+            s = json.dumps(d.snapshot(packets=40))
+            if s != last or n % 10 == 0:
+                yield f"data: {s}\n\n"
+                last = s
+            n += 1
+            await _asyncio.sleep(0.5)
+    return StreamingResponse(gen(), media_type="text/event-stream", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+
+class LiveDecision(BaseModel):
+    decision: str = Field(..., pattern="^(isolate|dismiss)$")
+
+
+@app.post("/api/live/decide")
+def live_decide(body: LiveDecision, request: Request):
+    _live_guard(request)
+    s = auth.read_session(request.cookies.get(COOKIE, ""))
+    if not _dev().decide(body.decision, by=s["u"] if s else "operator"):
+        raise HTTPException(409, "There is no alarm waiting for a decision.")
+    return _dev().snapshot()
+
+
+@app.post("/api/live/restore")
+def live_restore(request: Request):
+    _live_guard(request)
+    s = auth.read_session(request.cookies.get(COOKIE, ""))
+    d = _dev()
+    if not d.isolated:
+        raise HTTPException(409, "Isolate the controller first: restoring settings while the attacker can still write would be undone.")
+    d.restore(by=s["u"] if s else "operator")
+    return d.snapshot()
+
+
+@app.post("/api/live/close")
+def live_close(request: Request):
+    _live_guard(request)
+    d = _dev()
+    d.close_incident()
+    return d.snapshot()
+
+
+class LiveSis(BaseModel):
+    on: bool
+
+
+@app.post("/api/live/sis")
+def live_sis(body: LiveSis, request: Request):
+    _live_guard(request)
+    d = _dev()
+    with d.lock:
+        d.sis_on = bool(body.on)
+        if not d.sis_on:
+            d.sis_tripped = False
+    return d.snapshot()
+
+
+@app.get("/api/live/spread")
+def live_spread():
+    d = _dev()
+    return _live_spread(d.asset)

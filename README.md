@@ -62,6 +62,53 @@ From the platform, "Replay in 3D twin" passes the whole scenario (attackers, sta
 failsafe, fixes). In the twin, click a building for "Add as a new attacker" or "Add as another way in", with a start
 minute.
 
+## Live attack demo (`/app#/live`): step by step
+
+**What is real and what is not.**
+- **Real:** the Modbus/TCP traffic, the detection, the isolation and the recovery. The attack script sends real protocol frames over a real socket; Cascade inspects each one as it arrives; isolation closes and refuses the attacker's connection; recovery rewrites the controller's registers.
+- **Emulated:** the controller. It's a small Python program (`backend/live.py`) standing in for `WA01` Pumping Station PLC, with a toy tank model.
+- **Simulated:** everything beyond the controller (the rest of the city).
+
+The page, the top bar and the twin all say this.
+
+**On one laptop (about 2 minutes on stage):**
+1. Start Cascade (`run_master.bat`). The emulated controller starts with it on `127.0.0.1:5020`.
+2. Open `http://localhost:8000/app#/live`. For the first 30 seconds it learns normal behaviour from the HMI's own traffic (pipeline stage 1), then shows **Normal. Watching every request.**
+3. Optional: open `http://localhost:8000/twin` in a second window or on a second screen.
+4. Open a second terminal in the project folder and run `attack.bat recon` (or `python tools\live\attack.py recon`). Two **notices** appear: an unknown device (T0848 Rogue Master) and an address scan (T0861 Point & Tag Identification). No alarm yet: reading is suspicious, not damaging.
+5. Run `attack.bat` (the full attack). Within a second:
+   - The page shows **ALARM** with alerts for T1692.001, T0878, T0836 and T0831.
+   - Every page's top bar shows **LIVE ALARM WA01**.
+   - The twin marks WA01 as the way in and replays the simulated spread: District Water Supply, 60,000 people, lost at T+03:00 if nobody stops it.
+   - The tank starts filling: the attacker forced the pump on in manual mode.
+6. Either click **Isolate now**, or wait 20 seconds and the **failsafe** isolates on its own. The attacker's terminal prints that the controller closed the connection. Running the attack again shows *refused (isolated)*.
+7. Point out that the tank is still at risk: isolation stops the attacker but does not undo what they wrote. Click **Restore known-good configuration**: setpoints, alarm and auto mode come back, and the tank drains.
+8. Click **Close incident**. Every decision is in the hash-chained audit log (`/api/ops/verify`).
+
+The independent safety trip (SIS) checkbox shows defence in depth. With it on, the pump is forced off at 490 cm whatever the attacker writes, because a real SIS isn't reachable over Modbus. Switch it off to let the tank overflow.
+
+**From a second laptop (more convincing):** start Cascade with `run_master_lan.bat` (it sets `CASCADE_LIVE_HOST=0.0.0.0` and prints this laptop's IP address; allow Python on private networks when Windows asks). On the other laptop, copy `tools\live\attack.py` (Python 3, standard library only) and run `python attack.py --host <IP>`. The page then shows the attacker's real IP address.
+
+**If something goes wrong:**
+- **Port 5020 is busy:** set `CASCADE_LIVE_PORT=5021` before starting, and use `--port 5021`.
+- **You need the testbed off:** set `CASCADE_LIVE=0`.
+- **Safety:** the script only works against this emulated controller. Never point it at real equipment.
+
+## Recovery (`/app#/recovery`) and the assumptions register (`/app#/assumptions`)
+
+**Recovery** answers what comes after the 6-hour window. Once the attacker is cut off from a system (its zone isolated, or the whole network), a crew restores it:
+- Restore times are per type of system, ×3 with no tested backup.
+- 1–8 crews work in parallel.
+- Crews go to the systems that bring back the most people first. Low-value work waits if it would block a service-critical system.
+
+The page shows a restoration timeline, when each service is back, people-hours lost (including after the window), and a crews × backups grid.
+
+Finding on the worst case: water and power are back at T+07:15, but cleaning could not start before T+04:15, because nothing on that path is monitored and isolation waited for the network-wide cut. Monitoring shortens recovery, not just detection. Restore times are planning assumptions and are labelled as such.
+
+**Assumptions register:** every number the model uses, with its meaning, an honest basis and how it was tested. Example: the 240-minute time to detect without monitoring is marked optimistic, because industry reports put attacker dwell time in days.
+
+**MITRE ATT&CK for ICS:** every fix type now lists its ATT&CK for ICS mitigations and the techniques it counters (Compliance page). Every live alert names its technique and the mitigation that would stop it. IDs were checked against attack.mitre.org; note that "Unauthorized Command Message" is now **T1692.001**, not T0855.
+
 ## What's new in PASS 16 (twin traffic, graph and data fixes)
 
 **Digital twin: traffic signals that are tied to the model.**
@@ -213,8 +260,9 @@ python backend\test_auth.py
 python backend\test_water.py
 python backend\test_insights.py
 python backend\test_api.py
+python backend\test_pass17.py
 ```
-58 tests; all pass on `data`, `data_master` and `data_district28` (`set CASCADE_DATA=data_master` first).
+63 tests; all pass on `data`, `data_master` and `data_district28` (`set CASCADE_DATA=data_master` first).
 
 Browser checks (server running on `data_master`, `npm i playwright` once if Node does not find it):
 ```
@@ -228,6 +276,7 @@ node tools\e2e\themes.js          # both themes: errors, "undefined", invisible 
 node tools\e2e\auth_flow.js       # sign-in and 2FA end to end (own temporary server on port 8011)
 node tools\e2e\twin_water.js      # twin water rings follow the replay
 node tools\e2e\twin_signals.js    # cars never run a red; signals follow the junction-signal controller
+node tools\e2e\live_attack.js     # real attack script vs the live testbed: notices, alarm, pill, twin, isolate, recover, failsafe
 python tools\e2e\api_badinput.py  # every endpoint answers bad input with a 4xx
 node tools\audit_layout.js 1440,1280,1024,768,390 --twin
 ```
@@ -237,6 +286,8 @@ node tools\audit_layout.js 1440,1280,1024,768,390 --twin
 All infrastructure data is simulated. Spread times, detection times and the harm window are assumptions in
 `config.py`; change them and re-run to see how much the results depend on them.
 
-Not real telemetry, not a penetration test: no system is scanned or attacked, and there is no exploit code. The ML
-ML is the SENTINEL water anomaly detector (Model C, BATADAL), shown as historical replay in `ml_water/`. CVE
+Not real telemetry, not a penetration test: no real system is scanned or attacked. The only attack code is
+`tools/live/attack.py`, which reads a few registers and sends four ordinary Modbus writes to Cascade's own emulated
+controller (no exploit; Modbus has no authentication, which is the point). The live testbed proves detection and
+response on real protocol traffic; it does not prove anything about a real utility's network. The ML is the SENTINEL water anomaly detector (Model C, BATADAL), shown as historical replay in `ml_water/`. CVE
 exploitation likelihood is FIRST EPSS plus CISA KEV; the team did not train a CVE model.

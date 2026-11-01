@@ -429,6 +429,47 @@ table.gates { width: 100%; font-size: 13px; } table.gates td, table.gates th { p
 .gp.ok { background: var(--white); color: var(--navy); } .gp.no { background: var(--warn); color: #1a1200; } .gp.na { color: var(--faint); }
 @media (max-width: 980px) { .evgrid { grid-template-columns: minmax(0, 1fr); } }
 
+/* recovery page */
+.rcv-ctl { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; }
+.rcv-ctl label { display: flex; gap: 8px; align-items: center; color: var(--mute); font-size: 13px; }
+.rcv-ctl select { max-width: 100%; }
+.rcv-ctl .chk input { width: auto; }
+.wrapv { overflow-wrap: anywhere; }
+
+/* live testbed */
+.livepill.alarm { border-color: var(--pink); color: var(--pink); animation: lvpulse 1.2s ease-in-out infinite; }
+.livepill.alarm .d { background: var(--pink); }
+.livepill.iso .d { background: var(--warn); }
+@keyframes lvpulse { 50% { box-shadow: 0 0 0 4px rgba(255,111,181,.25); } }
+@media (prefers-reduced-motion: reduce) { .livepill.alarm { animation: none; } }
+.histbanner.live { border-color: rgba(255,111,181,.6); background: rgba(255,111,181,.07); margin-bottom: 16px; }
+.histbanner.live b { color: var(--pink); }
+.lv-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; }
+@media (max-width: 900px) { .lv-grid { grid-template-columns: minmax(0, 1fr); } }
+.lv-tank svg { display: block; margin: 6px auto 0; }
+.lv-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 8px; }
+.lv-state { font-weight: 600; margin: 4px 0 8px; }
+.lv-state.ok { color: var(--white); }
+.lv-state.alarm { color: var(--pink); }
+.lv-state.iso { color: var(--warn); }
+.lv-count { font-size: 14px; color: var(--mute); margin: 6px 0 12px; }
+.lv-count b { font: 800 34px/1 var(--display); color: var(--pink); margin-right: 6px; font-variant-numeric: tabular-nums; }
+.lv-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.lv-pipe { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; counter-reset: s; }
+.lv-pipe li { counter-increment: s; display: grid; grid-template-columns: 26px minmax(0, 1fr); column-gap: 10px; align-items: baseline; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; color: var(--faint); }
+.lv-pipe li::before { content: counter(s); grid-row: span 2; font-weight: 700; }
+.lv-pipe li b { color: inherit; font-weight: 600; }
+.lv-pipe li span { font-size: 12px; }
+.lv-pipe li.done { color: var(--mute); }
+.lv-pipe li.on { color: var(--white); border-color: var(--pink); background: rgba(255,111,181,.08); }
+.lv-pkhead { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.lv-pkhead .chk, .chk { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--mute); }
+.lv-pk { max-height: 420px; overflow: auto; }
+table.t tr.hot td { background: rgba(255,111,181,.07); }
+.lv-cmd { display: flex; justify-content: space-between; align-items: center; gap: 8px; background: var(--navy); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; }
+.lv-cmd code { white-space: nowrap; }
+.pinkt { color: var(--pink); }
+
 /* ---------- design refinement (branch design-refinement): hierarchy, journey, fixes, states ---------- */
 /* top bar: a quiet breadcrumb instead of repeating the page heading */
 .top h1 { display: flex; align-items: baseline; gap: 8px; font: 600 17.5px/1.2 var(--body); letter-spacing: 0; }

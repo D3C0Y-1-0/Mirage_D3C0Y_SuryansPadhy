@@ -253,7 +253,9 @@ export async function compliance(root) {
   const cols = [{ key: 'label', label: 'Fix' },
     { key: 'nist_800_53', label: 'NIST SP 800-53 (used by SP 800-82r3)', render: r => r.nist_800_53.map(h).join('<br>') },
     { key: 'iec_62443', label: 'IEC 62443', render: r => r.iec_62443.map(h).join('<br>') },
-    { key: 'india', label: 'India', render: r => r.india.map(h).join('<br>') }];
+    { key: 'india', label: 'India', render: r => r.india.map(h).join('<br>') },
+    { key: 'mitre_ics', label: 'MITRE ATT&CK for ICS: mitigations', render: r => (r.mitre_ics || []).map(h).join('<br>') },
+    { key: 'mitre_techniques', label: 'Techniques it counters', render: r => (r.mitre_techniques || []).map(h).join('<br>') }];
   root.innerHTML = `
     <div class="head"><div><h2>Compliance mapping</h2><p class="lede">Which control families each recommended fix relates to, so a plan can be discussed in the language auditors use.</p></div></div>
     <p class="note warn" style="margin-bottom:16px">${h(c.note)}</p>
