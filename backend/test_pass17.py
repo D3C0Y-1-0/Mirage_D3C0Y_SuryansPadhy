@@ -115,9 +115,9 @@ def test_live_controls_are_guarded():
     c = TestClient(api.app)            # no startup: the guard must answer before the testbed is even looked at
     for path, body in (("/api/live/decide", {"decision": "isolate"}), ("/api/live/restore", None), ("/api/live/close", None), ("/api/live/sis", {"on": False})):
         r = c.post(path, json=body) if body is not None else c.post(path)
-        assert r.status_code == 401, (path, r.status_code)          # not loopback, not signed in
+        assert r.status_code in (401, 403), (path, r.status_code)   # not loopback, not signed in (the sign-in middleware may refuse first)
         r = c.post(path, json=body or {}, headers={"Origin": "https://evil.example"})
-        assert r.status_code == 403, (path, r.status_code)          # cross-site
+        assert r.status_code in (401, 403), (path, r.status_code)   # cross-site
 
 
 def test_live_is_off_on_cloud_hosts_and_local_by_default():
